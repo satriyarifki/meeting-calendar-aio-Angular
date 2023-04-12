@@ -14,7 +14,7 @@
     </div>
     <a
       (click)="nextMonth()"
-      class="inline-flex cursor-pointer  shadow-md items-center px-4 py-2 mx-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700"
+      class="inline-flex cursor-pointer shadow-md items-center px-4 py-2 mx-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700"
     >
       Next
     </a>
@@ -85,36 +85,65 @@
           {{ item.date }}
         </span>
         <div class="w-full" *ngIf="filterEvents(item.full).length != 0">
-          <div
-            class="max-sm:hidden flex-wrap flex py-1 pl-3 lg:space-x-3 max-lg:space-y-1"
-          >
+          <div *ngFor="let item of filterEvents(item.full)" class="pb-0.5">
             <a
-              [routerLink]="['/']"
-              routerLinkActive="router-link-active"
-              class="w-full lg:w-5/12 h-fit bg-blue-200 hover:bg-blue-400 rounded-sm text-center"
+              (click)="activityBool()"
+              class="max-sm:hidden flex-wrap flex py-1 px-2 lg:space-x-1.5 max-lg:space-y-1 border hover:bg-gray-200"
             >
-              {{ filterEvents(item.full)[0].time_start.slice(0, -3) }}</a
+              <div
+                class="w-full lg:w-5/12 h-fit bg-blue-200 hover:bg-blue-300 rounded-sm text-center"
+              >
+                {{ item.time_start.slice(0, -3) }}
+              </div>
+              <span>-</span>
+              <div
+                class="w-full lg:w-5/12 h-fit bg-blue-200 hover:bg-blue-300 rounded-sm text-center"
+              >
+                {{ item.time_end.slice(0, -3) }}
+              </div>
+            </a>
+            <div
+              *ngIf="detailsActivity"
+              class="w-72 transition-[opacity,margin] fixed duration z-10 bg-white shadow-md rounded-lg p-2 mt-2 border border-gray-700 divide-gray-700"
             >
-            <a
-              [routerLink]="['/']"
-              routerLinkActive="router-link-active"
-              class="w-full lg:w-5/12 h-fit bg-blue-200 hover:bg-blue-400 rounded-sm text-center"
-            >
-            {{ filterEvents(item.full)[0].time_end.slice(0, -3) }}</a
-            >
+              <a
+                class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 hover:text-gray-300"
+                href="#"
+              >
+                Newsletter
+              </a>
+              <a
+                class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 hover:text-gray-300"
+                href="#"
+              >
+                Purchases
+              </a>
+              <a
+                class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 hover:text-gray-300"
+                href="#"
+              >
+                Downloads
+              </a>
+              <a
+                class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 hover:text-gray-300"
+                href="#"
+              >
+                Team Account
+              </a>
+            </div>
+            <div class="flex-wrap flex py-1 pl-1 space-y-1 sm:hidden">
+              <span
+                class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
+                >1</span
+              >
+              <span
+                class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
+                >2</span
+              >
+            </div>
           </div>
-          <div class="flex-wrap flex py-1 pl-1 space-y-1 sm:hidden">
-            <span
-              class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
-              >1</span
-            >
-            <span
-              class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
-              >2</span
-            >
-          </div>
-        </div></a
-      >
+        </div>
+      </a>
     </div>
   </div>
 </div>

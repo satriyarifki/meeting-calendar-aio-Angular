@@ -1,3 +1,19 @@
+<a
+  [routerLink]="['/']"
+  routerLinkActive="router-link-active"
+  class="bg-white hover:bg-gray-700 hover:fill-white transition-colors w-10 h-10 justify-center grid content-center fixed left-3 top-3 rounded"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    height="30"
+    viewBox="0 96 960 960"
+    width="30"
+  >
+    <path
+      d="M240 816V336h60v480h-60Zm447-3L453 579l234-234 43 43-191 191 191 191-43 43Z"
+    />
+  </svg>
+</a>
 <div class="w-full justify-center flex">
   <div class="w-1/4">
     <div class="m-3 p-5 shadow-xl h-[96vh] bg-white">
@@ -109,20 +125,207 @@
         <div class="py-3">
           <h1>Activity</h1>
         </div>
-        <div *ngFor="let item of filterEvents(this.dateParams)">
+        <div *ngFor="let item of filterEvents(this.dateParams)" class="py-1">
           <div class="space-y-1 p-2 bg-cyan-300 rounded-sm ml-2">
-            <h3 class="font-manrope text-md font-medium">Title: {{ item.title }}</h3>
-            <h3 class="font-manrope text-sm">Time : {{ item.time_start.slice(0, -3) }} WIB - {{ item.time_end.slice(0, -3) }} WIB</h3>
+            <div class="flex justify-between">
+              <h3 class="font-manrope text-md font-medium">
+                Title: {{ item.title }}
+              </h3>
+              <a
+                (click)="activityBool(item)"
+                class="cursor-pointer bg-yellow-400 hover:bg-yellow-300 grid content-center px-1 rounded-md"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="20"
+                  viewBox="0 96 960 960"
+                  width="20"
+                  fill="white"
+                >
+                  <path
+                    d="M480.118 726Q551 726 600.5 676.382q49.5-49.617 49.5-120.5Q650 485 600.382 435.5q-49.617-49.5-120.5-49.5Q409 386 359.5 435.618q-49.5 49.617-49.5 120.5Q310 627 359.618 676.5q49.617 49.5 120.5 49.5Zm-.353-58Q433 668 400.5 635.265q-32.5-32.736-32.5-79.5Q368 509 400.735 476.5q32.736-32.5 79.5-32.5Q527 444 559.5 476.735q32.5 32.736 32.5 79.5Q592 603 559.265 635.5q-32.736 32.5-79.5 32.5ZM480 856q-146 0-264-83T40 556q58-134 176-217t264-83q146 0 264 83t176 217q-58 134-176 217t-264 83Zm0-300Zm-.169 240Q601 796 702.5 730.5 804 665 857 556q-53-109-154.331-174.5-101.332-65.5-222.5-65.5Q359 316 257.5 381.5 156 447 102 556q54 109 155.331 174.5 101.332 65.5 222.5 65.5Z"
+                  />
+                </svg>
+              </a>
+            </div>
+
+            <h3 class="font-manrope text-sm">
+              Time : {{ item.time_start.slice(0, -3) }} WIB -
+              {{ item.time_end.slice(0, -3) }} WIB
+            </h3>
+            <h3 class="font-manrope text-sm">
+              Link :
+              <a
+                class="text-indigo-700"
+                href="https://www.{{ item.url_online }}"
+                >{{ item.url_online }}</a
+              >
+            </h3>
             <!-- <h3 class="font-manrope text-sm">End : </h3> -->
           </div>
-          <div>
-            
-          </div>
+          <div></div>
         </div>
       </div>
     </div>
   </div>
-  <div class="w-3/4">
+  <div class="w-2/6" *ngIf="showActivity">
+    <div class="my-3 mr-3 p-5 shadow-xl h-[96vh] bg-white">
+      <div class="w-full flex justify-between items-center pb-5 pt-1">
+        <h1 class="text-2xl font-medium font-manrope">Activity Details</h1>
+        <a class="cursor-pointer" (click)="leaveActivity()"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="35"
+            viewBox="0 96 960 960"
+            width="35"
+            fill="red"
+          >
+            <path
+              d="m249 849-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z"
+            />
+          </svg>
+        </a>
+      </div>
+      <div class="px-3 space-y-3">
+        <div class="flex justify-between items-center flex-wrap">
+          <div class="w-1/3 justify-between flex items-center">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm font-manrope text-gray-600"
+              >Date</label
+            >
+            <h1 class="text-xl font-semibold">:</h1>
+          </div>
+
+          <div class="grow px-4">
+            <h2 class="font-manrope font-medium">
+              {{ detailActivity.date | date : "longDate" }}
+            </h2>
+          </div>
+        </div>
+        <div class="flex justify-between items-center flex-wrap">
+          <div class="w-1/3 justify-between flex items-center">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm font-manrope text-gray-600"
+              >Time</label
+            >
+            <h1 class="text-xl font-semibold">:</h1>
+          </div>
+          <div class="grow px-4">
+            <h2 class="font-manrope font-medium">
+              {{ detailActivity.time_start.slice(0, -3) }} WIB -
+              {{ detailActivity.time_end.slice(0, -3) }} WIB
+            </h2>
+          </div>
+
+          <div class="px-2 space-x-2 w-2/3 flex">
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+        <div class="flex justify-between items-center flex-wrap">
+          <div class="w-1/3 justify-between flex items-center">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm font-manrope text-gray-600"
+              >Organizer Name</label
+            >
+            <h1 class="text-xl font-semibold">:</h1>
+          </div>
+          <div class="grow px-4">
+            <h2 class="font-manrope font-medium">
+              {{ detailActivity.organizer }}
+            </h2>
+          </div>
+        </div>
+        <div class="flex justify-between items-center flex-wrap">
+          <div class="w-1/3 justify-between flex items-center">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm font-manrope text-gray-600"
+              >Meeting Name</label
+            >
+            <h1 class="text-xl font-semibold">:</h1>
+          </div>
+          <div class="grow px-4">
+            <h2 class="font-manrope font-medium">{{ detailActivity.title }}</h2>
+          </div>
+        </div>
+        <div class="flex justify-between items-center flex-wrap">
+          <div class="w-1/3 justify-between flex items-center">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm font-manrope text-gray-600"
+              >Online /Offline</label
+            >
+            <h1 class="text-xl font-semibold">:</h1>
+          </div>
+          <div class="grow px-4">
+            <h2 class="font-manrope font-medium">
+              {{ detailActivity.online_offline }}
+            </h2>
+          </div>
+        </div>
+        <div class="flex justify-between items-center flex-wrap">
+          <div class="w-1/3 justify-between flex items-center">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm font-manrope text-gray-600"
+              >Link Online</label
+            >
+            <h1 class="text-xl font-semibold">:</h1>
+          </div>
+          <div class="grow px-4">
+            <h2 class="font-manrope font-medium">
+              {{ detailActivity.url_online }}
+            </h2>
+          </div>
+        </div>
+        <div class="flex justify-between items-center flex-wrap">
+          <div class="w-1/3 justify-between flex items-center">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm font-manrope text-gray-600"
+              >Room Offline</label
+            >
+            <h1 class="text-xl font-semibold">:</h1>
+          </div>
+          <div class="grow px-4">
+            <h2 class="font-manrope font-medium">
+              {{ detailActivity.roomId }}
+            </h2>
+          </div>
+        </div>
+        <div class="flex justify-between items-center flex-wrap">
+          <div class="w-1/3 justify-between flex items-center">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm font-manrope text-gray-600"
+              >Participants</label
+            >
+            <h1 class="text-xl font-semibold">:</h1>
+          </div>
+        </div>
+        <div class="flex justify-between flex-wrap">
+          <div class="w-1/3 justify-between flex items-center">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm font-manrope text-gray-600"
+              >Message</label
+            >
+            <h1 class="text-xl font-semibold">:</h1>
+          </div>
+          <textarea
+            name=""
+            id=""
+            rows="5"
+            class="mx-2 py-3 px-3 grow border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="" [ngClass]="!showActivity ? 'w-4/6' : 'w-2/6'">
     <div class="my-3 mr-3 p-5 shadow-xl bg-white backdrop-opacity-40">
       <div class="text-start flex justify-between mx-5 my-3">
         <div>

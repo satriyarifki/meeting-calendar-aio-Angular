@@ -15,6 +15,7 @@ export class MonthComponent {
   currentDate = new Date();
   endDate = new Date();
   lastDateMonth!: Date;
+  detailsActivity: Boolean = false;
   title: any;
   eventData: any[] = [];
   constructor(private apiService: ApiService) {
@@ -38,9 +39,11 @@ export class MonthComponent {
   }
   formatTime(time: any) {
     console.log(time);
-    
+
     return format(new Date(), 'kk:mm');
   }
+
+  // Get 1 Month Date
   loopDate(date: any) {
     var firstDay = date;
     firstDay.setDate(1);
@@ -59,6 +62,7 @@ export class MonthComponent {
       firstDay.setDate(firstDay.getDate() + 1);
     }
   }
+
   getFirstDayOfWeek(d: any) {
     // 👇️ clone date object, so we don't mutate it
     const date = new Date(d);
@@ -99,5 +103,15 @@ export class MonthComponent {
     this.monthSelected.setMonth(this.monthSelected.getMonth() - 1);
 
     this.loopDate(this.monthSelected);
+  }
+
+  enterActivityHover() {
+    this.detailsActivity = true;
+  }
+  leaveActivityHover() {
+    this.detailsActivity = false;
+  }
+  activityBool() {
+    this.detailsActivity = !this.detailsActivity;
   }
 }

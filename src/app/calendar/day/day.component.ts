@@ -18,6 +18,8 @@ export class DayComponent {
   dateNow = new Date(this.actRoute.snapshot.params['date']);
   hoursOfDay = HoursOfDay;
   currentDate = new Date();
+  showActivity: Boolean = false;
+  detailActivity: any;
   arrayDateinMonth: any[] = [];
   test: any;
   eventData: any[] = [];
@@ -132,5 +134,24 @@ export class DayComponent {
     var pickDate = new Date(date);
     this.loopDate(pickDate);
     this.router.navigate(['/day/', pickDate.toLocaleDateString()]);
+  }
+  enterActivityHover() {
+    this.showActivity = true;
+  }
+  leaveActivity() {
+    this.showActivity = false;
+    this.detailActivity = null;
+  }
+  activityBool(params: any) {
+    if (this.showActivity) {
+      if (this.detailActivity != params) {
+        this.detailActivity = params;
+        return;
+      }
+      this.detailActivity = null;
+    } else {
+      this.detailActivity = params;
+    }
+    this.showActivity = !this.showActivity;
   }
 }
