@@ -1,0 +1,197 @@
+<div class="w-full justify-center flex">
+  <div class="w-1/4">
+    <div class="m-3 p-5 shadow-xl h-[96vh] bg-white">
+      <!-- <div inline-datepicker data-date="02/25/2022" [(ngModel)]="test"></div> -->
+      {{ test }}
+
+      <div class="p-2 border">
+        <div class="flex justify-around pb-2">
+          <button
+            (click)="toPrevMonth()"
+            title="left arrow"
+            class="p-2 text-gray-800 transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+          <h1 class="font-manrope text-xl font-medium">
+            {{ dateParams.toLocaleString("default", { month: "long" }) }}
+            {{ dateParams.getFullYear() }}
+          </h1>
+
+          <button
+            (click)="toNextMonth()"
+            title="right arrow"
+            class="p-2 text-gray-800 transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          class="flex flex-wrap bg-blue-500 text-white rounded-sm rounded-b-none font-manrope"
+        >
+          <div class="w-[14.2%] py-2 text-center text-sm grow">Mon</div>
+          <div class="w-[14.2%] py-2 text-center text-sm grow">Tue</div>
+          <div class="w-[14.2%] py-2 text-center text-sm grow">Wed</div>
+          <div class="w-[14.2%] py-2 text-center text-sm grow">Thu</div>
+          <div class="w-[14.2%] py-2 text-center text-sm grow">Fri</div>
+          <div class="w-[14.2%] py-2 text-center text-sm grow">Sat</div>
+          <div class="w-[14.2%] py-2 text-center text-sm grow">Sun</div>
+        </div>
+        <div class="flex flex-wrap mt-0.5">
+          <div
+            class="w-[14.2%] grow flex justify-start text-center cursor-pointer"
+            *ngFor="let item of arrayDateinMonth; index as i"
+            [ngClass]="
+              item.date == currentDate.getDate() &&
+              item.month == currentDate.getMonth() &&
+              item.year == currentDate.getFullYear()
+                ? 'border-1 border-green-600'
+                : ''
+            "
+          >
+            <a
+              (click)="changeDatePicker(item.full)"
+              class="w-full h-full flex justify-center rounded-full hover:bg-gray-200 p-1"
+              [ngClass]="
+                item.date == dateParams.getDate() &&
+                item.month == dateParams.getMonth() &&
+                item.year == dateParams.getFullYear()
+                  ? 'bg-gray-200'
+                  : ''
+              "
+              ><span
+                class="w-5 text-md font-semibold font-manrope"
+                [ngClass]="
+                  item.month != dateParams.getMonth()
+                    ? 'text-gray-400'
+                    : item.date == currentDate.getDate() &&
+                      item.month == currentDate.getMonth() &&
+                      item.year == currentDate.getFullYear()
+                    ? 'text-blue-600'
+                    : item.day == 0 || item.day == 6
+                    ? 'text-red-500'
+                    : ''
+                "
+              >
+                {{ item.date }}
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="filterEvents(this.dateParams).length != 0" class="mt-5">
+        <div class="py-3">
+          <h1>Activity</h1>
+        </div>
+        <div *ngFor="let item of filterEvents(this.dateParams)">
+          <div class="space-y-1 p-2 bg-cyan-300 rounded-sm ml-2">
+            <h3 class="font-manrope text-md font-medium">Title: {{ item.title }}</h3>
+            <h3 class="font-manrope text-sm">Time : {{ item.time_start.slice(0, -3) }} WIB - {{ item.time_end.slice(0, -3) }} WIB</h3>
+            <!-- <h3 class="font-manrope text-sm">End : </h3> -->
+          </div>
+          <div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-3/4">
+    <div class="my-3 mr-3 p-5 shadow-xl bg-white backdrop-opacity-40">
+      <div class="text-start flex justify-between mx-5 my-3">
+        <div>
+          <h1 class="text-2xl font-semibold">
+            {{ dateParams | date : "EEEE" }}
+          </h1>
+          <h1 class="text-2xl">{{ dateParams | date : " dd" }}</h1>
+        </div>
+
+        <div class="flex h-1/2 justify-between mt-8 md:mt-0">
+          <button
+            (click)="toPrevDay()"
+            title="left arrow"
+            class="p-2 mx-3 text-gray-800 transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-7 h-7"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+
+          <button
+            (click)="toNextDay()"
+            title="right arrow"
+            class="p-2 text-gray-800 transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-7 h-7"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="h-[78.5vh] overflow-auto">
+        <table class="w-full text-sm text-left text-gray-800 shadow-inner">
+          <thead>
+            <tr>
+              <th class="w-1/12"></th>
+              <th class="grow"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-white border-b" *ngFor="let hour of hoursOfDay">
+              <th class="px-6 py-4 border-r">{{ hour }}</th>
+              <td class=""></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

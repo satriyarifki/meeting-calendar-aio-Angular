@@ -1,7 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{html,ts}",],
+  content: ["./src/**/*.{html,ts}"],
   theme: {
+    // screens: {
+    //   'xs': '475px',
+    // },
     extend: {
       colors: {
         hijau: "#00FFC6",
@@ -27,5 +30,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
-
+};

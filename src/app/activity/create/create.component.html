@@ -1,0 +1,166 @@
+<div
+  #signOutModal
+  id="popup-modal"
+  tabindex="-1"
+  class="fixed top-0 left-0 right-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full bg-gray-900 bg-opacity-50"
+>
+  <div class="relative w-full h-full mx-auto max-w-lg md:h-auto">
+    <div class="relative rounded-lg shadow bg-white">
+      <button
+        type="button"
+        class="absolute top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-gray-800 hover:text-white"
+      >
+        <svg
+          aria-hidden="true"
+          class="w-5 h-5"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <span class="sr-only">Close modal</span>
+      </button>
+      <div class="px-6 pt-4">
+        <h2 class="font-medium text-xl">Add Meeting</h2>
+      </div>
+      <div class="p-6">
+        <div class="space-y-3">
+          <div class="flex justify-between items-center flex-wrap">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm mb-2 w-1/4"
+              >Date</label
+            >
+            <input
+              type="date"
+              class="py-3 px-3 w-3/4 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+            />
+          </div>
+          <div class="flex justify-between items-center flex-wrap">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm mb-2 w-1/4"
+              >Time</label
+            >
+            <div class="space-x-2 w-3/4 flex">
+              <input
+                type="time"
+                class="py-3 px-3 grow border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+              />
+              <input
+                type="time"
+                class="py-3 px-3 grow border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+              />
+            </div>
+          </div>
+          <div class="flex justify-between items-center flex-wrap">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm mb-2 w-1/4"
+              >Organizer Name</label
+            >
+            <input
+              type="text"
+              class="py-3 px-3 w-3/4 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+            />
+          </div>
+          <div class="flex justify-between items-center flex-wrap">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm mb-2 w-1/4"
+              >Meeting Name</label
+            >
+            <input
+              type="text"
+              class="py-3 px-3 w-3/4 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+            />
+          </div>
+          <div class="flex justify-between items-center flex-wrap">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm mb-2 w-1/4"
+              >Online/Offline</label
+            >
+            <div class="flex w-3/4">
+              <div class="grow flex">
+                <input
+                  [(ngModel)]="radioInput"
+                  type="radio"
+                  id="offline"
+                  value="offline"
+                  name="online-offline"
+                  class="py-3 mx-2 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+                />
+                <label for="offline" class="align-middle">Offline</label>
+              </div>
+              <div class="grow flex">
+                <input
+                  [(ngModel)]="radioInput"
+                  type="radio"
+                  id="online"
+                  value="online"
+                  name="online-offline"
+                  class="py-3 mx-2 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+                />
+                <label for="online">Online</label>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-between items-center flex-wrap">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm mb-2 w-1/4"
+              >Link Online</label
+            >
+            <input
+              type="text"
+              class="py-3 px-3 w-3/4 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+            />
+          </div>
+          <div class="flex justify-between items-center flex-wrap">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm mb-2 w-1/4"
+              >Room Offline</label
+            >
+            <input
+              type="email"
+              [disabled]="radioInput == 'online' ? true : false"
+              [value]="radioInput == 'online' ? '-' : ''"
+              class="py-3 px-3 w-3/4 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+            />
+          </div>
+          <div class="flex justify-between items-center flex-wrap">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm mb-2 w-1/4"
+              >Participant</label
+            >
+            <input
+              type="email"
+              class="py-3 px-3 w-3/4 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+            />
+          </div>
+          <div class="flex justify-between flex-wrap">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm mb-2 w-1/4"
+              >Message</label
+            >
+            <textarea
+              name=""
+              id=""
+              rows="5"
+              class="py-3 px-3 w-3/4 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

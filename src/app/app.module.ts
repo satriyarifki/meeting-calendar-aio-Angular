@@ -7,12 +7,28 @@ import { SchedulerModule } from 'angular-calendar-scheduler';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
+import { MonthComponent } from './calendar/month/month.component';
+import { WeekComponent } from './calendar/week/week.component';
+import { SigninComponent } from './auth/signin/signin.component';
+import { CreateComponent } from './activity/create/create.component';
+import { HomeComponent } from './home/home.component';
+import { DayComponent } from './calendar/day/day.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+    MonthComponent,
+    WeekComponent,
+    SigninComponent,
+    CreateComponent,
+    HomeComponent,
+    DayComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,

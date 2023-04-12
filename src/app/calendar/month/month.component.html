@@ -1,0 +1,120 @@
+<div class="mx-10 py-8">
+  <div class="flex flex-wrap"></div>
+  <div class="flex flex-wrap">
+    <a
+      (click)="previousMonth()"
+      class="inline-flex cursor-pointer shadow-md items-center px-4 py-2 mr-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700"
+    >
+      Previous
+    </a>
+    <div class="justify-start flex">
+      <h1 class="font-manrope text-4xl font-bold">
+        {{ monthSelected.toLocaleString("default", { month: "long" }) }}
+      </h1>
+    </div>
+    <a
+      (click)="nextMonth()"
+      class="inline-flex cursor-pointer  shadow-md items-center px-4 py-2 mx-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700"
+    >
+      Next
+    </a>
+    <div class="justify-end flex grow">
+      <h1 class="font-manrope text-4xl font-bold">
+        {{ monthSelected.getFullYear() }}
+      </h1>
+    </div>
+  </div>
+</div>
+<!-- Weekdays Name -->
+<div class="mx-3 sm:mx-10 rounded-lg">
+  <!-- Big Responsive -->
+  <div
+    class="flex flex-wrap bg-blue-600 text-white rounded-lg rounded-b-none max-md:hidden"
+  >
+    <div class="w-[14.2%] py-3 text-center grow">Monday</div>
+    <div class="w-[14.2%] py-3 text-center grow">Tuesday</div>
+    <div class="w-[14.2%] py-3 text-center grow">Wednesday</div>
+    <div class="w-[14.2%] py-3 text-center grow">Thursday</div>
+    <div class="w-[14.2%] py-3 text-center grow">Friday</div>
+    <div class="w-[14.2%] py-3 text-center grow">Saturday</div>
+    <div class="w-[14.2%] py-3 text-center grow">Sunday</div>
+  </div>
+
+  <!-- Small Responsive -->
+  <div
+    class="flex flex-wrap bg-blue-600 text-white rounded-lg rounded-b-none md:hidden max-sm:w[80%]"
+  >
+    <div class="w-[14.2%] py-3 text-center grow">Mon</div>
+    <div class="w-[14.2%] py-3 text-center grow">Tue</div>
+    <div class="w-[14.2%] py-3 text-center grow">Wed</div>
+    <div class="w-[14.2%] py-3 text-center grow">Thu</div>
+    <div class="w-[14.2%] py-3 text-center grow">Fri</div>
+    <div class="w-[14.2%] py-3 text-center grow">Sat</div>
+    <div class="w-[14.2%] py-3 text-center grow">Sun</div>
+  </div>
+
+  <!-- Calendar Date -->
+  <div class="flex flex-wrap mt-0.5 mb-5">
+    <div
+      class="w-[14.2%] h-20 sm:h-28 grow flex justify-start border bg-white"
+      *ngFor="let item of arrayDateinMonth; index as i"
+      [ngClass]="
+        item.date == currentDate.getDate() &&
+        item.month == currentDate.getMonth() &&
+        item.year == currentDate.getFullYear()
+          ? 'border-1 border-green-600'
+          : ''
+      "
+    >
+      <a
+        [routerLink]="['/day/', item.full]"
+        routerLinkActive="router-link-active"
+        class="w-full h-full flex hover:bg-gray-100 p-1"
+        ><span
+          class="w-5 text-xl font-semibold"
+          [ngClass]="
+            item.month != monthSelected.getMonth()
+              ? 'text-gray-400'
+              : item.date == currentDate.getDate() &&
+                item.month == currentDate.getMonth() &&
+                item.year == currentDate.getFullYear()
+              ? 'text-green-600'
+              : ''
+          "
+        >
+          {{ item.date }}
+        </span>
+        <div class="w-full" *ngIf="filterEvents(item.full).length != 0">
+          <div
+            class="max-sm:hidden flex-wrap flex py-1 pl-3 lg:space-x-3 max-lg:space-y-1"
+          >
+            <a
+              [routerLink]="['/']"
+              routerLinkActive="router-link-active"
+              class="w-full lg:w-5/12 h-fit bg-blue-200 hover:bg-blue-400 rounded-sm text-center"
+            >
+              {{ filterEvents(item.full)[0].time_start.slice(0, -3) }}</a
+            >
+            <a
+              [routerLink]="['/']"
+              routerLinkActive="router-link-active"
+              class="w-full lg:w-5/12 h-fit bg-blue-200 hover:bg-blue-400 rounded-sm text-center"
+            >
+            {{ filterEvents(item.full)[0].time_end.slice(0, -3) }}</a
+            >
+          </div>
+          <div class="flex-wrap flex py-1 pl-1 space-y-1 sm:hidden">
+            <span
+              class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
+              >1</span
+            >
+            <span
+              class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
+              >2</span
+            >
+          </div>
+        </div></a
+      >
+    </div>
+  </div>
+</div>
