@@ -2,13 +2,15 @@
   #signOutModal
   id="popup-modal"
   tabindex="-1"
-  class="fixed top-0 left-0 right-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full bg-gray-900 bg-opacity-50"
+  class="fixed top-0 left-0 right-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-screen md:h-full bg-gray-900 bg-opacity-50"
+  *ngIf="show"
 >
   <div class="relative w-full h-full mx-auto max-w-lg md:h-auto">
     <div class="relative rounded-lg shadow bg-white">
       <button
+        (click)="closeModal()"
         type="button"
-        class="absolute top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-gray-800 hover:text-white"
+        class="absolute transition duration-200 top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-gray-800 hover:text-white"
       >
         <svg
           aria-hidden="true"
@@ -29,7 +31,12 @@
         <h2 class="font-medium text-xl">Add Meeting</h2>
       </div>
       <div class="p-6">
-        <div class="space-y-3">
+        <form
+          [formGroup]="form"
+          (ngSubmit)="onSubmit()"
+          enctype="multipart/form-data"
+          class="space-y-2"
+        >
           <div class="flex justify-between items-center flex-wrap">
             <label
               for="inline-input-label-with-helper-text"
@@ -37,8 +44,12 @@
               >Date</label
             >
             <input
+              id="date"
+              name="date"
+              formControlName="date"
+              value="{{ initialDate | date : 'yyyy-MM-dd' }}"
               type="date"
-              class="py-3 px-3 w-3/4 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+              class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             />
           </div>
           <div class="flex justify-between items-center flex-wrap">
@@ -47,14 +58,21 @@
               class="block text-sm mb-2 w-1/4"
               >Time</label
             >
-            <div class="space-x-2 w-3/4 flex">
+            <div class="space-x-2 w-3/4 flex items-center">
               <input
+                id="time_start"
+                name="time_start"
+                formControlName="time_start"
                 type="time"
-                class="py-3 px-3 grow border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+                class="py-2 px-2 grow border border-gray-300 rounded-md text-md focus:border-blue-500 ring:border-blue-500 outline-none"
               />
+              <span class="w-5 text-center text-xl font-medium">-</span>
               <input
+                id="time_end"
+                name="time_end"
+                formControlName="time_end"
                 type="time"
-                class="py-3 px-3 grow border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+                class="py-2 px-2 grow border border-gray-300 rounded-md text-md focus:border-blue-500 ring:border-blue-500 outline-none"
               />
             </div>
           </div>
@@ -65,8 +83,11 @@
               >Organizer Name</label
             >
             <input
+              id="organizer"
+              name="organizer"
+              formControlName="organizer"
               type="text"
-              class="py-3 px-3 w-3/4 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+              class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             />
           </div>
           <div class="flex justify-between items-center flex-wrap">
@@ -76,8 +97,11 @@
               >Meeting Name</label
             >
             <input
+              id="title"
+              name="title"
+              formControlName="title"
               type="text"
-              class="py-3 px-3 w-3/4 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+              class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             />
           </div>
           <div class="flex justify-between items-center flex-wrap">
@@ -89,51 +113,72 @@
             <div class="flex w-3/4">
               <div class="grow flex">
                 <input
+                  formControlName="online_offline"
                   [(ngModel)]="radioInput"
                   type="radio"
+                  value="Offline"
                   id="offline"
-                  value="offline"
-                  name="online-offline"
-                  class="py-3 mx-2 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+                  name="online_offline"
+                  class="py-3 mx-2 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
                 />
                 <label for="offline" class="align-middle">Offline</label>
               </div>
               <div class="grow flex">
                 <input
+                  formControlName="online_offline"
                   [(ngModel)]="radioInput"
                   type="radio"
+                  value="Online"
                   id="online"
-                  value="online"
-                  name="online-offline"
-                  class="py-3 mx-2 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+                  name="online_offline"
+                  class="py-3 mx-2 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
                 />
                 <label for="online">Online</label>
               </div>
             </div>
           </div>
-          <div class="flex justify-between items-center flex-wrap">
+          <div
+            class="flex justify-between items-center flex-wrap"
+            *ngIf="radioInput == 'Online'"
+          >
             <label
               for="inline-input-label-with-helper-text"
               class="block text-sm mb-2 w-1/4"
               >Link Online</label
             >
             <input
+              id="url_online"
+              name="url_online"
+              formControlName="url_online"
               type="text"
-              class="py-3 px-3 w-3/4 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+              class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             />
           </div>
-          <div class="flex justify-between items-center flex-wrap">
+          <div
+            class="flex justify-between items-center flex-wrap"
+            *ngIf="radioInput == 'Offline'"
+          >
             <label
               for="inline-input-label-with-helper-text"
               class="block text-sm mb-2 w-1/4"
               >Room Offline</label
             >
-            <input
+            <select
+              class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+              id="roomId"
+              name="roomId"
+              formControlName="roomId"
+              [value]="1"
+            >
+              <option *ngFor="let item of roomsAll" value="{{ item.id }}">{{ item.room_name }}</option>
+            </select>
+            <!-- <input
+              id="roomId"
+              name="roomId"
+              formControlName="roomId"
               type="email"
-              [disabled]="radioInput == 'online' ? true : false"
-              [value]="radioInput == 'online' ? '-' : ''"
-              class="py-3 px-3 w-3/4 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
-            />
+              class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+            /> -->
           </div>
           <div class="flex justify-between items-center flex-wrap">
             <label
@@ -142,8 +187,11 @@
               >Participant</label
             >
             <input
-              type="email"
-              class="py-3 px-3 w-3/4 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+              id="participants"
+              name="participants"
+              formControlName="participants"
+              type="text"
+              class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             />
           </div>
           <div class="flex justify-between flex-wrap">
@@ -153,13 +201,40 @@
               >Message</label
             >
             <textarea
-              name=""
-              id=""
+              id="message"
+              name="message"
+              formControlName="message"
               rows="5"
-              class="py-3 px-3 w-3/4 border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+              class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             ></textarea>
           </div>
-        </div>
+          <div class="flex justify-center pt-3">
+            <a
+              (click)="onSubmit()"
+              class="relative px-5 py-1.5 cursor-pointer overflow-hidden font-medium text-gray-600 bg-gray-100 border border-gray-100 rounded-lg shadow-inner group"
+            >
+              <span
+                class="absolute top-0 left-0 w-0 h-0 transition-all duration-200 border-t-2 border-gray-600 group-hover:w-full ease"
+              ></span>
+              <span
+                class="absolute bottom-0 right-0 w-0 h-0 transition-all duration-200 border-b-2 border-gray-600 group-hover:w-full ease"
+              ></span>
+              <span
+                class="absolute top-0 left-0 w-full h-0 transition-all duration-300 delay-75 bg-gray-600 group-hover:h-full ease"
+              ></span>
+              <span
+                class="absolute bottom-0 left-0 w-full h-0 transition-all duration-300 delay-75 bg-gray-600 group-hover:h-full ease"
+              ></span>
+              <span
+                class="absolute inset-0 w-full h-full duration-300 delay-300 bg-gray-900 opacity-0 group-hover:opacity-100"
+              ></span>
+              <span
+                class="relative font-manrope font-semibold transition-colors duration-300 delay-75 group-hover:text-white ease"
+                >Submit</span
+              >
+            </a>
+          </div>
+        </form>
       </div>
     </div>
   </div>

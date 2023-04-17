@@ -14,4 +14,24 @@ export class ApiService {
   getEvents(): Observable<any> {
     return this.http.get(this.baseUrl + 'events');
   }
+  postEvents(body: any): Observable<any> {
+    return this.http.post(this.baseUrl + 'events', body);
+  }
+  deleteEvents(id: any): Observable<any> {
+    return this.http.delete(this.baseUrl + 'events/' + id);
+  }
+
+  getParticipants(): Observable<any> {
+    return this.http.get(this.baseUrl + 'participants');
+  }
+  postParticipants(body: any): Observable<any> {
+    return this.http.post(this.baseUrl + 'participants', body);
+  }
+  deleteParticipantsByEvent(eventId: any): Observable<any> {
+    return this.http.delete(this.baseUrl + 'participants/' + eventId);
+  }
+
+  getRooms(): Observable<any> {
+    return this.http.get(this.baseUrl + 'rooms');
+  }
 }

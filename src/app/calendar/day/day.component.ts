@@ -1,12 +1,27 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { addHours, format, addDays, addMonths } from 'date-fns';
+import {
+  addHours,
+  format,
+  addDays,
+  addMonths,
+  eachHourOfInterval,
+  hoursToMilliseconds,
+  hoursToMinutes,
+  getTime,
+} from 'date-fns';
+import { forkJoin } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
+import { CreateActivityService } from 'src/app/services/create-activity/create-activity.service';
 
 const HoursOfDay = [
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-  22, 23, 24,
+  22, 23,
 ];
+const eachHours = eachHourOfInterval({
+  start: new Date(2014, 9, 6, 0),
+  end: new Date(2014, 9, 6, 23),
+});
 
 @Component({
   selector: 'app-day',
@@ -16,24 +31,45 @@ const HoursOfDay = [
 export class DayComponent {
   dateParams = new Date(this.actRoute.snapshot.params['date']);
   dateNow = new Date(this.actRoute.snapshot.params['date']);
-  hoursOfDay = HoursOfDay;
+  hoursOfDay = eachHours;
   currentDate = new Date();
   showActivity: Boolean = false;
   detailActivity: any;
+  deleteAlertBool: Boolean = false;
+  idEventOnDelete: any;
+  roomsData: any[] = [];
+  dataParticipants: any[] = [];
   arrayDateinMonth: any[] = [];
   test: any;
   eventData: any[] = [];
   constructor(
     private actRoute: ActivatedRoute,
     private apiService: ApiService,
-    private router: Router
+    private router: Router,
+    private createService: CreateActivityService
   ) {
     this.loopDate(this.dateNow);
 
-    apiService.getEvents().subscribe((data) => {
-      this.eventData = data;
-      console.log(this.filterEvents(this.dateParams).length);
+    forkJoin(
+      apiService.getEvents(),
+      apiService.getParticipants(),
+      apiService.getRooms()
+    ).subscribe(([events, participants, rooms]) => {
+      this.eventData = events;
+      this.dataParticipants = participants;
+      this.roomsData = rooms;
+      // console.log((this.inBetweenTimeChecker('10')!.minutes/60));
+
+      this.eventData.sort(function (a, b) {
+        return a.time_start >= b.time_start ? 1 : -1; // sort in descending order
+      });
+
+      // console.log(this.filterParticipants(1));
     });
+  }
+
+  callCreateService() {
+    this.createService.onCallCreateModal(this.dateParams);
   }
 
   filterEvents(date: any) {
@@ -52,7 +88,7 @@ export class DayComponent {
     this.router.navigate(['/day/', date.toLocaleDateString()]);
 
     // console.log(this.dateParams);
-    console.log(this.filterEvents(this.dateParams).length);
+    // console.log(this.filterEvents(this.dateParams).length);
   }
   toPrevDay() {
     // this.dateParams = addDays(this.dateParams, -1);
@@ -80,6 +116,11 @@ export class DayComponent {
     this.loopDate(date);
     this.router.navigate(['/day/', date.toLocaleDateString()]);
     // console.log(this.dateParams);
+  }
+  subscribeParticipants() {
+    this.apiService.getParticipants().subscribe((data) => {
+      this.dataParticipants = data;
+    });
   }
 
   loopDate(date: any) {
@@ -142,6 +183,66 @@ export class DayComponent {
     this.showActivity = false;
     this.detailActivity = null;
   }
+  filterParticipants(id: any) {
+    return this.dataParticipants.filter((data: any) => data.eventId == id);
+  }
+  filterRoomById(id: any) {
+    return this.roomsData.filter((data: any) => data.id == id);
+  }
+  inBetweenTimeChecker(paramHour: any) {
+    let result;
+    for (const events of this.filterEvents(this.dateParams)) {
+      if (
+        events.time_start.split(':')[0] <= paramHour &&
+        events.time_end.split(':')[0] >= paramHour
+      ) {
+        if (
+          paramHour == events.time_start.split(':')[0] &&
+          events.time_start.split(':')[1] != '00'
+        ) {
+          result = {
+            status: true,
+            minutesType: 'start',
+            minutes: events.time_start.split(':')[1],
+          };
+          break;
+        }
+
+        if (
+          paramHour == events.time_end.split(':')[0] &&
+          events.time_end.split(':')[1] != '00'
+        ) {
+          result = {
+            status: true,
+            minutesType: 'end',
+            minutes: events.time_end.split(':')[1],
+          };
+          break;
+        }
+        if (
+          paramHour == events.time_end.split(':')[0] &&
+          events.time_end.split(':')[1] == '00'
+        ) {
+          result = {
+            status: true,
+            minutesType: 'end',
+            minutes: null,
+          };
+          break;
+        }
+        result = {
+          status: true,
+          minutesType: null,
+          minutes: null,
+        };
+        // console.log('cek');
+        break;
+      } else {
+        result = { status: false };
+      }
+    }
+    return result;
+  }
   activityBool(params: any) {
     if (this.showActivity) {
       if (this.detailActivity != params) {
@@ -153,5 +254,32 @@ export class DayComponent {
       this.detailActivity = params;
     }
     this.showActivity = !this.showActivity;
+  }
+  callDeleteAlert(id: any) {
+    this.idEventOnDelete = id;
+    this.deleteAlertBool = true;
+  }
+  deleteEvents() {
+    this.apiService.deleteParticipantsByEvent(this.idEventOnDelete).subscribe(
+      (response) => {
+        console.log(response + 'Participants Delete Success');
+        this.apiService.deleteEvents(this.idEventOnDelete).subscribe(
+          (response) => {
+            console.log(response + 'Events Delete Success');
+            this.closeDeleteAlert();
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+  closeDeleteAlert() {
+    this.idEventOnDelete = null;
+    this.deleteAlertBool = false;
   }
 }

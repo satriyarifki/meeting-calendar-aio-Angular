@@ -6,7 +6,7 @@ import { SchedulerModule } from 'angular-calendar-scheduler';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MonthComponent } from './calendar/month/month.component';
 import { WeekComponent } from './calendar/week/week.component';
 import { SigninComponent } from './auth/signin/signin.component';
@@ -14,6 +14,7 @@ import { CreateComponent } from './activity/create/create.component';
 import { HomeComponent } from './home/home.component';
 import { DayComponent } from './calendar/day/day.component';
 import { HttpClientModule } from '@angular/common/http';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    ReactiveFormsModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
@@ -36,7 +38,7 @@ import { HttpClientModule } from '@angular/common/http';
     SchedulerModule.forRoot({ locale: 'en', headerDateFormat: 'daysRange' }),
     FormsModule,
   ],
-  providers: [{ provide: LOCALE_ID, useValue: 'en-US' }],
+  providers: [DatePipe],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

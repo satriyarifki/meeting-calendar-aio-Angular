@@ -14,14 +14,15 @@
     />
   </svg>
 </a>
+
 <div class="w-full justify-center flex">
-  <div class="w-1/4">
+  <!------------------------------------------------------------------- Section 1 ------------------------------------------------------------------------------->
+  <div class="w-1/4 transition-[width]">
     <div class="m-3 p-5 shadow-xl h-[96vh] bg-white">
       <!-- <div inline-datepicker data-date="02/25/2022" [(ngModel)]="test"></div> -->
-      {{ test }}
 
       <div class="p-2 border">
-        <div class="flex justify-around pb-2">
+        <div class="flex justify-around pb-2 items-center">
           <button
             (click)="toPrevMonth()"
             title="left arrow"
@@ -125,261 +126,382 @@
         <div class="py-3">
           <h1>Activity</h1>
         </div>
-        <div *ngFor="let item of filterEvents(this.dateParams)" class="py-1">
-          <div class="space-y-1 p-2 bg-cyan-300 rounded-sm ml-2">
-            <div class="flex justify-between">
-              <h3 class="font-manrope text-md font-medium">
-                Title: {{ item.title }}
-              </h3>
-              <a
-                (click)="activityBool(item)"
-                class="cursor-pointer bg-yellow-400 hover:bg-yellow-300 grid content-center px-1 rounded-md"
-                ><svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="20"
-                  viewBox="0 96 960 960"
-                  width="20"
-                  fill="white"
+        <div class="overflow-auto h-[45vh]">
+          <div *ngFor="let item of filterEvents(this.dateParams)" class="py-1">
+            <div class="space-y-1 p-2 bg-cyan-300 rounded-sm ml-2">
+              <div class="flex justify-between">
+                <h3 class="font-manrope text-md font-medium">
+                  <span class="text-gray-500">Title :</span> {{ item.title }}
+                </h3>
+                <a
+                  (click)="activityBool(item)"
+                  class="cursor-pointer bg-yellow-400 hover:bg-yellow-300 grid content-center px-1 rounded-md"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="20"
+                    viewBox="0 96 960 960"
+                    width="20"
+                    fill="white"
+                  >
+                    <path
+                      d="M480.118 726Q551 726 600.5 676.382q49.5-49.617 49.5-120.5Q650 485 600.382 435.5q-49.617-49.5-120.5-49.5Q409 386 359.5 435.618q-49.5 49.617-49.5 120.5Q310 627 359.618 676.5q49.617 49.5 120.5 49.5Zm-.353-58Q433 668 400.5 635.265q-32.5-32.736-32.5-79.5Q368 509 400.735 476.5q32.736-32.5 79.5-32.5Q527 444 559.5 476.735q32.5 32.736 32.5 79.5Q592 603 559.265 635.5q-32.736 32.5-79.5 32.5ZM480 856q-146 0-264-83T40 556q58-134 176-217t264-83q146 0 264 83t176 217q-58 134-176 217t-264 83Zm0-300Zm-.169 240Q601 796 702.5 730.5 804 665 857 556q-53-109-154.331-174.5-101.332-65.5-222.5-65.5Q359 316 257.5 381.5 156 447 102 556q54 109 155.331 174.5 101.332 65.5 222.5 65.5Z"
+                    />
+                  </svg>
+                </a>
+              </div>
+
+              <div class="flex justify-between">
+                <h3 class="font-manrope text-sm">
+                  <span class="text-gray-500">Time :</span>
+                  {{ item.time_start.slice(0, -3) }} WIB -
+                  {{ item.time_end.slice(0, -3) }} WIB
+                </h3>
+                <a
+                  (click)="callDeleteAlert(item.id)"
+                  class="cursor-pointer bg-red-500 hover:bg-red-400 grid content-center px-1 rounded-md"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="18"
+                    viewBox="0 96 960 960"
+                    width="18"
+                    fill="white"
+                  >
+                    <path
+                      d="M261 936q-24.75 0-42.375-17.625T201 876V306h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438V306ZM367 790h60V391h-60v399Zm166 0h60V391h-60v399ZM261 306v570-570Z"
+                    />
+                  </svg>
+                </a>
+              </div>
+
+              <h3
+                class="font-manrope text-sm"
+                *ngIf="item.online_offline == 'Online'"
+              >
+                <span class="text-gray-500">Link :</span>
+
+                <a
+                  class="text-indigo-700"
+                  href="https://www.{{ item.url_online }}"
+                  target="_blank"
                 >
-                  <path
-                    d="M480.118 726Q551 726 600.5 676.382q49.5-49.617 49.5-120.5Q650 485 600.382 435.5q-49.617-49.5-120.5-49.5Q409 386 359.5 435.618q-49.5 49.617-49.5 120.5Q310 627 359.618 676.5q49.617 49.5 120.5 49.5Zm-.353-58Q433 668 400.5 635.265q-32.5-32.736-32.5-79.5Q368 509 400.735 476.5q32.736-32.5 79.5-32.5Q527 444 559.5 476.735q32.5 32.736 32.5 79.5Q592 603 559.265 635.5q-32.736 32.5-79.5 32.5ZM480 856q-146 0-264-83T40 556q58-134 176-217t264-83q146 0 264 83t176 217q-58 134-176 217t-264 83Zm0-300Zm-.169 240Q601 796 702.5 730.5 804 665 857 556q-53-109-154.331-174.5-101.332-65.5-222.5-65.5Q359 316 257.5 381.5 156 447 102 556q54 109 155.331 174.5 101.332 65.5 222.5 65.5Z"
-                  />
-                </svg>
-              </a>
+                  {{ item.url_online }}</a
+                >
+              </h3>
+              <h3
+                class="font-manrope text-sm"
+                *ngIf="item.online_offline == 'Offline'"
+              >
+                <span class="text-gray-500">Room :</span>
+
+                <span class="text-black" target="_blank">
+                  {{ filterRoomById(item.roomId)[0].room_name }}</span
+                >
+              </h3>
+              <!-- <h3 class="font-manrope text-sm">End : </h3> -->
+            </div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-4/6 flex">
+    <!------------------------------------------------------------------- Section 2 ------------------------------------------------------------------------------->
+    <div class="w-1/2" *ngIf="showActivity">
+      <div class="my-3 mr-3 p-5 shadow-xl h-[96vh] bg-white">
+        <div class="w-full flex justify-between items-center pb-5 pt-1">
+          <h1 class="text-2xl font-medium font-manrope">Activity Details</h1>
+          <a class="cursor-pointer" (click)="leaveActivity()"
+            ><svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="35"
+              viewBox="0 96 960 960"
+              width="35"
+              fill="red"
+            >
+              <path
+                d="m249 849-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z"
+              />
+            </svg>
+          </a>
+        </div>
+        <div class="px-3 space-y-3">
+          <div class="flex justify-between items-center flex-wrap">
+            <div class="w-1/3 justify-between flex items-center">
+              <label
+                for="inline-input-label-with-helper-text"
+                class="block text-sm font-manrope text-gray-600"
+                >Date</label
+              >
+              <h1 class="text-xl font-semibold">:</h1>
             </div>
 
-            <h3 class="font-manrope text-sm">
-              Time : {{ item.time_start.slice(0, -3) }} WIB -
-              {{ item.time_end.slice(0, -3) }} WIB
-            </h3>
-            <h3 class="font-manrope text-sm">
-              Link :
+            <div class="grow px-4">
+              <h2 class="font-manrope font-medium">
+                {{ detailActivity.date | date : "longDate" }}
+              </h2>
+            </div>
+          </div>
+          <div class="flex justify-between items-center flex-wrap">
+            <div class="w-1/3 justify-between flex items-center">
+              <label
+                for="inline-input-label-with-helper-text"
+                class="block text-sm font-manrope text-gray-600"
+                >Time</label
+              >
+              <h1 class="text-xl font-semibold">:</h1>
+            </div>
+            <div class="grow px-4">
+              <h2 class="font-manrope font-medium">
+                {{ detailActivity.time_start.slice(0, -3) }} WIB -
+                {{ detailActivity.time_end.slice(0, -3) }} WIB
+              </h2>
+            </div>
+
+            <div class="px-2 space-x-2 w-2/3 flex">
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+          <div class="flex justify-between items-center flex-wrap">
+            <div class="w-1/3 justify-between flex items-center">
+              <label
+                for="inline-input-label-with-helper-text"
+                class="block text-sm font-manrope text-gray-600"
+                >Organizer Name</label
+              >
+              <h1 class="text-xl font-semibold">:</h1>
+            </div>
+            <div class="grow px-4">
+              <h2 class="font-manrope font-medium">
+                {{ detailActivity.organizer }}
+              </h2>
+            </div>
+          </div>
+          <div class="flex justify-between items-center flex-wrap">
+            <div class="w-1/3 justify-between flex items-center">
+              <label
+                for="inline-input-label-with-helper-text"
+                class="block text-sm font-manrope text-gray-600"
+                >Meeting Name</label
+              >
+              <h1 class="text-xl font-semibold">:</h1>
+            </div>
+            <div class="grow px-4">
+              <h2 class="font-manrope font-medium">
+                {{ detailActivity.title }}
+              </h2>
+            </div>
+          </div>
+          <div class="flex justify-between items-center flex-wrap">
+            <div class="w-1/3 justify-between flex items-center">
+              <label
+                for="inline-input-label-with-helper-text"
+                class="block text-sm font-manrope text-gray-600"
+                >Online /Offline</label
+              >
+              <h1 class="text-xl font-semibold">:</h1>
+            </div>
+            <div class="grow px-4">
+              <div class="font-manrope font-medium">
+                {{ detailActivity.online_offline }}
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-between items-center flex-wrap">
+            <div class="w-1/3 justify-between flex items-center">
+              <label
+                for="inline-input-label-with-helper-text"
+                class="block text-sm font-manrope text-gray-600"
+                >Link Online</label
+              >
+              <h1 class="text-xl font-semibold">:</h1>
+            </div>
+            <div class="grow px-4">
               <a
                 class="text-indigo-700"
-                href="https://www.{{ item.url_online }}"
-                >{{ item.url_online }}</a
+                href="https://www.{{ detailActivity.url_online }}"
+                target="_blank"
               >
-            </h3>
-            <!-- <h3 class="font-manrope text-sm">End : </h3> -->
+                {{ detailActivity.url_online }}</a
+              >
+            </div>
           </div>
-          <div></div>
+          <div class="flex justify-between items-center flex-wrap">
+            <div class="w-1/3 justify-between flex items-center">
+              <label
+                for="inline-input-label-with-helper-text"
+                class="block text-sm font-manrope text-gray-600"
+                >Room Offline</label
+              >
+              <h1 class="text-xl font-semibold">:</h1>
+            </div>
+            <div class="grow px-4">
+              <h2 class="font-manrope font-medium">
+                {{ filterRoomById(detailActivity.roomId)[0].room_name }}
+              </h2>
+            </div>
+          </div>
+          <div class="flex justify-between items-center flex-wrap">
+            <div class="w-1/3 justify-between flex items-center">
+              <label
+                for="inline-input-label-with-helper-text"
+                class="block text-sm font-manrope text-gray-600"
+                >Participants</label
+              >
+              <h1 class="text-xl font-semibold">:</h1>
+            </div>
+            <div class="grow px-4 space-y-1">
+              <h1
+                class="font-manrope text-sm font-medium bg-blue-100 p-1 rounded-md w-1/2"
+                *ngFor="let item of this.filterParticipants(detailActivity.id)"
+              >
+                {{ item.email }}
+              </h1>
+            </div>
+          </div>
+          <div class="flex justify-between flex-wrap">
+            <div class="w-1/3 justify-between flex items-center">
+              <label
+                for="inline-input-label-with-helper-text"
+                class="block text-sm font-manrope text-gray-600"
+                >Message</label
+              >
+              <h1 class="text-xl font-semibold">:</h1>
+            </div>
+            <textarea
+              name=""
+              id=""
+              rows="5"
+              [value]="detailActivity.message"
+              disabled
+              class="mx-2 py-3 px-3 grow border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+            ></textarea>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="w-2/6" *ngIf="showActivity">
-    <div class="my-3 mr-3 p-5 shadow-xl h-[96vh] bg-white">
-      <div class="w-full flex justify-between items-center pb-5 pt-1">
-        <h1 class="text-2xl font-medium font-manrope">Activity Details</h1>
-        <a class="cursor-pointer" (click)="leaveActivity()"
-          ><svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="35"
-            viewBox="0 96 960 960"
-            width="35"
-            fill="red"
-          >
-            <path
-              d="m249 849-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z"
-            />
-          </svg>
-        </a>
-      </div>
-      <div class="px-3 space-y-3">
-        <div class="flex justify-between items-center flex-wrap">
-          <div class="w-1/3 justify-between flex items-center">
-            <label
-              for="inline-input-label-with-helper-text"
-              class="block text-sm font-manrope text-gray-600"
-              >Date</label
-            >
-            <h1 class="text-xl font-semibold">:</h1>
+
+    <!------------------------------------------------------------------- Section 3 ------------------------------------------------------------------------------->
+    <div
+      class="transition-[width]"
+      [ngClass]="!showActivity ? 'w-full' : 'w-1/2'"
+    >
+      <div class="my-3 mr-3 p-5 shadow-xl bg-white backdrop-opacity-40">
+        <div class="text-start flex justify-between mx-5 my-3">
+          <div>
+            <h1 class="text-2xl font-semibold">
+              {{ dateParams | date : "EEEE" }}
+            </h1>
+            <h1 class="text-2xl">{{ dateParams | date : " dd" }}</h1>
           </div>
 
-          <div class="grow px-4">
-            <h2 class="font-manrope font-medium">
-              {{ detailActivity.date | date : "longDate" }}
-            </h2>
-          </div>
-        </div>
-        <div class="flex justify-between items-center flex-wrap">
-          <div class="w-1/3 justify-between flex items-center">
-            <label
-              for="inline-input-label-with-helper-text"
-              class="block text-sm font-manrope text-gray-600"
-              >Time</label
+          <div class="flex h-1/2 justify-between mt-8 md:mt-0">
+            <button
+              (click)="callCreateService()"
+              class="middle none center mr-3 rounded-lg border border-pink-500 py-2 px-3 font-manrope text-xs font-bold uppercase text-pink-500 transition-all hover:opacity-75 focus:ring focus:ring-pink-200 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              data-ripple-dark="true"
             >
-            <h1 class="text-xl font-semibold">:</h1>
-          </div>
-          <div class="grow px-4">
-            <h2 class="font-manrope font-medium">
-              {{ detailActivity.time_start.slice(0, -3) }} WIB -
-              {{ detailActivity.time_end.slice(0, -3) }} WIB
-            </h2>
-          </div>
+              Add Activity
+            </button>
+            <button
+              (click)="toPrevDay()"
+              title="left arrow"
+              class="p-2 mx-3 text-gray-800 transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-7 h-7"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
 
-          <div class="px-2 space-x-2 w-2/3 flex">
-            <div></div>
-            <div></div>
-          </div>
-        </div>
-        <div class="flex justify-between items-center flex-wrap">
-          <div class="w-1/3 justify-between flex items-center">
-            <label
-              for="inline-input-label-with-helper-text"
-              class="block text-sm font-manrope text-gray-600"
-              >Organizer Name</label
+            <button
+              (click)="toNextDay()"
+              title="right arrow"
+              class="p-2 text-gray-800 transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
             >
-            <h1 class="text-xl font-semibold">:</h1>
-          </div>
-          <div class="grow px-4">
-            <h2 class="font-manrope font-medium">
-              {{ detailActivity.organizer }}
-            </h2>
-          </div>
-        </div>
-        <div class="flex justify-between items-center flex-wrap">
-          <div class="w-1/3 justify-between flex items-center">
-            <label
-              for="inline-input-label-with-helper-text"
-              class="block text-sm font-manrope text-gray-600"
-              >Meeting Name</label
-            >
-            <h1 class="text-xl font-semibold">:</h1>
-          </div>
-          <div class="grow px-4">
-            <h2 class="font-manrope font-medium">{{ detailActivity.title }}</h2>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-7 h-7"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
           </div>
         </div>
-        <div class="flex justify-between items-center flex-wrap">
-          <div class="w-1/3 justify-between flex items-center">
-            <label
-              for="inline-input-label-with-helper-text"
-              class="block text-sm font-manrope text-gray-600"
-              >Online /Offline</label
-            >
-            <h1 class="text-xl font-semibold">:</h1>
-          </div>
-          <div class="grow px-4">
-            <h2 class="font-manrope font-medium">
-              {{ detailActivity.online_offline }}
-            </h2>
-          </div>
-        </div>
-        <div class="flex justify-between items-center flex-wrap">
-          <div class="w-1/3 justify-between flex items-center">
-            <label
-              for="inline-input-label-with-helper-text"
-              class="block text-sm font-manrope text-gray-600"
-              >Link Online</label
-            >
-            <h1 class="text-xl font-semibold">:</h1>
-          </div>
-          <div class="grow px-4">
-            <h2 class="font-manrope font-medium">
-              {{ detailActivity.url_online }}
-            </h2>
-          </div>
-        </div>
-        <div class="flex justify-between items-center flex-wrap">
-          <div class="w-1/3 justify-between flex items-center">
-            <label
-              for="inline-input-label-with-helper-text"
-              class="block text-sm font-manrope text-gray-600"
-              >Room Offline</label
-            >
-            <h1 class="text-xl font-semibold">:</h1>
-          </div>
-          <div class="grow px-4">
-            <h2 class="font-manrope font-medium">
-              {{ detailActivity.roomId }}
-            </h2>
-          </div>
-        </div>
-        <div class="flex justify-between items-center flex-wrap">
-          <div class="w-1/3 justify-between flex items-center">
-            <label
-              for="inline-input-label-with-helper-text"
-              class="block text-sm font-manrope text-gray-600"
-              >Participants</label
-            >
-            <h1 class="text-xl font-semibold">:</h1>
-          </div>
-        </div>
-        <div class="flex justify-between flex-wrap">
-          <div class="w-1/3 justify-between flex items-center">
-            <label
-              for="inline-input-label-with-helper-text"
-              class="block text-sm font-manrope text-gray-600"
-              >Message</label
-            >
-            <h1 class="text-xl font-semibold">:</h1>
-          </div>
-          <textarea
-            name=""
-            id=""
-            rows="5"
-            class="mx-2 py-3 px-3 grow border border-gray-200 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
-          ></textarea>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="" [ngClass]="!showActivity ? 'w-4/6' : 'w-2/6'">
-    <div class="my-3 mr-3 p-5 shadow-xl bg-white backdrop-opacity-40">
-      <div class="text-start flex justify-between mx-5 my-3">
-        <div>
-          <h1 class="text-2xl font-semibold">
-            {{ dateParams | date : "EEEE" }}
+        <div class="p-10">
+          <h1 class="w-full text-center font-manrope font-semibold">
+            Hours Graph
           </h1>
-          <h1 class="text-2xl">{{ dateParams | date : " dd" }}</h1>
-        </div>
-
-        <div class="flex h-1/2 justify-between mt-8 md:mt-0">
-          <button
-            (click)="toPrevDay()"
-            title="left arrow"
-            class="p-2 mx-3 text-gray-800 transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-7 h-7"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
+          <div class="w-full flex flex-wrap">
+            <div
+              class="px-0.5 py-3 text-start"
+              *ngFor="let hour of hoursOfDay"
+              [ngClass]="showActivity ? 'w-1/6' : 'w-1/12'"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-
-          <button
-            (click)="toNextDay()"
-            title="right arrow"
-            class="p-2 text-gray-800 transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-7 h-7"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
+              <div
+                class="w-full h-10 border border-blue-300 rounded-sm grid justify-items-stretch"
+              >
+                <div
+                  class="h-full"
+                  [ngClass]="
+                    inBetweenTimeChecker(hour | date : 'HH')?.status
+                      ? inBetweenTimeChecker(hour | date : 'HH')?.minutes !=
+                        null
+                        ? inBetweenTimeChecker(hour | date : 'HH')?.minutes >=
+                            20 ||
+                          inBetweenTimeChecker(hour | date : 'HH')?.minutes <=
+                            40
+                          ? inBetweenTimeChecker(hour | date : 'HH')
+                              ?.minutesType == 'start'
+                            ? 'w-1/2 bg-blue-300 justify-self-end'
+                            : 'w-1/2 bg-blue-300 justify-self-start'
+                          : inBetweenTimeChecker(hour | date : 'HH')?.minutes >
+                            40
+                          ? inBetweenTimeChecker(hour | date : 'HH')
+                              ?.minutesType == 'start'
+                            ? 'w-1/4 bg-blue-300 justify-self-end'
+                            : 'w-3/4 bg-blue-300 justify-self-start'
+                          : inBetweenTimeChecker(hour | date : 'HH')
+                              ?.minutesType == 'start'
+                          ? 'w-3/4 bg-blue-300 justify-self-end'
+                          : 'w-1/4 bg-blue-300 justify-self-start'
+                        : inBetweenTimeChecker(hour | date : 'HH')
+                            ?.minutesType == 'end' &&
+                          inBetweenTimeChecker(hour | date : 'HH')
+                            ?.minutes == null
+                        ? 'w-0 '
+                        : 'w-full bg-blue-300'
+                      : ''
+                  "
+                ></div>
+              </div>
+              <h1 class="font-manrope text-[15px] font-medium text-gray-800">
+                {{ hour | date : "HH" }}
+              </h1>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="h-[78.5vh] overflow-auto">
+        <!-- <div class="h-[78.5vh] overflow-auto">
         <table class="w-full text-sm text-left text-gray-800 shadow-inner">
           <thead>
             <tr>
@@ -394,6 +516,73 @@
             </tr>
           </tbody>
         </table>
+      </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  id=""
+  [ngClass]="this.deleteAlertBool ? '' : 'hidden'"
+  class="w-full h-full fixed top-0 left-0 z-[60] overflow-x-hidden overflow-y-auto bg-gray-600 bg-opacity-50 transition"
+>
+  <div
+    class="duration-500 ease-out transition-all sm:max-w-lg sm:w-full sm:mx-auto min-h-[calc(100%-2rem)] flex items-center justify-center"
+  >
+    <div class="relative p-4 text-center bg-white rounded-md shadow sm:p-5">
+      <button
+        type="button"
+        (click)="closeDeleteAlert()"
+        class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+      >
+        <svg
+          aria-hidden="true"
+          class="w-5 h-5"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <span class="sr-only">Close modal</span>
+      </button>
+      <svg
+        class="text-gray-400 w-11 h-11 mb-3.5 mx-auto"
+        aria-hidden="true"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+          clip-rule="evenodd"
+        ></path>
+      </svg>
+      <p class="mb-4 text-gray-500">
+        Are you sure you want to delete this meeting?
+      </p>
+      <div class="flex justify-center items-center space-x-4">
+        <button
+          (click)="closeDeleteAlert()"
+          data-modal-toggle="deleteModal"
+          type="button"
+          class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 focus:ring-gray-600"
+        >
+          No, cancel
+        </button>
+        <button
+          (click)="deleteEvents()"
+          type="submit"
+          class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300"
+        >
+          Yes, I'm sure
+        </button>
       </div>
     </div>
   </div>
