@@ -1,0 +1,105 @@
+<a
+  [routerLink]="['/']"
+  routerLinkActive="router-link-active"
+  class="bg-white hover:bg-gray-700 hover:fill-white transition-colors w-10 h-10 justify-center grid content-center sticky left-3 top-3 my-3 rounded"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    height="30"
+    viewBox="0 96 960 960"
+    width="30"
+  >
+    <path
+      d="M240 816V336h60v480h-60Zm447-3L453 579l234-234 43 43-191 191 191 191-43 43Z"
+    />
+  </svg>
+</a>
+<div class="h-[87vh] grid content-center">
+  <div
+    class="max-w-xl max-sm:max-w-sm p-6 mx-auto bg-white bg-opacity-5 rounded-md shadow-md"
+  >
+    <h2 class="text-2xl font-semibold text-[#D89C60] font-manrope capitalize">
+      Login
+    </h2>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="flex flex-wrap mt-4 px-7 max-sm:px-1 space-y-2">
+        <!-- <div>
+        <label class="text-[#D89C60] font-manrope text-gray-200" for="username"
+          >Username</label
+        >
+        <input
+          id="username"
+          type="text"
+          class="block w-full px-4 py-2 mt-2 text-[#D89C60] font-manrope bg-white border border-gray-300 rounded-md    focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+        />
+      </div> -->
+
+        <div class="w-full space-y-1">
+          <label class="text-[#D89C60] font-manrope" for="emailAddress"
+            >Email Address</label
+          >
+          <input
+            id="emailAddress"
+            type="email"
+            formControlName="email"
+            class="block w-full px-4 py-2 text-[#D89C60] font-manrope font-semibold bg-white border border-gray-300 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
+          />
+        </div>
+
+        <div class="w-full space-y-1">
+          <label class="text-[#D89C60] font-manrope" for="password"
+            >Password</label
+          >
+          <div class="relative flex items-center">
+            <button
+              (click)="changeVisibilityPassword()"
+              class="absolute right-0 focus:outline-none rtl:left-0 rtl:right-auto"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                class="w-6 h-6 mx-4 fill-[#04517481] hover:fill-[#00356b] text-gray-400 transition-colors duration-300 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400"
+              >
+                <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
+                <path
+                  fill-rule="evenodd"
+                  d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+            <input
+              id="password"
+              formControlName="password"
+              [type]="this.showPassword ? 'text' : 'password'"
+              class="block w-full px-4 py-2 text-[#D89C60] font-manrope font-semibold bg-white border border-gray-300 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
+            />
+          </div>
+        </div>
+
+        <!-- <div>
+        <label
+          class="text-[#D89C60] font-manrope "
+          for="passwordConfirmation"
+          >Password Confirmation</label
+        >
+        <input
+          id="passwordConfirmation"
+          type="password"
+          class="block w-full px-4 py-2 mt-2 text-[#D89C60] font-manrope bg-white border border-gray-300 rounded-md    focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring"
+        />
+      </div> -->
+      </div>
+
+      <div class="flex justify-end mt-6">
+        <button
+          type="submit"
+          class="px-8 max-sm:px-5 py-2.5 max-sm:py-2 leading-5 max-sm:text-sm font-manrope font-medium text-white transition-colors duration-300 transform bg-[#E87A00] rounded-md hover:bg-[#D89C60] focus:outline-none focus:bg-gray-600"
+        >
+          Get In
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -12,6 +12,7 @@ import {
 } from 'date-fns';
 import { forkJoin } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { CreateActivityService } from 'src/app/services/create-activity/create-activity.service';
 
 const HoursOfDay = [
@@ -46,6 +47,7 @@ export class DayComponent {
     private actRoute: ActivatedRoute,
     private apiService: ApiService,
     private router: Router,
+    private authService: AuthService,
     private createService: CreateActivityService
   ) {
     this.loopDate(this.dateNow);
@@ -189,6 +191,13 @@ export class DayComponent {
   filterRoomById(id: any) {
     return this.roomsData.filter((data: any) => data.id == id);
   }
+  filterTotalHourExist(hour: any) {
+    return this.filterEvents(this.dateParams).filter(
+      (data: any) =>
+        data.time_end.split(':')[0] == hour ||
+        data.time_start.split(':')[0] == hour
+    );
+  }
   inBetweenTimeChecker(paramHour: any) {
     let result;
     for (const events of this.filterEvents(this.dateParams)) {
@@ -267,6 +276,7 @@ export class DayComponent {
           (response) => {
             console.log(response + 'Events Delete Success');
             this.closeDeleteAlert();
+            window.location.reload();
           },
           (err) => {
             console.log(err);
@@ -281,5 +291,17 @@ export class DayComponent {
   closeDeleteAlert() {
     this.idEventOnDelete = null;
     this.deleteAlertBool = false;
+  }
+
+  signOut() {
+    this.authService.signOut();
+    window.location.reload();
+  }
+
+  onAuthCheck() {
+    if (this.authService.getToken() != null) {
+      return false;
+    }
+    return true;
   }
 }

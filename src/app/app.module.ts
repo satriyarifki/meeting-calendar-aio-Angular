@@ -15,6 +15,8 @@ import { HomeComponent } from './home/home.component';
 import { DayComponent } from './calendar/day/day.component';
 import { HttpClientModule } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+import { LoginComponent } from './auth/login/login.component';
+import { AlertComponent } from './alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,8 @@ import { DatePipe } from '@angular/common';
     CreateComponent,
     HomeComponent,
     DayComponent,
+    LoginComponent,
+    AlertComponent,
   ],
   imports: [
     BrowserModule,

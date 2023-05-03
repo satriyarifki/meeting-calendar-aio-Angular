@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { format, parseISO, hoursToMilliseconds } from 'date-fns';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-month',
@@ -18,7 +20,11 @@ export class MonthComponent {
   detailsActivity: Boolean = false;
   title: any;
   eventData: any[] = [];
-  constructor(private apiService: ApiService) {
+  constructor(
+    private apiService: ApiService,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.endDate.setMonth(this.currentDate.getMonth() + 2);
     this.dateAgo.setDate(this.currentDate.getDate() - 14);
 
@@ -113,5 +119,17 @@ export class MonthComponent {
   }
   activityBool() {
     this.detailsActivity = !this.detailsActivity;
+  }
+
+  signOut() {
+    this.authService.signOut();
+    window.location.reload();
+  }
+
+  onAuthCheck() {
+    if (this.authService.getToken() != null) {
+      return false;
+    }
+    return true;
   }
 }

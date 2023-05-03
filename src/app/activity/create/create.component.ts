@@ -48,7 +48,7 @@ export class CreateComponent implements OnInit {
   ngOnInit(): void {
     this.apiService.getRooms().subscribe((data) => {
       this.roomsAll = data;
-      console.log(data);
+      // console.log(data);
     });
   }
   initialForm() {
@@ -95,7 +95,7 @@ export class CreateComponent implements OnInit {
     this.arrayParicipants = this.f['participants'].value
       .replace(/\s/g, '')
       .split(',');
-    console.log(body);
+    // console.log(body);
 
     this.apiService.postEvents(body).subscribe(
       (data) => {
@@ -112,6 +112,7 @@ export class CreateComponent implements OnInit {
             .subscribe(
               (subs) => {
                 this.closeModal();
+                window.location.reload();
               },
               (err) => {
                 console.log(err);

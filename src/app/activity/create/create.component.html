@@ -64,6 +64,9 @@
                 name="time_start"
                 formControlName="time_start"
                 type="time"
+                step="600"
+                min="07:00"
+                max="23:00"
                 class="py-2 px-2 grow border border-gray-300 rounded-md text-md focus:border-blue-500 ring:border-blue-500 outline-none"
               />
               <span class="w-5 text-center text-xl font-medium">-</span>
@@ -170,7 +173,9 @@
               formControlName="roomId"
               [value]="1"
             >
-              <option *ngFor="let item of roomsAll" value="{{ item.id }}">{{ item.room_name }}</option>
+              <option *ngFor="let item of roomsAll" value="{{ item.id }}">
+                {{ item.room_name }}
+              </option>
             </select>
             <!-- <input
               id="roomId"

@@ -1,7 +1,7 @@
 <a
   [routerLink]="['/']"
   routerLinkActive="router-link-active"
-  class="bg-white hover:bg-gray-700 hover:fill-white transition-colors w-10 h-10 justify-center grid content-center fixed left-3 top-3 rounded"
+  class="bg-white hover:bg-gray-700 hover:fill-white transition-colors w-10 h-10 justify-center grid content-center absolute left-3 top-3 my-3 rounded max-sm:hidden"
 >
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -14,11 +14,67 @@
     />
   </svg>
 </a>
+<div
+  class="my-3 min-[560px]:mr-3 max-[560px]:mx-3 p-3 shadow-xl bg-white rounded-sm flex justify-between sm:hidden"
+>
+  <a
+    [routerLink]="['/']"
+    routerLinkActive="router-link-active"
+    class="z-20 bg-white hover:bg-gray-700 hover:fill-white transition-colors w-10 h-10 justify-center grid content-center left-3 top-3 rounded"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="30"
+      viewBox="0 96 960 960"
+      width="30"
+    >
+      <path
+        d="M240 816V336h60v480h-60Zm447-3L453 579l234-234 43 43-191 191 191 191-43 43Z"
+      />
+    </svg>
+  </a>
+  <a
+    *ngIf="!onAuthCheck()"
+    (click)="callCreateService()"
+    class="inline-flex cursor-pointer items-center justify-center h-10 px-2 text-sm font-medium tracking-wide text-white transition duration-200 bg-[#001F3D] font-manrope rounded-md hover:bg-gray-800 focus:shadow-outline focus:outline-none"
+  >
+    Add Activity
+  </a>
+  <a
+    *ngIf="onAuthCheck()"
+    [routerLink]="['/login']"
+    routerLinkActive="router-link-active"
+    class="relative cursor-pointer inline-flex items-center justify-start px-2 py-1 overflow-hidden font-medium transition-all bg-[#D89C60] rounded-md hover:bg-white group item"
+  >
+    <span
+      class="absolute inset-0 border-0 group-hover:border-[25px] ease-linear duration-100 transition-all border-white rounded-md"
+    ></span>
+    <span
+      class="relative w-full align-middle text-sm text-left text-white transition-colors duration-200 ease-in-out group-hover:text-[#D89C60]"
+      >Login</span
+    >
+  </a>
+  <a
+    *ngIf="!onAuthCheck()"
+    (click)="signOut()"
+    class="relative cursor-pointer inline-flex items-center justify-start px-2 py-1 overflow-hidden font-medium transition-all bg-[#ff3526] rounded-md hover:bg-white group item"
+  >
+    <span
+      class="absolute inset-0 border-0 group-hover:border-[25px] ease-linear duration-100 transition-all border-white rounded-md"
+    ></span>
+    <span
+      class="relative w-full align-middle text-sm text-left text-white transition-colors duration-200 ease-in-out group-hover:text-[#ff3526]"
+      >Sign Out</span
+    >
+  </a>
+</div>
 
-<div class="w-full justify-center flex">
+<div
+  class="w-full justify-center max-sm:justify-center max-md:justify-end flex flex-wrap"
+>
   <!------------------------------------------------------------------- Section 1 ------------------------------------------------------------------------------->
-  <div class="w-1/4 transition-[width]">
-    <div class="m-3 p-5 shadow-xl h-[96vh] bg-white">
+  <div class="w-1/4 max-[560px]:w-full max-md:w-2/5 transition-[width]">
+    <div class="m-3 p-5 shadow-xl sm:h-[96vh] bg-white rounded-sm">
       <!-- <div inline-datepicker data-date="02/25/2022" [(ngModel)]="test"></div> -->
 
       <div class="p-2 border">
@@ -43,7 +99,9 @@
               />
             </svg>
           </button>
-          <h1 class="font-manrope text-xl font-medium">
+          <h1
+            class="font-manrope text-xl font-medium max-md:text-md text-center"
+          >
             {{ dateParams.toLocaleString("default", { month: "long" }) }}
             {{ dateParams.getFullYear() }}
           </h1>
@@ -70,7 +128,7 @@
           </button>
         </div>
         <div
-          class="flex flex-wrap bg-blue-500 text-white rounded-sm rounded-b-none font-manrope"
+          class="flex flex-wrap text-[#D89C60] font-medium rounded-sm rounded-b-none font-manrope max-lg:hidden"
         >
           <div class="w-[14.2%] py-2 text-center text-sm grow">Mon</div>
           <div class="w-[14.2%] py-2 text-center text-sm grow">Tue</div>
@@ -79,6 +137,31 @@
           <div class="w-[14.2%] py-2 text-center text-sm grow">Fri</div>
           <div class="w-[14.2%] py-2 text-center text-sm grow">Sat</div>
           <div class="w-[14.2%] py-2 text-center text-sm grow">Sun</div>
+        </div>
+        <div
+          class="flex flex-wrap text-[#D89C60] font-medium rounded-sm rounded-b-none font-manrope lg:hidden"
+        >
+          <div class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow">
+            M
+          </div>
+          <div class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow">
+            T
+          </div>
+          <div class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow">
+            W
+          </div>
+          <div class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow">
+            T
+          </div>
+          <div class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow">
+            F
+          </div>
+          <div class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow">
+            S
+          </div>
+          <div class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow">
+            S
+          </div>
         </div>
         <div class="flex flex-wrap mt-0.5">
           <div
@@ -103,7 +186,7 @@
                   : ''
               "
               ><span
-                class="w-5 text-md font-semibold font-manrope"
+                class="w-5 text-md max-lg:text-sm font-semibold font-manrope"
                 [ngClass]="
                   item.month != dateParams.getMonth()
                     ? 'text-gray-400'
@@ -126,12 +209,30 @@
         <div class="py-3">
           <h1>Activity</h1>
         </div>
-        <div class="overflow-auto h-[45vh]">
+        <div class="overflow-auto sm:h-[45vh]">
           <div *ngFor="let item of filterEvents(this.dateParams)" class="py-1">
-            <div class="space-y-1 p-2 bg-cyan-300 rounded-sm ml-2">
+            <div
+              (click)="activityBool(item)"
+              class="flex justify-center cursor-pointer space-y-0.5 py-2 px-2 shadow-md shadow-[#04517481] bg-opacity-60 rounded-sm mx-2 md:hidden"
+            >
               <div class="flex justify-between">
-                <h3 class="font-manrope text-md font-medium">
-                  <span class="text-gray-500">Title :</span> {{ item.title }}
+                <h3
+                  class="font-manrope text-md max-[560px]:text-sm font-semibold text-[#E87A00]"
+                >
+                  {{ item.title }}
+                  <span class="text-xs text-[#D89C60] px-1">
+                    {{ item.time_start.slice(0, -3) }} -
+                    {{ item.time_end.slice(0, -3) }}</span
+                  >
+                </h3>
+              </div>
+            </div>
+            <div
+              class="space-y-0.5 py-2 px-4 shadow-md shadow-[#04517481] border- bg-opacity-60 rounded-sm mx-2 max-md:hidden"
+            >
+              <div class="flex justify-between">
+                <h3 class="font-manrope text-md font-semibold">
+                  {{ item.title }}
                 </h3>
                 <a
                   (click)="activityBool(item)"
@@ -151,12 +252,12 @@
               </div>
 
               <div class="flex justify-between">
-                <h3 class="font-manrope text-sm">
-                  <span class="text-gray-500">Time :</span>
+                <h3 class="font-manrope text-xs font-medium text-gray-600">
                   {{ item.time_start.slice(0, -3) }} WIB -
                   {{ item.time_end.slice(0, -3) }} WIB
                 </h3>
                 <a
+                  *ngIf="!onAuthCheck()"
                   (click)="callDeleteAlert(item.id)"
                   class="cursor-pointer bg-red-500 hover:bg-red-400 grid content-center px-1 rounded-md"
                   ><svg
@@ -177,8 +278,6 @@
                 class="font-manrope text-sm"
                 *ngIf="item.online_offline == 'Online'"
               >
-                <span class="text-gray-500">Link :</span>
-
                 <a
                   class="text-indigo-700"
                   href="https://www.{{ item.url_online }}"
@@ -206,19 +305,25 @@
     </div>
   </div>
 
-  <div class="w-4/6 flex">
+  <div class="w-4/6 max-[560px]:w-full max-md:w-1/2 flex flex-wrap">
     <!------------------------------------------------------------------- Section 2 ------------------------------------------------------------------------------->
-    <div class="w-1/2" *ngIf="showActivity">
-      <div class="my-3 mr-3 p-5 shadow-xl h-[96vh] bg-white">
+    <div class="w-1/2 max-[560px]:w-full" *ngIf="showActivity">
+      <div
+        class="my-3 min-[560px]:mr-3 max-[560px]:mx-3 p-5 shadow-xl h-[96vh] bg-white rounded-sm"
+      >
         <div class="w-full flex justify-between items-center pb-5 pt-1">
-          <h1 class="text-2xl font-medium font-manrope">Activity Details</h1>
-          <a class="cursor-pointer" (click)="leaveActivity()"
+          <h1 class="text-2xl sm:text-lg font-medium font-manrope">
+            Activity Details
+          </h1>
+          <a
+            class="cursor-pointer hover:bg-gray-700 rounded-sm transition-colors"
+            (click)="leaveActivity()"
             ><svg
+              class="fill-gray-700 hover:fill-white"
               xmlns="http://www.w3.org/2000/svg"
               height="35"
               viewBox="0 96 960 960"
               width="35"
-              fill="red"
             >
               <path
                 d="m249 849-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z"
@@ -238,7 +343,7 @@
             </div>
 
             <div class="grow px-4">
-              <h2 class="font-manrope font-medium">
+              <h2 class="font-manrope font-medium max-md:text-sm">
                 {{ detailActivity.date | date : "longDate" }}
               </h2>
             </div>
@@ -253,7 +358,7 @@
               <h1 class="text-xl font-semibold">:</h1>
             </div>
             <div class="grow px-4">
-              <h2 class="font-manrope font-medium">
+              <h2 class="font-manrope font-medium max-md:text-sm">
                 {{ detailActivity.time_start.slice(0, -3) }} WIB -
                 {{ detailActivity.time_end.slice(0, -3) }} WIB
               </h2>
@@ -274,7 +379,7 @@
               <h1 class="text-xl font-semibold">:</h1>
             </div>
             <div class="grow px-4">
-              <h2 class="font-manrope font-medium">
+              <h2 class="font-manrope font-medium max-md:text-sm">
                 {{ detailActivity.organizer }}
               </h2>
             </div>
@@ -289,7 +394,7 @@
               <h1 class="text-xl font-semibold">:</h1>
             </div>
             <div class="grow px-4">
-              <h2 class="font-manrope font-medium">
+              <h2 class="font-manrope font-medium max-md:text-sm">
                 {{ detailActivity.title }}
               </h2>
             </div>
@@ -304,7 +409,7 @@
               <h1 class="text-xl font-semibold">:</h1>
             </div>
             <div class="grow px-4">
-              <div class="font-manrope font-medium">
+              <div class="font-manrope font-medium max-md:text-sm">
                 {{ detailActivity.online_offline }}
               </div>
             </div>
@@ -338,7 +443,7 @@
               <h1 class="text-xl font-semibold">:</h1>
             </div>
             <div class="grow px-4">
-              <h2 class="font-manrope font-medium">
+              <h2 class="font-manrope font-medium max-md:text-sm">
                 {{ filterRoomById(detailActivity.roomId)[0].room_name }}
               </h2>
             </div>
@@ -354,7 +459,7 @@
             </div>
             <div class="grow px-4 space-y-1">
               <h1
-                class="font-manrope text-sm font-medium bg-blue-100 p-1 rounded-md w-1/2"
+                class="font-manrope text-sm font-medium max-md:text-sm bg-blue-100 p-1 rounded-md w-1/2"
                 *ngFor="let item of this.filterParticipants(detailActivity.id)"
               >
                 {{ item.email }}
@@ -385,34 +490,78 @@
 
     <!------------------------------------------------------------------- Section 3 ------------------------------------------------------------------------------->
     <div
-      class="transition-[width]"
-      [ngClass]="!showActivity ? 'w-full' : 'w-1/2'"
+      class="transition-[width] max-[560px]:w-full"
+      [ngClass]="!showActivity ? 'w-full' : 'w-1/2 '"
     >
-      <div class="my-3 mr-3 p-5 shadow-xl bg-white backdrop-opacity-40">
+      <div
+        class="my-3 mr-3 p-3 shadow-xl bg-white rounded-sm flex max-sm:hidden"
+        [ngClass]="!onAuthCheck() ? 'justify-between' : 'justify-end'"
+      >
+        <a
+          *ngIf="!onAuthCheck()"
+          (click)="callCreateService()"
+          class="inline-flex cursor-pointer items-center justify-center h-10 px-3 font-medium tracking-wide text-white transition duration-200 bg-[#001F3D] font-manrope rounded-md hover:bg-gray-800 focus:shadow-outline focus:outline-none"
+        >
+          Add Activity
+        </a>
+        <a
+          *ngIf="onAuthCheck()"
+          [routerLink]="['/login']"
+          routerLinkActive="router-link-active"
+          class="relative cursor-pointer inline-flex items-center justify-start px-5 py-1.5 overflow-hidden font-medium transition-all bg-[#D89C60] rounded-md hover:bg-white group"
+        >
+          <span
+            class="absolute inset-0 border-0 group-hover:border-[25px] ease-linear duration-100 transition-all border-white rounded-md"
+          ></span>
+          <span
+            class="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-[#D89C60]"
+            >Login</span
+          >
+        </a>
+        <a
+          *ngIf="!onAuthCheck()"
+          (click)="signOut()"
+          class="relative cursor-pointer inline-flex items-center justify-start px-5 py-1.5 overflow-hidden font-medium transition-all bg-[#ff3526] rounded-md hover:bg-white group"
+        >
+          <span
+            class="absolute inset-0 border-0 group-hover:border-[25px] ease-linear duration-100 transition-all border-white rounded-md"
+          ></span>
+          <span
+            class="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-[#ff3526]"
+            >Sign Out</span
+          >
+        </a>
+      </div>
+      <div
+        class="my-3 min-[560px]:mr-3 max-[560px]:mx-3 p-5 shadow-xl bg-white rounded-sm backdrop-opacity-40"
+      >
         <div class="text-start flex justify-between mx-5 my-3">
-          <div>
-            <h1 class="text-2xl font-semibold">
+          <div class="max-md:flex max-md:space-x-2">
+            <h1 class="text-2xl max-md:text-lg font-semibold">
               {{ dateParams | date : "EEEE" }}
             </h1>
-            <h1 class="text-2xl">{{ dateParams | date : " dd" }}</h1>
+            <h1 class="text-2xl max-md:text-lg">
+              {{ dateParams | date : " dd" }}
+            </h1>
           </div>
 
-          <div class="flex h-1/2 justify-between mt-8 md:mt-0">
-            <button
-              (click)="callCreateService()"
+          <div
+            class="flex h-1/2 justify-between space-x-1 md:space-x-3 items-center"
+          >
+            <!-- <button
               class="middle none center mr-3 rounded-lg border border-pink-500 py-2 px-3 font-manrope text-xs font-bold uppercase text-pink-500 transition-all hover:opacity-75 focus:ring focus:ring-pink-200 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               data-ripple-dark="true"
             >
               Add Activity
-            </button>
+            </button> -->
             <button
               (click)="toPrevDay()"
               title="left arrow"
-              class="p-2 mx-3 text-gray-800 transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
+              class="p-2 text-gray-800 transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-200"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="w-7 h-7"
+                class="md:w-7 md:h-7 h-4 w-4"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -429,11 +578,11 @@
             <button
               (click)="toNextDay()"
               title="right arrow"
-              class="p-2 text-gray-800 transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
+              class="p-2 text-gray-800 transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-200"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="w-7 h-7"
+                class="md:w-7 md:h-7 h-4 w-4"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -448,18 +597,23 @@
             </button>
           </div>
         </div>
-        <div class="p-10">
+        <div class="p-6">
           <h1 class="w-full text-center font-manrope font-semibold">
-            Hours Graph
+            Hours Graph (WIB)
           </h1>
           <div class="w-full flex flex-wrap">
             <div
               class="px-0.5 py-3 text-start"
               *ngFor="let hour of hoursOfDay"
-              [ngClass]="showActivity ? 'w-1/6' : 'w-1/12'"
+              [ngClass]="showActivity ? 'w-1/6' : 'w-1/12 max-md:w-1/6'"
             >
               <div
-                class="w-full h-10 border border-blue-300 rounded-sm grid justify-items-stretch"
+                class="w-full h-10 border border-[#045174] bg-opacity-80 rounded-sm"
+                [ngClass]="
+                  this.filterTotalHourExist(hour | date : 'HH').length == 2
+                    ? 'flex'
+                    : 'grid justify-items-stretch'
+                "
               >
                 <div
                   class="h-full"
@@ -473,31 +627,49 @@
                             40
                           ? inBetweenTimeChecker(hour | date : 'HH')
                               ?.minutesType == 'start'
-                            ? 'w-1/2 bg-blue-300 justify-self-end'
-                            : 'w-1/2 bg-blue-300 justify-self-start'
+                            ? 'w-1/2 bg-[#045174] bg-opacity-80 justify-self-end'
+                            : 'w-1/2 bg-[#045174] bg-opacity-80 justify-self-start'
                           : inBetweenTimeChecker(hour | date : 'HH')?.minutes >
                             40
                           ? inBetweenTimeChecker(hour | date : 'HH')
                               ?.minutesType == 'start'
-                            ? 'w-1/4 bg-blue-300 justify-self-end'
-                            : 'w-3/4 bg-blue-300 justify-self-start'
+                            ? 'w-1/4 bg-[#045174] bg-opacity-80 justify-self-end'
+                            : 'w-3/4 bg-[#045174] bg-opacity-80 justify-self-start'
                           : inBetweenTimeChecker(hour | date : 'HH')
                               ?.minutesType == 'start'
-                          ? 'w-3/4 bg-blue-300 justify-self-end'
-                          : 'w-1/4 bg-blue-300 justify-self-start'
+                          ? 'w-3/4 bg-[#045174] bg-opacity-80 justify-self-end'
+                          : 'w-1/4 bg-[#045174] bg-opacity-80 justify-self-start'
                         : inBetweenTimeChecker(hour | date : 'HH')
                             ?.minutesType == 'end' &&
-                          inBetweenTimeChecker(hour | date : 'HH')
-                            ?.minutes == null
+                          inBetweenTimeChecker(hour | date : 'HH')?.minutes ==
+                            null
                         ? 'w-0 '
-                        : 'w-full bg-blue-300'
+                        : 'w-full bg-[#045174] bg-opacity-80'
                       : ''
                   "
+                ></div>
+                <div
+                  *ngIf="
+                    this.filterTotalHourExist(hour | date : 'HH').length == 2
+                  "
+                  class="w-1/2 bg-[#045174] bg-opacity-80"
                 ></div>
               </div>
               <h1 class="font-manrope text-[15px] font-medium text-gray-800">
                 {{ hour | date : "HH" }}
               </h1>
+            </div>
+          </div>
+          <div class="w-full flex justify-center py-2 space-x-4">
+            <div class="flex items-center cursor-pointer">
+              <div class="h-4 w-4 bg-[#045174] bg-opacity-80 rounded-sm"></div>
+              <h1 class="font-manrope text-sm font-medium px-1">Booked</h1>
+            </div>
+            <div class="flex items-center cursor-pointer">
+              <div
+                class="h-4 w-4 border border-[#045174] bg-opacity-80 rounded-sm"
+              ></div>
+              <h1 class="font-manrope text-sm font-medium px-1">Available</h1>
             </div>
           </div>
         </div>

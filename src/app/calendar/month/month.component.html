@@ -1,35 +1,84 @@
-<div class="mx-10 py-8">
-  <div class="flex flex-wrap"></div>
-  <div class="flex flex-wrap">
+<div class="mx-10 pt-8 pb-5 flex justify-between">
+  <div class="flex flex-wrap w-1/4 max-[560px]:hidden"></div>
+  <div class="flex flex-wrap space-x-3 max-[560px]:space-x-2">
     <a
       (click)="previousMonth()"
-      class="inline-flex cursor-pointer shadow-md items-center px-4 py-2 mr-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700"
+      class="inline-flex cursor-pointer shadow-md items-center px-4 max-[560px]:px-2 py-2 text-sm font-medium text-[#54086B] bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700"
     >
-      Previous
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-4 h-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15 19l-7-7 7-7"
+        />
+      </svg>
     </a>
-    <div class="justify-start flex">
-      <h1 class="font-manrope text-4xl font-bold">
+    <div
+      class="justify-start text-4xl max-[560px]:text-2xl items-center flex space-x-3 max-[560px]:space-x-1.5"
+    >
+      <h1 class="font-manrope font-bold text-white">
         {{ monthSelected.toLocaleString("default", { month: "long" }) }}
+      </h1>
+      <h1 class="font-manrope font-bold text-white">
+        {{ monthSelected.getFullYear() }}
       </h1>
     </div>
     <a
       (click)="nextMonth()"
-      class="inline-flex cursor-pointer shadow-md items-center px-4 py-2 mx-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700"
+      class="inline-flex cursor-pointer shadow-md items-center px-4 max-[560px]:px-2 py-2 text-sm font-medium text-[#54086B] bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700"
     >
-      Next
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-4 h-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
     </a>
-    <div class="justify-end flex grow">
-      <h1 class="font-manrope text-4xl font-bold">
-        {{ monthSelected.getFullYear() }}
-      </h1>
-    </div>
+  </div>
+  <div class="flex flex-wrap w-1/4 justify-end">
+    <a *ngIf="onAuthCheck()"
+      [routerLink]="['/login']"
+      routerLinkActive="router-link-active"
+      class="relative cursor-pointer inline-flex items-center justify-start px-5 max-[560px]:px-3 max-[560px]:text-sm py-1.5 overflow-hidden font-medium transition-all bg-[#D89C60] rounded-md hover:bg-white group"
+    >
+      <span
+        class="absolute inset-0 border-0 group-hover:border-[25px] ease-linear duration-100 transition-all border-white rounded-md"
+      ></span>
+      <span
+        class="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-[#D89C60]"
+        >Login</span
+      >
+    </a>
+    <a *ngIf="!onAuthCheck()"
+      (click)="signOut()"
+      class="relative cursor-pointer inline-flex items-center justify-start px-5 max-[560px]:px-3 max-[560px]:text-sm py-1.5 overflow-hidden font-medium transition-all bg-[#ff3526] rounded-md hover:bg-white group"
+    >
+      <span
+        class="absolute inset-0 border-0 group-hover:border-[25px] ease-linear duration-100 transition-all border-white rounded-md"
+      ></span>
+      <span
+        class="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-[#ff3526]"
+        >Sign Out</span
+      >
+    </a>
   </div>
 </div>
 <!-- Weekdays Name -->
 <div class="mx-3 sm:mx-10 rounded-lg">
   <!-- Big Responsive -->
   <div
-    class="flex flex-wrap bg-blue-600 text-white rounded-lg rounded-b-none max-md:hidden"
+    class="flex flex-wrap bg-white bg-opacity-0 text-[#D89C60] font-medium rounded-md rounded-b-none max-md:hidden mx-0.5"
   >
     <div class="w-[14.2%] py-3 text-center grow">Monday</div>
     <div class="w-[14.2%] py-3 text-center grow">Tuesday</div>
@@ -42,7 +91,7 @@
 
   <!-- Small Responsive -->
   <div
-    class="flex flex-wrap bg-blue-600 text-white rounded-lg rounded-b-none md:hidden max-sm:w[80%]"
+    class="flex flex-wrap bg-white bg-opacity-0 text-[#D89C60] font-medium rounded-md rounded-b-none md:hidden max-sm:w[80%] mx-0.5"
   >
     <div class="w-[14.2%] py-3 text-center grow">Mon</div>
     <div class="w-[14.2%] py-3 text-center grow">Tue</div>
@@ -56,7 +105,7 @@
   <!-- Calendar Date -->
   <div class="flex flex-wrap mt-0.5 mb-5">
     <div
-      class="w-[14.2%] h-20 sm:h-28 grow flex justify-start border bg-white"
+      class="w-[13%] h-20 sm:h-28 grow flex justify-start bg-white m-0.5"
       *ngFor="let item of arrayDateinMonth; index as i"
       [ngClass]="
         item.date == currentDate.getDate() &&
@@ -69,7 +118,7 @@
       <a
         [routerLink]="['/day/', item.full]"
         routerLinkActive="router-link-active"
-        class="w-full h-full flex hover:bg-gray-100 p-1"
+        class="w-full h-full flex hover:bg-gray-200 p-1"
         ><span
           class="w-5 text-xl font-semibold"
           [ngClass]="
@@ -79,58 +128,34 @@
                 item.month == currentDate.getMonth() &&
                 item.year == currentDate.getFullYear()
               ? 'text-green-600'
-              : ''
+              : 'text-[#050833]'
           "
         >
           {{ item.date }}
         </span>
         <div class="w-full" *ngIf="filterEvents(item.full).length != 0">
           <div *ngFor="let item of filterEvents(item.full)" class="pb-0.5">
-            <a
+            <div
+                class="w-full h-fit py-0.5 bg-[#045174] bg-opacity-80 text-white hover:bg-[#0c4c6a] rounded-sm text-center text-sm font-manrope"
+              >
+                {{ item.title}}
+              </div>
+            <!-- <a
               (click)="activityBool()"
               class="max-sm:hidden flex-wrap flex py-1 px-2 lg:space-x-1.5 max-lg:space-y-1 border hover:bg-gray-200"
             >
               <div
-                class="w-full lg:w-5/12 h-fit bg-blue-200 hover:bg-blue-300 rounded-sm text-center"
+                class="w-full lg:w-5/12 h-fit bg-[#045174] bg-opacity-60 text-white hover:bg-[#0c4c6a] rounded-sm text-center"
               >
                 {{ item.time_start.slice(0, -3) }}
               </div>
               <span>-</span>
               <div
-                class="w-full lg:w-5/12 h-fit bg-blue-200 hover:bg-blue-300 rounded-sm text-center"
+                class="w-full lg:w-5/12 h-fit bg-[#045174] bg-opacity-60 text-white hover:bg-[#0c4c6a] rounded-sm text-center"
               >
                 {{ item.time_end.slice(0, -3) }}
               </div>
             </a>
-            <div
-              *ngIf="detailsActivity"
-              class="w-72 transition-[opacity,margin] fixed duration z-10 bg-white shadow-md rounded-lg p-2 mt-2 border border-gray-700 divide-gray-700"
-            >
-              <a
-                class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 hover:text-gray-300"
-                href="#"
-              >
-                Newsletter
-              </a>
-              <a
-                class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 hover:text-gray-300"
-                href="#"
-              >
-                Purchases
-              </a>
-              <a
-                class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 hover:text-gray-300"
-                href="#"
-              >
-                Downloads
-              </a>
-              <a
-                class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 hover:text-gray-300"
-                href="#"
-              >
-                Team Account
-              </a>
-            </div>
             <div class="flex-wrap flex py-1 pl-1 space-y-1 sm:hidden">
               <span
                 class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
@@ -140,7 +165,7 @@
                 class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
                 >2</span
               >
-            </div>
+            </div> -->
           </div>
         </div>
       </a>
