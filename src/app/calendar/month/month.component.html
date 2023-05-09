@@ -1,5 +1,7 @@
 <div class="mx-10 pt-8 pb-5 flex justify-between">
-  <div class="flex flex-wrap w-1/4 max-[560px]:hidden"></div>
+  <div class="flex flex-wrap w-1/4 max-[560px]:hidden">
+    <img src="assets/img/otsuka-white.png" class="h-10 mx-3"  alt="">
+  </div>
   <div class="flex flex-wrap space-x-3 max-[560px]:space-x-2">
     <a
       (click)="previousMonth()"
@@ -120,7 +122,7 @@
         routerLinkActive="router-link-active"
         class="w-full h-full flex hover:bg-gray-200 p-1"
         ><span
-          class="w-5 text-xl font-semibold"
+          class="w-5 text-xl max-sm:text-[1rem] font-semibold"
           [ngClass]="
             item.month != monthSelected.getMonth()
               ? 'text-gray-400'
@@ -136,7 +138,7 @@
         <div class="w-full" *ngIf="filterEvents(item.full).length != 0">
           <div *ngFor="let item of filterEvents(item.full)" class="pb-0.5">
             <div
-                class="w-full h-fit py-0.5 bg-[#045174] bg-opacity-80 text-white hover:bg-[#0c4c6a] rounded-sm text-center text-sm font-manrope"
+                class="w-full h-fit py-0.5 bg-[#045174] bg-opacity-80 text-white hover:bg-[#0c4c6a] rounded-sm text-center text-sm font-manrope max-sm:hidden"
               >
                 {{ item.title}}
               </div>
@@ -155,17 +157,13 @@
               >
                 {{ item.time_end.slice(0, -3) }}
               </div>
-            </a>
-            <div class="flex-wrap flex py-1 pl-1 space-y-1 sm:hidden">
+            </a> -->
+            <div class="flex-wrap flex justify-center py-1 pl-1 space-y-1 sm:hidden">
               <span
-                class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
-                >1</span
+                class="bg-[#045174] bg-opacity-80 text-white text-xs text-center font-medium mr-1  rounded-sm w-full h-4"
+                >{{ item.time_start.slice(0, -6) }}</span
               >
-              <span
-                class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
-                >2</span
-              >
-            </div> -->
+            </div>
           </div>
         </div>
       </a>

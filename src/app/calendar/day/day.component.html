@@ -1,7 +1,7 @@
 <a
   [routerLink]="['/']"
   routerLinkActive="router-link-active"
-  class="bg-white hover:bg-gray-700 hover:fill-white transition-colors w-10 h-10 justify-center grid content-center absolute left-3 top-3 my-3 rounded max-sm:hidden"
+  class="bg-white hover:bg-gray-700 hover:fill-white transition-colors w-10 h-10 justify-center grid content-center absolute left-3 top-3 rounded max-sm:hidden"
 >
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -15,7 +15,7 @@
   </svg>
 </a>
 <div
-  class="my-3 min-[560px]:mr-3 max-[560px]:mx-3 p-3 shadow-xl bg-white rounded-sm flex justify-between sm:hidden"
+  class="my-3 min-[560px]:mx-3 max-[560px]:mx-3 p-3 shadow-xl bg-white rounded-sm flex justify-between md:hidden"
 >
   <a
     [routerLink]="['/']"
@@ -70,11 +70,11 @@
 </div>
 
 <div
-  class="w-full justify-center max-sm:justify-center max-md:justify-end flex flex-wrap"
+  class="w-full justify-center max-sm:justify-center max-md:justify-center flex flex-wrap"
 >
   <!------------------------------------------------------------------- Section 1 ------------------------------------------------------------------------------->
-  <div class="w-1/4 max-[560px]:w-full max-md:w-2/5 transition-[width]">
-    <div class="m-3 p-5 shadow-xl sm:h-[96vh] bg-white rounded-sm">
+  <div class="w-1/4 max-[560px]:w-full max-md:w-4/5 transition-[width]">
+    <div class="m-3 p-5 shadow-xl md:h-[96vh]  bg-white rounded-sm">
       <!-- <div inline-datepicker data-date="02/25/2022" [(ngModel)]="test"></div> -->
 
       <div class="p-2 border">
@@ -207,15 +207,21 @@
       </div>
       <div *ngIf="filterEvents(this.dateParams).length != 0" class="mt-5">
         <div class="py-3">
-          <h1>Activity</h1>
+          <h1
+            class="underline underline-offset-4 decoration-[#04517481] font-medium"
+          >
+            Meetings
+          </h1>
         </div>
-        <div class="overflow-auto sm:h-[45vh]">
+        <div class="overflow-auto md:h-[45vh]">
           <div *ngFor="let item of filterEvents(this.dateParams)" class="py-1">
             <div
-              (click)="activityBool(item)"
-              class="flex justify-center cursor-pointer space-y-0.5 py-2 px-2 shadow-md shadow-[#04517481] bg-opacity-60 rounded-sm mx-2 md:hidden"
+              class="flex justify-center ml-2 md:hidden shadow-sm shadow-[#04517481]"
             >
-              <div class="flex justify-between">
+              <div
+                (click)="activityBool(item)"
+                class="grow flex justify-between cursor-pointer space-y-0.5 py-2 px-2 bg-opacity-60 rounded-l-sm"
+              >
                 <h3
                   class="font-manrope text-md max-[560px]:text-sm font-semibold text-[#E87A00]"
                 >
@@ -226,17 +232,70 @@
                   >
                 </h3>
               </div>
+              <a
+                *ngIf="!onAuthCheck()"
+                (click)="callDeleteAlert(item.id)"
+                class="cursor-pointer bg-red-500 hover:bg-red-400 shadow-sm grid content-center px-2 rounded-r-sm"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="18"
+                  viewBox="0 96 960 960"
+                  width="18"
+                  fill="white"
+                >
+                  <path
+                    d="M261 936q-24.75 0-42.375-17.625T201 876V306h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438V306ZM367 790h60V391h-60v399Zm166 0h60V391h-60v399ZM261 306v570-570Z"
+                  />
+                </svg>
+              </a>
             </div>
             <div
-              class="space-y-0.5 py-2 px-4 shadow-md shadow-[#04517481] border- bg-opacity-60 rounded-sm mx-2 max-md:hidden"
+              class="mx-2 border rounded-sm border-[#04517481] shadow-md flex max-md:hidden"
             >
-              <div class="flex justify-between">
-                <h3 class="font-manrope text-md font-semibold">
-                  {{ item.title }}
+              <div
+                class="grow space-y-0.5 py-2 px-4 bg-opacity-60 rounded-l-sm "
+              >
+                <div class="flex justify-between">
+                  <h3 class="font-manrope text-md font-semibold">
+                    {{ item.title }}
+                  </h3>
+                </div>
+
+                <div class="flex justify-between">
+                  <h3 class="font-manrope text-xs font-medium text-gray-600">
+                    {{ item.time_start.slice(0, -3) }} WIB -
+                    {{ item.time_end.slice(0, -3) }} WIB
+                  </h3>
+                </div>
+
+                <h3
+                  class="font-manrope text-sm"
+                  *ngIf="item.online_offline == 'Online'"
+                >
+                  <a
+                    class="text-indigo-700"
+                    href="https://www.{{ item.url_online }}"
+                    target="_blank"
+                  >
+                    {{ item.url_online }}</a
+                  >
                 </h3>
+                <h3
+                  class="font-manrope text-sm"
+                  *ngIf="item.online_offline == 'Offline'"
+                >
+                  <span class="text-gray-500">Room :</span>
+
+                  <span class="text-black" target="_blank">
+                    {{ filterRoomById(item.roomId)[0].room_name }}</span
+                  >
+                </h3>
+                <!-- <h3 class="font-manrope text-sm">End : </h3> -->
+              </div>
+              <div class="w-1/6 max-h-full">
                 <a
                   (click)="activityBool(item)"
-                  class="cursor-pointer bg-yellow-400 hover:bg-yellow-300 grid content-center px-1 rounded-md"
+                  class="cursor-pointer bg-yellow-400 hover:bg-yellow-300 flex items-center justify-center px-1 rounded-r-sm h-1/2 w-full"
                   ><svg
                     xmlns="http://www.w3.org/2000/svg"
                     height="20"
@@ -249,17 +308,10 @@
                     />
                   </svg>
                 </a>
-              </div>
-
-              <div class="flex justify-between">
-                <h3 class="font-manrope text-xs font-medium text-gray-600">
-                  {{ item.time_start.slice(0, -3) }} WIB -
-                  {{ item.time_end.slice(0, -3) }} WIB
-                </h3>
                 <a
                   *ngIf="!onAuthCheck()"
                   (click)="callDeleteAlert(item.id)"
-                  class="cursor-pointer bg-red-500 hover:bg-red-400 grid content-center px-1 rounded-md"
+                  class="cursor-pointer bg-red-500 hover:bg-red-400 flex items-center justify-center px-1 rounded-r-sm h-1/2 w-full"
                   ><svg
                     xmlns="http://www.w3.org/2000/svg"
                     height="18"
@@ -273,31 +325,8 @@
                   </svg>
                 </a>
               </div>
-
-              <h3
-                class="font-manrope text-sm"
-                *ngIf="item.online_offline == 'Online'"
-              >
-                <a
-                  class="text-indigo-700"
-                  href="https://www.{{ item.url_online }}"
-                  target="_blank"
-                >
-                  {{ item.url_online }}</a
-                >
-              </h3>
-              <h3
-                class="font-manrope text-sm"
-                *ngIf="item.online_offline == 'Offline'"
-              >
-                <span class="text-gray-500">Room :</span>
-
-                <span class="text-black" target="_blank">
-                  {{ filterRoomById(item.roomId)[0].room_name }}</span
-                >
-              </h3>
-              <!-- <h3 class="font-manrope text-sm">End : </h3> -->
             </div>
+
             <div></div>
           </div>
         </div>
@@ -305,7 +334,7 @@
     </div>
   </div>
 
-  <div class="w-4/6 max-[560px]:w-full max-md:w-1/2 flex flex-wrap">
+  <div class="w-4/6 max-[560px]:w-full max-md:w-4/5 flex flex-wrap">
     <!------------------------------------------------------------------- Section 2 ------------------------------------------------------------------------------->
     <div class="w-1/2 max-[560px]:w-full" *ngIf="showActivity">
       <div
@@ -494,7 +523,7 @@
       [ngClass]="!showActivity ? 'w-full' : 'w-1/2 '"
     >
       <div
-        class="my-3 mr-3 p-3 shadow-xl bg-white rounded-sm flex max-sm:hidden"
+        class="my-3 mr-3 p-3 shadow-xl bg-white rounded-sm flex max-md:hidden"
         [ngClass]="!onAuthCheck() ? 'justify-between' : 'justify-end'"
       >
         <a

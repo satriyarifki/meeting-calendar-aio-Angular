@@ -3,6 +3,8 @@ import { ApiService } from 'src/app/services/api.service';
 import { format, parseISO, hoursToMilliseconds } from 'date-fns';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Router } from '@angular/router';
+import { AlertService } from 'src/app/services/alert/alert.service';
+import { AlertType } from 'src/app/services/alert/alert.model';
 
 @Component({
   selector: 'app-month',
@@ -22,6 +24,7 @@ export class MonthComponent {
   eventData: any[] = [];
   constructor(
     private apiService: ApiService,
+    private alertService: AlertService,
     private authService: AuthService,
     private router: Router
   ) {
@@ -123,7 +126,8 @@ export class MonthComponent {
 
   signOut() {
     this.authService.signOut();
-    window.location.reload();
+    // window.location.reload();
+    this.alertService.onCallAlert('log Out Success', AlertType.Success);
   }
 
   onAuthCheck() {

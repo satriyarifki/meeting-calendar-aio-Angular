@@ -87,6 +87,7 @@ export class DayComponent {
     var date = addDays(this.dateParams, 1);
     this.dateParams = addDays(this.dateParams, 1);
     this.loopDate(date);
+    this.showActivity = false;
     this.router.navigate(['/day/', date.toLocaleDateString()]);
 
     // console.log(this.dateParams);
@@ -97,6 +98,7 @@ export class DayComponent {
     var date = addDays(this.dateParams, -1);
     this.dateParams = addDays(this.dateParams, -1);
     this.loopDate(date);
+    this.showActivity = false;
     this.router.navigate(['/day/', date.toLocaleDateString()]);
     // console.log(this.dateParams);
   }
@@ -106,6 +108,7 @@ export class DayComponent {
     this.dateParams = addMonths(this.dateParams, 1);
     // console.log(date);
     this.loopDate(date);
+    this.showActivity = false;
     this.router.navigate(['/day/', date.toLocaleDateString()]);
 
     // console.log(this.dateParams);
@@ -116,6 +119,7 @@ export class DayComponent {
     this.dateParams = addMonths(this.dateParams, -1);
     // console.log(date);
     this.loopDate(date);
+    this.showActivity = false;
     this.router.navigate(['/day/', date.toLocaleDateString()]);
     // console.log(this.dateParams);
   }

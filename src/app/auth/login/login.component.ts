@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AlertType } from 'src/app/services/alert/alert.model';
+import { AlertService } from 'src/app/services/alert/alert.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
@@ -11,9 +13,11 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 export class LoginComponent {
   form!: FormGroup;
   showPassword: Boolean = false;
+  submitted = false;
 
   constructor(
     private authService: AuthService,
+    private alertService: AlertService,
     private formBuilder: FormBuilder,
     private router: Router
   ) {
@@ -28,6 +32,7 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
+    this.submitted = true;
     if (this.form.invalid) {
       return;
     }
@@ -42,20 +47,21 @@ export class LoginComponent {
           this.authService.saveUser(data.user);
 
           console.log('Sign In Success');
+          this.alertService.onCallAlert('Login Success', AlertType.Success);
 
           // this.alertService.onCallAlert('Login Success', AlertType.Success);
           this.reloadPage();
         },
         (err) => {
           if (err.statusText == 'Unauthorized') {
-            // this.alertService.onCallAlert(
-            //   'Invalid Email or Password',
-            //   AlertType.Error
-            // );
             console.log('Email or Pass Invalid');
+            this.alertService.onCallAlert(
+              'Email or Password Invalid',
+              AlertType.Error
+            );
           } else {
+            this.alertService.onCallAlert('Login Failed', AlertType.Error);
             console.log('Sign In Failed');
-            // this.alertService.onCallAlert('Login Failed', AlertType.Error);
           }
 
           // console.log(err.statusText);
@@ -63,7 +69,12 @@ export class LoginComponent {
           // this.errorMessage = err.error.message;
           // this.isLoginFailed = true;
           // this.submitted = false;
-          this.form.setValue({ email: '', password: '' });
+          this.submitted = false;
+          this.f['password'].setValue('');
+          // this.form.setValue({ email: '', password: '' });
+        },
+        () => {
+          this.submitted = false;
         }
       );
   }

@@ -88,9 +88,17 @@ export class CreateComponent implements OnInit {
       // participants: this.f['participants'].value,
       message: this.f['message'].value,
     };
+    let email = {
+      date: this.f['date'].value,
+      organizer: this.f['organizer'].value,
+      participants: this.f['participants'].value,
+      message: this.f['message'].value,
+    };
     if (body.online_offline == 'Online') {
       body.roomId = 1;
     }
+
+    console.log(email.message);
 
     this.arrayParicipants = this.f['participants'].value
       .replace(/\s/g, '')
@@ -119,6 +127,14 @@ export class CreateComponent implements OnInit {
               }
             );
         });
+        this.apiService.sendEmail(email).subscribe(
+          (em) => {
+            console.log('Email sent Success');
+          },
+          (err) => {
+            console.log('Email Failed');
+          }
+        );
         this.submitted = false;
       },
       (err) => {

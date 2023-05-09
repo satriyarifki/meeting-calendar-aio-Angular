@@ -14,13 +14,16 @@
     />
   </svg>
 </a>
-<div class="h-[87vh] grid content-center">
+<div class="h-[80vh] grid content-center">
   <div
-    class="max-w-xl max-sm:max-w-sm p-6 mx-auto bg-white bg-opacity-5 rounded-md shadow-md"
+    class="max-w-xl max-sm:max-w-sm p-6 mx-auto bg-white bg-opacity-0 rounded-md"
   >
-    <h2 class="text-2xl font-semibold text-[#D89C60] font-manrope capitalize">
+    <div class="w-full flex justify-center">
+      <img src="assets/img/otsuka-white.png" class="h-16 mx-3" alt="" />
+      <!-- <h2 class="text-2xl font-semibold text-[#D89C60] font-manrope capitalize">
       Login
-    </h2>
+    </h2> -->
+    </div>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="flex flex-wrap mt-4 px-7 max-sm:px-1 space-y-2">
@@ -45,6 +48,14 @@
             formControlName="email"
             class="block w-full px-4 py-2 text-[#D89C60] font-manrope font-semibold bg-white border border-gray-300 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
           />
+          <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+            <div
+              *ngIf="f['email'].errors['required']"
+              class="text-red-500 dark:text-red-500 text-sm text-end"
+            >
+              Email is required
+            </div>
+          </div>
         </div>
 
         <div class="w-full space-y-1">
@@ -76,6 +87,17 @@
               class="block w-full px-4 py-2 text-[#D89C60] font-manrope font-semibold bg-white border border-gray-300 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
             />
           </div>
+          <div
+            *ngIf="submitted && f['password'].errors"
+            class="invalid-feedback"
+          >
+            <div
+              *ngIf="f['password'].errors['required']"
+              class="text-red-500 dark:text-red-500 text-sm text-end"
+            >
+              Password is required
+            </div>
+          </div>
         </div>
 
         <!-- <div>
@@ -92,12 +114,12 @@
       </div> -->
       </div>
 
-      <div class="flex justify-end mt-6">
+      <div class="flex justify-center mt-6">
         <button
           type="submit"
           class="px-8 max-sm:px-5 py-2.5 max-sm:py-2 leading-5 max-sm:text-sm font-manrope font-medium text-white transition-colors duration-300 transform bg-[#E87A00] rounded-md hover:bg-[#D89C60] focus:outline-none focus:bg-gray-600"
         >
-          Get In
+          Log In
         </button>
       </div>
     </form>

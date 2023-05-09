@@ -9,6 +9,7 @@ var baseApi = environment.baseApi;
 })
 export class ApiService {
   private baseUrl = baseApi + 'api/';
+  private emailUrl = baseApi + 'email/';
 
   constructor(private http: HttpClient) {}
   getEvents(): Observable<any> {
@@ -33,5 +34,9 @@ export class ApiService {
 
   getRooms(): Observable<any> {
     return this.http.get(this.baseUrl + 'rooms');
+  }
+
+  sendEmail(body: any): Observable<any> {
+    return this.http.post(this.emailUrl + 'send', body);
   }
 }
