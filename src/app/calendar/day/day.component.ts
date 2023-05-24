@@ -14,6 +14,7 @@ import { forkJoin } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { CreateActivityService } from 'src/app/services/create-activity/create-activity.service';
+import { EditActivityService } from 'src/app/services/edit-activity/edit-activity.service';
 
 const HoursOfDay = [
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
@@ -47,11 +48,13 @@ export class DayComponent {
     private actRoute: ActivatedRoute,
     private apiService: ApiService,
     private router: Router,
-    private authService: AuthService,
-    private createService: CreateActivityService
+    public authService: AuthService,
+    private createService: CreateActivityService,
+    private editService: EditActivityService
   ) {
     this.loopDate(this.dateNow);
-
+    // console.log(authService.getToken());
+    
     forkJoin(
       apiService.getEvents(),
       apiService.getParticipants(),
@@ -72,6 +75,9 @@ export class DayComponent {
 
   callCreateService() {
     this.createService.onCallCreateModal(this.dateParams);
+  }
+  callEditService(event:any) {
+    this.editService.onCallEditModal(event);
   }
 
   filterEvents(date: any) {
@@ -144,7 +150,8 @@ export class DayComponent {
         date: firstDay.getDate(),
         year: firstDay.getFullYear(),
         month: firstDay.getMonth(),
-        full: firstDay.toLocaleDateString(),
+        full: (firstDay.getMonth() + 1) + '/' + firstDay.getDate() + '/' + firstDay.getFullYear(),
+        localeString : firstDay.toLocaleDateString(),
       });
       firstDay.setDate(firstDay.getDate() + 1);
     }

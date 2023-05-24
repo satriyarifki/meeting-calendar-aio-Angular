@@ -1,7 +1,7 @@
 <a
   [routerLink]="['/']"
   routerLinkActive="router-link-active"
-  class="bg-white hover:bg-gray-700 hover:fill-white transition-colors w-10 h-10 justify-center grid content-center absolute left-3 top-3 rounded max-sm:hidden"
+  class="bg-white hover:bg-gray-700 hover:fill-white transition-colors w-10 h-10 justify-center grid content-center absolute left-3 top-3 rounded max-md:hidden"
 >
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -20,7 +20,7 @@
   <a
     [routerLink]="['/']"
     routerLinkActive="router-link-active"
-    class="z-20 bg-white hover:bg-gray-700 hover:fill-white transition-colors w-10 h-10 justify-center grid content-center left-3 top-3 rounded"
+    class="z-10 bg-white hover:bg-gray-700 hover:fill-white transition-colors w-10 h-10 justify-center grid content-center left-3 top-3 rounded"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +74,7 @@
 >
   <!------------------------------------------------------------------- Section 1 ------------------------------------------------------------------------------->
   <div class="w-1/4 max-[560px]:w-full max-md:w-4/5 transition-[width]">
-    <div class="m-3 p-5 shadow-xl md:h-[96vh]  bg-white rounded-sm">
+    <div class="m-3 p-5 shadow-xl md:h-[96vh] bg-white rounded-sm">
       <!-- <div inline-datepicker data-date="02/25/2022" [(ngModel)]="test"></div> -->
 
       <div class="p-2 border">
@@ -182,7 +182,7 @@
                 item.date == dateParams.getDate() &&
                 item.month == dateParams.getMonth() &&
                 item.year == dateParams.getFullYear()
-                  ? 'bg-gray-200'
+                  ? 'bg-gray-300'
                   : ''
               "
               ><span
@@ -233,9 +233,25 @@
                 </h3>
               </div>
               <a
+                *ngIf="authService.getToken() != null"
+                (click)="callEditService(item)"
+                class="cursor-pointer bg-yellow-400 hover:bg-yellow-300 shadow-sm grid content-center px-2 transition-colors"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="18"
+                  viewBox="0 96 960 960"
+                  width="18"
+                  class="fill-white"
+                >
+                  <path
+                    d="M180 876h44l443-443-44-44-443 443v44Zm614-486L666 262l42-42q17-17 42-17t42 17l44 44q17 17 17 42t-17 42l-42 42Zm-42 42L248 936H120V808l504-504 128 128Zm-107-21-22-22 44 44-22-22Z"
+                  />
+                </svg>
+              </a>
+              <a
                 *ngIf="!onAuthCheck()"
                 (click)="callDeleteAlert(item.id)"
-                class="cursor-pointer bg-red-500 hover:bg-red-400 shadow-sm grid content-center px-2 rounded-r-sm"
+                class="cursor-pointer bg-red-500 hover:bg-red-400 shadow-sm grid content-center px-2 rounded-r-sm transition-colors"
                 ><svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="18"
@@ -253,7 +269,7 @@
               class="mx-2 border rounded-sm border-[#04517481] shadow-md flex max-md:hidden"
             >
               <div
-                class="grow space-y-0.5 py-2 px-4 bg-opacity-60 rounded-l-sm "
+                class="grow space-y-0.5 py-2 px-4 bg-opacity-60 rounded-l-sm"
               >
                 <div class="flex justify-between">
                   <h3 class="font-manrope text-md font-semibold">
@@ -294,8 +310,24 @@
               </div>
               <div class="w-1/6 max-h-full">
                 <a
+                  *ngIf="authService.getToken() != null"
+                  (click)="callEditService(item)"
+                  class="cursor-pointer bg-yellow-400 hover:bg-yellow-300 flex items-center justify-center px-1 rounded-r-sm h-1/2 w-full transition-colors"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24"
+                    width="24"
+                    class="fill-white"
+                  >
+                    <path
+                      d="M5 19h1.4l8.625-8.625-1.4-1.4L5 17.6ZM19.3 8.925l-4.25-4.2 1.4-1.4q.575-.575 1.413-.575.837 0 1.412.575l1.4 1.4q.575.575.6 1.388.025.812-.55 1.387ZM17.85 10.4 7.25 21H3v-4.25l10.6-10.6Zm-3.525-.725-.7-.7 1.4 1.4Z"
+                    />
+                  </svg>
+                </a>
+                <a
+                  *ngIf="authService.getToken() == null"
                   (click)="activityBool(item)"
-                  class="cursor-pointer bg-yellow-400 hover:bg-yellow-300 flex items-center justify-center px-1 rounded-r-sm h-1/2 w-full"
+                  class="cursor-pointer bg-yellow-400 hover:bg-yellow-300 flex items-center justify-center px-1 rounded-r-sm h-1/2 w-full transition-colors"
                   ><svg
                     xmlns="http://www.w3.org/2000/svg"
                     height="20"
@@ -311,7 +343,7 @@
                 <a
                   *ngIf="!onAuthCheck()"
                   (click)="callDeleteAlert(item.id)"
-                  class="cursor-pointer bg-red-500 hover:bg-red-400 flex items-center justify-center px-1 rounded-r-sm h-1/2 w-full"
+                  class="cursor-pointer bg-red-500 hover:bg-red-400 flex items-center justify-center px-1  h-1/2 w-full transition-colors"
                   ><svg
                     xmlns="http://www.w3.org/2000/svg"
                     height="18"
@@ -368,11 +400,11 @@
                 class="block text-sm font-manrope text-gray-600"
                 >Date</label
               >
-              <h1 class="text-xl font-semibold">:</h1>
+              <!-- <h1 class="text-xl font-semibold">:</h1> -->
             </div>
 
             <div class="grow px-4">
-              <h2 class="font-manrope font-medium max-md:text-sm">
+              <h2 class="font-manrope font-medium max-lg:text-sm">
                 {{ detailActivity.date | date : "longDate" }}
               </h2>
             </div>
@@ -384,11 +416,12 @@
                 class="block text-sm font-manrope text-gray-600"
                 >Time</label
               >
-              <h1 class="text-xl font-semibold">:</h1>
+              <!-- <h1 class="text-xl font-semibold">:</h1> -->
             </div>
             <div class="grow px-4">
-              <h2 class="font-manrope font-medium max-md:text-sm">
+              <h2 class="font-manrope font-medium max-lg:text-sm">
                 {{ detailActivity.time_start.slice(0, -3) }} WIB -
+                <br class="max-sm:hidden lg:hidden" />
                 {{ detailActivity.time_end.slice(0, -3) }} WIB
               </h2>
             </div>
@@ -405,10 +438,10 @@
                 class="block text-sm font-manrope text-gray-600"
                 >Organizer Name</label
               >
-              <h1 class="text-xl font-semibold">:</h1>
+              <!-- <h1 class="text-xl font-semibold">:</h1> -->
             </div>
             <div class="grow px-4">
-              <h2 class="font-manrope font-medium max-md:text-sm">
+              <h2 class="font-manrope font-medium max-lg:text-sm">
                 {{ detailActivity.organizer }}
               </h2>
             </div>
@@ -420,10 +453,10 @@
                 class="block text-sm font-manrope text-gray-600"
                 >Meeting Name</label
               >
-              <h1 class="text-xl font-semibold">:</h1>
+              <!-- <h1 class="text-xl font-semibold">:</h1> -->
             </div>
             <div class="grow px-4">
-              <h2 class="font-manrope font-medium max-md:text-sm">
+              <h2 class="font-manrope font-medium max-lg:text-sm">
                 {{ detailActivity.title }}
               </h2>
             </div>
@@ -435,10 +468,10 @@
                 class="block text-sm font-manrope text-gray-600"
                 >Online /Offline</label
               >
-              <h1 class="text-xl font-semibold">:</h1>
+              <!-- <h1 class="text-xl font-semibold">:</h1> -->
             </div>
             <div class="grow px-4">
-              <div class="font-manrope font-medium max-md:text-sm">
+              <div class="font-manrope font-medium max-lg:text-sm">
                 {{ detailActivity.online_offline }}
               </div>
             </div>
@@ -450,7 +483,7 @@
                 class="block text-sm font-manrope text-gray-600"
                 >Link Online</label
               >
-              <h1 class="text-xl font-semibold">:</h1>
+              <!-- <h1 class="text-xl font-semibold">:</h1> -->
             </div>
             <div class="grow px-4">
               <a
@@ -469,10 +502,10 @@
                 class="block text-sm font-manrope text-gray-600"
                 >Room Offline</label
               >
-              <h1 class="text-xl font-semibold">:</h1>
+              <!-- <h1 class="text-xl font-semibold">:</h1> -->
             </div>
             <div class="grow px-4">
-              <h2 class="font-manrope font-medium max-md:text-sm">
+              <h2 class="font-manrope font-medium max-lg:text-sm">
                 {{ filterRoomById(detailActivity.roomId)[0].room_name }}
               </h2>
             </div>
@@ -484,11 +517,11 @@
                 class="block text-sm font-manrope text-gray-600"
                 >Participants</label
               >
-              <h1 class="text-xl font-semibold">:</h1>
+              <!-- <h1 class="text-xl font-semibold">:</h1> -->
             </div>
             <div class="grow px-4 space-y-1">
               <h1
-                class="font-manrope text-sm font-medium max-md:text-sm bg-blue-100 p-1 rounded-md w-1/2"
+                class="font-manrope text-sm font-medium max-lg:text-sm bg-blue-100 p-1 rounded-md w-fit"
                 *ngFor="let item of this.filterParticipants(detailActivity.id)"
               >
                 {{ item.email }}
@@ -502,7 +535,7 @@
                 class="block text-sm font-manrope text-gray-600"
                 >Message</label
               >
-              <h1 class="text-xl font-semibold">:</h1>
+              <!-- <h1 class="text-xl font-semibold">:</h1> -->
             </div>
             <textarea
               name=""
@@ -632,9 +665,8 @@
           </h1>
           <div class="w-full flex flex-wrap">
             <div
-              class="px-0.5 py-3 text-start"
+              class="px-0.5 py-3 text-start w-1/6 max-[400px]:w-1/3"
               *ngFor="let hour of hoursOfDay"
-              [ngClass]="showActivity ? 'w-1/6' : 'w-1/12 max-md:w-1/6'"
             >
               <div
                 class="w-full h-10 border border-[#045174] bg-opacity-80 rounded-sm"
@@ -684,9 +716,19 @@
                   class="w-1/2 bg-[#045174] bg-opacity-80"
                 ></div>
               </div>
-              <h1 class="font-manrope text-[15px] font-medium text-gray-800">
-                {{ hour | date : "HH" }}
-              </h1>
+              <div class="flex">
+                <h1
+                  class="font-manrope text-sm font-medium text-gray-800 max-md:text-xs w-1/2"
+                >
+                  <span class="max-md:hidden">{{ hour | date : "HH:mm" }}</span>
+                  <span class="md:hidden">{{ hour | date : "HH" }}</span>
+                </h1>
+                <!-- <h1
+                  class="font-manrope text-sm font-medium text-gray-800 max-md:text-xs w-1/2"
+                >
+                  {{ hour | date : "HH:" }}30
+                </h1> -->
+              </div>
             </div>
           </div>
           <div class="w-full flex justify-center py-2 space-x-4">

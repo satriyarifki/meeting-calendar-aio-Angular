@@ -1,5 +1,17 @@
-<div *ngIf="show" class="w-full text-white" [ngClass]="type == alertType.Success? 'bg-green-500' : type == alertType.Error? 'bg-red-500': type == alertType.Warning? 'bg-yellow-400': 'bg-blue-500' ">
-  <div class="container flex items-center justify-between px-6 py-4 mx-auto">
+<div
+  *ngIf="show"
+  class="w-full text-white fixed z-40 top-0"
+  [ngClass]="
+    type == alertType.Success
+      ? 'bg-green-500'
+      : type == alertType.Error
+      ? 'bg-red-500'
+      : type == alertType.Warning
+      ? 'bg-yellow-500'
+      : 'bg-blue-500'
+  "
+>
+  <div class="w-screen flex items-center justify-between px-6 py-4 mx-auto">
     <div class="flex">
       <svg
         *ngIf="type == alertType.Success"
@@ -29,7 +41,7 @@
         ></path>
       </svg>
 
-      <p class="mx-3">{{ message }}.</p>
+      <p class="mx-3">{{ message }}</p>
     </div>
 
     <button

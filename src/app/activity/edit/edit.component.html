@@ -28,7 +28,7 @@
         <span class="sr-only">Close modal</span>
       </button>
       <div class="px-6 pt-4">
-        <h2 class="font-medium text-xl">Add Meeting</h2>
+        <h2 class="font-medium text-xl">Edit Meeting</h2>
       </div>
       <div class="p-6">
         <form
@@ -47,7 +47,7 @@
               id="date"
               name="date"
               formControlName="date"
-              value="{{ initialDate | date : 'yyyy-MM-dd' }}"
+              value="{{ initialEvent.date | date : 'yyyy-MM-dd' }}"
               type="date"
               class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             />
@@ -67,7 +67,7 @@
                 step="600"
                 min="07:00"
                 max="23:00"
-                class="py-2 px-2 grow border border-gray-300 rounded-md text-md focus:border-blue-500 ring:border-blue-500 outline-none"
+                class="py-2 px-2 grow border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
               />
               <span class="w-5 text-center text-xl font-medium">-</span>
               <input
@@ -75,7 +75,7 @@
                 name="time_end"
                 formControlName="time_end"
                 type="time"
-                class="py-2 px-2 grow border border-gray-300 rounded-md text-md focus:border-blue-500 ring:border-blue-500 outline-none"
+                class="py-2 px-2 grow border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
               />
             </div>
           </div>
@@ -111,7 +111,7 @@
             <label
               for="inline-input-label-with-helper-text"
               class="block text-sm mb-2 w-1/4"
-              >Online/Offline</label
+              >Online/ Offline</label
             >
             <div class="flex w-3/4">
               <div class="grow flex">
@@ -124,7 +124,7 @@
                   name="online_offline"
                   class="py-3 mx-2 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
                 />
-                <label for="offline" class="align-middle">Offline</label>
+                <label for="offline" class="align-middle text-sm">Offline</label>
               </div>
               <div class="grow flex">
                 <input
@@ -136,7 +136,7 @@
                   name="online_offline"
                   class="py-3 mx-2 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
                 />
-                <label for="online">Online</label>
+                <label for="online" class="text-sm">Online</label>
               </div>
             </div>
           </div>
@@ -173,7 +173,7 @@
               formControlName="roomId"
               [value]="1"
             >
-              <option *ngFor="let item of roomsAll" value="{{ item.id }}">
+              <option *ngFor="let item of roomsApi" value="{{ item.id }}">
                 {{ item.room_name }}
               </option>
             </select>

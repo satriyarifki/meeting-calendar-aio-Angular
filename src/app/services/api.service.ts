@@ -12,16 +12,21 @@ export class ApiService {
   private emailUrl = baseApi + 'email/';
 
   constructor(private http: HttpClient) {}
+  //EVENTS----------------------------------------------------------
   getEvents(): Observable<any> {
     return this.http.get(this.baseUrl + 'events');
   }
   postEvents(body: any): Observable<any> {
     return this.http.post(this.baseUrl + 'events', body);
   }
+  updateEvents(id: any, body: any): Observable<any> {
+    return this.http.post(this.baseUrl + 'events/' + id, body);
+  }
   deleteEvents(id: any): Observable<any> {
     return this.http.delete(this.baseUrl + 'events/' + id);
   }
 
+  //PARTICIPANTS----------------------------------------------------
   getParticipants(): Observable<any> {
     return this.http.get(this.baseUrl + 'participants');
   }
@@ -32,10 +37,12 @@ export class ApiService {
     return this.http.delete(this.baseUrl + 'participants/' + eventId);
   }
 
+  //ROOMS-----------------------------------------------------------
   getRooms(): Observable<any> {
     return this.http.get(this.baseUrl + 'rooms');
   }
 
+  // EMAILS---------------------------------------------------------
   sendEmail(body: any): Observable<any> {
     return this.http.post(this.emailUrl + 'send', body);
   }

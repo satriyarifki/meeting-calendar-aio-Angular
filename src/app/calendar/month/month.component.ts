@@ -66,8 +66,10 @@ export class MonthComponent {
         date: firstDay.getDate(),
         year: firstDay.getFullYear(),
         month: firstDay.getMonth(),
-        full: firstDay.toLocaleDateString(),
+        full: (firstDay.getMonth() + 1) + '/' + firstDay.getDate() + '/' + firstDay.getFullYear(),
+        localeString : firstDay.toLocaleDateString(),
       });
+      
       firstDay.setDate(firstDay.getDate() + 1);
     }
   }

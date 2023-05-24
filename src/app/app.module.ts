@@ -17,6 +17,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { LoginComponent } from './auth/login/login.component';
 import { AlertComponent } from './alert/alert.component';
+import { EditComponent } from './activity/edit/edit.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { AlertComponent } from './alert/alert.component';
     DayComponent,
     LoginComponent,
     AlertComponent,
+    EditComponent,
   ],
   imports: [
     BrowserModule,
