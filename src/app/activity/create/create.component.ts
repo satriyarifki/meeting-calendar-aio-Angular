@@ -27,18 +27,7 @@ export class CreateComponent implements OnInit {
     private formBuilder: FormBuilder,
     private alertService: AlertService,
     private datePipe: DatePipe
-  ) {
-    apiService.getEvents().subscribe((data) => {
-      this.eventDatas = data;
-    });
-    if (this.createService.subsVar == undefined) {
-      this.createService.subsVar = this.createService.invokeAlert.subscribe(
-        (date) => {
-          this.callModal(date.date);
-        }
-      );
-    }
-  }
+  ) {}
   get f() {
     return this.form.controls;
   }
@@ -77,6 +66,15 @@ export class CreateComponent implements OnInit {
         result = false;
         break;
       }
+      if (
+        (events.time_start.slice(0, -3) > startHour &&
+          events.time_start.slice(0, -3) < endHour) 
+      ) {
+        console.log(date + ' ' + startHour + ' ' + endHour);
+
+        result = false;
+        break;
+      }
     }
     console.log(result);
 
@@ -88,6 +86,16 @@ export class CreateComponent implements OnInit {
       this.roomsAll = data;
       // console.log(data);
     });
+    this.apiService.getEvents().subscribe((data) => {
+      this.eventDatas = data;
+    });
+    if (this.createService.subsVar == undefined) {
+      this.createService.subsVar = this.createService.invokeAlert.subscribe(
+        (date) => {
+          this.callModal(date.date);
+        }
+      );
+    }
   }
   initialForm() {
     this.form = this.formBuilder.group({
@@ -180,6 +188,7 @@ export class CreateComponent implements OnInit {
                   'Create Meeting Success!',
                   AlertType.Success
                 );
+                // this.ngOnInit();
                 window.location.reload();
               },
               (err) => {
