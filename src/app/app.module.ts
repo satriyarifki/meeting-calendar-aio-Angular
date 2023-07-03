@@ -18,6 +18,7 @@ import { DatePipe } from '@angular/common';
 import { LoginComponent } from './auth/login/login.component';
 import { AlertComponent } from './alert/alert.component';
 import { EditComponent } from './activity/edit/edit.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { EditComponent } from './activity/edit/edit.component';
     }),
     SchedulerModule.forRoot({ locale: 'en', headerDateFormat: 'daysRange' }),
     FormsModule,
+    BrowserAnimationsModule,
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],

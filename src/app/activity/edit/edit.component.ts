@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { format } from 'date-fns';
+import { areIntervalsOverlapping, format, set } from 'date-fns';
 import { forkJoin } from 'rxjs';
 import { AlertType } from 'src/app/services/alert/alert.model';
 import { AlertService } from 'src/app/services/alert/alert.service';
@@ -57,7 +57,7 @@ export class EditComponent {
   }
   callModal(event: any) {
     this.initialEvent = event.id;
-    // console.log(this.initialEvent);
+    console.log(this.initialEvent);
     this.initialForm();
 
     this.show = true;
@@ -73,6 +73,72 @@ export class EditComponent {
     return this.eventApi.filter(
       (data: any) => this.convertDate(data.date) == this.convertDate(date)
     );
+  }
+  isOverlappingTime(date: any, begin: any, end: any, roomId: any) {
+    let bool = false;
+    console.log({
+      status:
+        format(new Date(this.eventApi[1].date), 'P') ==
+        format(new Date(date), 'P'),
+      dateE: format(new Date(this.eventApi[1].date), 'P'),
+      date: format(new Date(date), 'P'),
+    });
+
+    let reservation = this.eventApi.filter(
+      (data: any) =>
+        format(new Date(data.date), 'P') == format(new Date(date), 'P') &&
+        data.id != this.initialEvent.id
+    );
+    console.log(reservation);
+
+    try {
+      if (reservation.length != 0) {
+        reservation.forEach((element: any) => {
+          if (
+            areIntervalsOverlapping(
+              {
+                start: set(new Date(element.date), {
+                  hours: element.time_start.slice(0, 2),
+                  minutes: element.time_start.slice(3, 5),
+                }),
+                end: set(new Date(element.date), {
+                  hours: element.time_end.slice(0, 2),
+                  minutes: element.time_end.slice(3, 5),
+                }),
+              },
+              {
+                start: set(new Date(date), {
+                  hours: begin.slice(0, 2),
+                  minutes: begin.slice(3, 5),
+                }),
+                end: set(new Date(date), {
+                  hours: end.slice(0, 2),
+                  minutes: end.slice(3, 5),
+                }),
+              }
+            )
+          ) {
+            bool = true;
+            this.alertService.onCallAlert(
+              'Date & Resource Booked! Choose Another!',
+              AlertType.Error
+            );
+            return;
+          }
+        });
+        // }
+      }
+    } catch (error) {
+      console.log('hh' + error);
+      bool = true;
+      this.alertService.onCallAlert(
+        'Fill Begin and End Correctly!',
+        AlertType.Error
+      );
+      return bool;
+    }
+
+    return bool;
   }
   inBetweenTimeChecker(startHour: any, endHour: any, date: any) {
     let result;
@@ -160,18 +226,28 @@ export class EditComponent {
       this.alertService.onCallAlert('Fill Blank Inputs!', AlertType.Warning);
       return;
     }
+    // if (
+    //   this.inBetweenTimeChecker(
+    //     this.f['time_start'].value,
+    //     this.f['time_end'].value,
+    //     this.f['date'].value
+    //   )
+    // ) {
+    //   this.alertService.onCallAlert(
+    //     'Time Booked, Choose Another!',
+    //     AlertType.Error
+    //   );
+
+    //   return;
+    // }
     if (
-      this.inBetweenTimeChecker(
+      this.isOverlappingTime(
+        this.f['date'].value,
         this.f['time_start'].value,
         this.f['time_end'].value,
-        this.f['date'].value
+        0
       )
     ) {
-      this.alertService.onCallAlert(
-        'Time Booked, Choose Another!',
-        AlertType.Error
-      );
-
       return;
     }
 

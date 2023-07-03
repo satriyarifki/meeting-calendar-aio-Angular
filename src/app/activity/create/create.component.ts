@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { addHours, format, addDays, addMonths } from 'date-fns';
 import { CreateActivityService } from 'src/app/services/create-activity/create-activity.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/services/api.service';
 import { DatePipe, formatDate } from '@angular/common';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { AlertType } from 'src/app/services/alert/alert.model';
+import { map, Observable, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-create',
@@ -18,6 +19,7 @@ export class CreateComponent implements OnInit {
   submitted: Boolean = false;
   initialDate!: Date;
   arrayParicipants: Array<String> = [];
+  options: string[] = ['link One', 'link Two', 'link Three'];
   roomsAll: any;
   form!: FormGroup;
   eventDatas: any;
@@ -28,8 +30,25 @@ export class CreateComponent implements OnInit {
     private alertService: AlertService,
     private datePipe: DatePipe
   ) {}
+  initialForm() {
+    this.form = this.formBuilder.group({
+      userId: [''],
+      date: [format(this.initialDate, 'yyyy-MM-dd'), Validators.required],
+      time_start: ['', Validators.required],
+      time_end: ['', Validators.required],
+      title: ['', Validators.required],
+      organizer: ['', Validators.required],
+      description: [''],
+      online_offline: ['', Validators.required],
+      url_online: [''],
+      roomId: [''],
+      participants: ['', Validators.required],
+      message: ['', Validators.required],
+      emailDirectSend: [false, Validators.required],
+    });
+  }
   get f() {
-    return this.form.controls;
+    return this.form?.controls;
   }
   callModal(date: any) {
     this.initialDate = date;
@@ -49,6 +68,7 @@ export class CreateComponent implements OnInit {
       (data: any) => this.convertDate(data.date) == this.convertDate(date)
     );
   }
+
   inBetweenTimeChecker(startHour: any, endHour: any, date: any) {
     let result = true;
 
@@ -67,8 +87,8 @@ export class CreateComponent implements OnInit {
         break;
       }
       if (
-        (events.time_start.slice(0, -3) > startHour &&
-          events.time_start.slice(0, -3) < endHour) 
+        events.time_start.slice(0, -3) > startHour &&
+        events.time_start.slice(0, -3) < endHour
       ) {
         console.log(date + ' ' + startHour + ' ' + endHour);
 
@@ -97,22 +117,7 @@ export class CreateComponent implements OnInit {
       );
     }
   }
-  initialForm() {
-    this.form = this.formBuilder.group({
-      userId: [''],
-      date: [format(this.initialDate, 'yyyy-MM-dd'), Validators.required],
-      time_start: ['', Validators.required],
-      time_end: ['', Validators.required],
-      title: ['', Validators.required],
-      organizer: ['', Validators.required],
-      description: [''],
-      online_offline: ['', Validators.required],
-      url_online: [''],
-      roomId: [''],
-      participants: ['', Validators.required],
-      message: ['', Validators.required],
-    });
-  }
+
   onSubmit() {
     this.submitted = true;
     if (this.form.invalid) {
@@ -189,21 +194,26 @@ export class CreateComponent implements OnInit {
                   AlertType.Success
                 );
                 // this.ngOnInit();
-                window.location.reload();
+                // window.location.reload();
               },
               (err) => {
                 console.log(err);
               }
             );
         });
-        // this.apiService.sendEmail(email).subscribe(
-        //   (em) => {
-        //     console.log('Email sent Success');
-        //   },
-        //   (err) => {
-        //     console.log('Email Failed');
-        //   }
-        // );
+        if (this.f['emailDirectSend'].value) {
+          console.log('Sent Email');
+
+          // this.apiService.sendEmail(email).subscribe(
+          //   (em) => {
+          //     console.log('Email sent Success');
+          //   },
+          //   (err) => {
+          //     console.log('Email Failed');
+          //   }
+          // );
+        }
+        this.ngOnInit()
         this.submitted = false;
       },
       (err) => {

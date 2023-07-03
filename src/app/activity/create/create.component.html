@@ -154,8 +154,14 @@
               name="url_online"
               formControlName="url_online"
               type="text"
-              class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+              list="onlineList"
+              class="py-2 px-2 w-3/4 border form-select border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             />
+            <datalist id="onlineList">
+              <option *ngFor="let item of options" [value]="item">
+                {{ item }}
+              </option>
+            </datalist>
           </div>
           <div
             class="flex justify-between items-center flex-wrap"
@@ -212,6 +218,23 @@
               rows="5"
               class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             ></textarea>
+          </div>
+          <div class="flex justify-center pt-3 flex-wrap">
+            <div class="px-2">
+              <h1 class="text-sm">Send Email Directly</h1>
+            </div>
+            <div class="">
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  formControlName="emailDirectSend"
+                  class="sr-only peer"
+                />
+                <div
+                  class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+                ></div>
+              </label>
+            </div>
           </div>
           <div class="flex justify-center pt-3">
             <a
