@@ -46,4 +46,9 @@ export class ApiService {
   sendEmail(body: any): Observable<any> {
     return this.http.post(this.emailUrl + 'send', body);
   }
+
+  // EMPLOYEES-------------------------------------------------------
+  getEmailEmployees(): Observable<any> {
+    return this.http.get(this.baseUrl + 'employees/email');
+  }
 }

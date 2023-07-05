@@ -201,9 +201,16 @@
               id="participants"
               name="participants"
               formControlName="participants"
-              type="text"
+              type="email"
+              list="emailList"
+              multiple
               class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             />
+            <datalist id="emailList">
+              <option *ngFor="let item of emailsEmployee" [value]="item">
+                {{ item }}
+              </option>
+            </datalist>
           </div>
           <div class="flex justify-between flex-wrap">
             <label
@@ -263,6 +270,32 @@
             </a>
           </div>
         </form>
+      </div>
+      <div class="wrapper px-10">
+        
+          <label
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            for="file_input"
+            >Upload file</label
+          >
+          <input
+            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+            id="files"
+            type="file"
+            name="files"
+            ng2FileSelect
+            [uploader]="uploader"
+            
+          />
+          <button
+            type="button"
+            (click)="uploader.uploadAll()"
+            [disabled]="!uploader.getNotUploadedItems().length"
+            class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
+          >
+            Purple
+          </button>
+        
       </div>
     </div>
   </div>

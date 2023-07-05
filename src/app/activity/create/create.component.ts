@@ -1,12 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { addHours, format, addDays, addMonths } from 'date-fns';
+import { FileUploader } from 'ng2-file-upload';
 import { CreateActivityService } from 'src/app/services/create-activity/create-activity.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ApiService } from 'src/app/services/api.service';
 import { DatePipe, formatDate } from '@angular/common';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { AlertType } from 'src/app/services/alert/alert.model';
-import { map, Observable, startWith } from 'rxjs';
+import { forkJoin, map, Observable, startWith } from 'rxjs';
+const URL = 'http://localhost:3555/upload/upload';
 
 @Component({
   selector: 'app-create',
@@ -20,9 +27,25 @@ export class CreateComponent implements OnInit {
   initialDate!: Date;
   arrayParicipants: Array<String> = [];
   options: string[] = ['link One', 'link Two', 'link Three'];
+  emailList: string[] = [
+    'rifkisatriya@gmail.com',
+    'satriaveiro@gmail.com',
+    'lazuardi@gmail.com',
+  ];
+  //API
+  emailsEmployee: any;
   roomsAll: any;
-  form!: FormGroup;
   eventDatas: any;
+
+  //FORM
+  form!: FormGroup;
+
+  public uploader: FileUploader = new FileUploader({
+    url: URL,
+    itemAlias: 'files',
+    additionalParameter: { dataId: 1 },
+  });
+
   constructor(
     private createService: CreateActivityService,
     private apiService: ApiService,
@@ -46,6 +69,13 @@ export class CreateComponent implements OnInit {
       message: ['', Validators.required],
       emailDirectSend: [false, Validators.required],
     });
+    this.uploader.onAfterAddingFile = (file) => {
+      file.withCredentials = false;
+    };
+    this.uploader.onCompleteItem = (item: any, status: any) => {
+      console.log('Uploaded File Details:', item);
+      this.alertService.onCallAlert('Upload Success!', AlertType.Success);
+    };
   }
   get f() {
     return this.form?.controls;
@@ -102,12 +132,14 @@ export class CreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.apiService.getRooms().subscribe((data) => {
-      this.roomsAll = data;
-      // console.log(data);
-    });
-    this.apiService.getEvents().subscribe((data) => {
-      this.eventDatas = data;
+    forkJoin(
+      this.apiService.getEmailEmployees(),
+      this.apiService.getRooms(),
+      this.apiService.getEvents()
+    ).subscribe(([emails, rooms, events]) => {
+      this.emailsEmployee = emails;
+      this.roomsAll = rooms;
+      this.eventDatas = events;
     });
     if (this.createService.subsVar == undefined) {
       this.createService.subsVar = this.createService.invokeAlert.subscribe(
@@ -204,16 +236,16 @@ export class CreateComponent implements OnInit {
         if (this.f['emailDirectSend'].value) {
           console.log('Sent Email');
 
-          // this.apiService.sendEmail(email).subscribe(
-          //   (em) => {
-          //     console.log('Email sent Success');
-          //   },
-          //   (err) => {
-          //     console.log('Email Failed');
-          //   }
-          // );
+          this.apiService.sendEmail(email).subscribe(
+            (em) => {
+              console.log('Email sent Success');
+            },
+            (err) => {
+              console.log('Email Failed');
+            }
+          );
         }
-        this.ngOnInit()
+        this.ngOnInit();
         this.submitted = false;
       },
       (err) => {

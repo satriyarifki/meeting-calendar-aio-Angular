@@ -27,9 +27,10 @@
         </svg>
         <span class="sr-only">Close modal</span>
       </button>
-      <div class="px-6 pt-4">
+      <div class="px-6 pt-4 w-1/2">
         <h2 class="font-medium text-xl">Edit Meeting</h2>
       </div>
+
       <div class="p-6">
         <form
           [formGroup]="form"
@@ -124,7 +125,9 @@
                   name="online_offline"
                   class="py-3 mx-2 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
                 />
-                <label for="offline" class="align-middle text-sm">Offline</label>
+                <label for="offline" class="align-middle text-sm"
+                  >Offline</label
+                >
               </div>
               <div class="grow flex">
                 <input
@@ -195,9 +198,16 @@
               id="participants"
               name="participants"
               formControlName="participants"
-              type="text"
+              type="email"
+              multiple
+              list="emailList"
               class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             />
+            <datalist id="emailList">
+              <option *ngFor="let item of emailsEmployee" [value]="item">
+                {{ item }}
+              </option>
+            </datalist>
           </div>
           <div class="flex justify-between flex-wrap">
             <label
@@ -213,7 +223,26 @@
               class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             ></textarea>
           </div>
-          <div class="flex justify-center pt-3">
+          <div class="w-full flex"></div>
+          <div class="flex justify-evenly pt-3">
+            <a
+              (click)="sendEmail()"
+              class="relative flex cursor-pointer px-5 py-1.5 space-x-1 font-medium text-white transition duration-300 bg-green-400 rounded-md hover:bg-green-500 ease"
+            >
+              <span class="relative">Send Email</span>
+              <svg
+                class="mt-0.5"
+                xmlns="http://www.w3.org/2000/svg"
+                height="20"
+                viewBox="0 -960 960 960"
+                width="20"
+                fill="white"
+              >
+                <path
+                  d="M120-160v-640l760 320-760 320Zm60-93 544-227-544-230v168l242 62-242 60v167Zm0 0v-457 457Z"
+                />
+              </svg>
+            </a>
             <a
               (click)="onSubmit()"
               class="relative px-5 py-1.5 cursor-pointer overflow-hidden font-medium text-gray-600 bg-gray-100 border border-gray-100 rounded-lg shadow-inner group"
@@ -235,7 +264,7 @@
               ></span>
               <span
                 class="relative font-manrope font-semibold transition-colors duration-300 delay-75 group-hover:text-white ease"
-                >Submit</span
+                >Submit Edit</span
               >
             </a>
           </div>

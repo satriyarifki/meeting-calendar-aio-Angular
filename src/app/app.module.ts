@@ -1,9 +1,5 @@
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { CalendarModule, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { SchedulerModule } from 'angular-calendar-scheduler';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -19,6 +15,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { AlertComponent } from './alert/alert.component';
 import { EditComponent } from './activity/edit/edit.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   declarations: [
@@ -38,13 +35,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    CalendarModule.forRoot({
-      provide: DateAdapter,
-      useFactory: adapterFactory,
-    }),
-    SchedulerModule.forRoot({ locale: 'en', headerDateFormat: 'daysRange' }),
     FormsModule,
     BrowserAnimationsModule,
+    FileUploadModule,
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent],

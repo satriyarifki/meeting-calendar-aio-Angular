@@ -20,10 +20,16 @@ export class EditComponent {
   submitted: Boolean = false;
   initialEvent!: any;
   arrayParicipants: Array<String> = [];
+
+  // API
   roomsApi: any;
   participantsApi: any;
-  form!: FormGroup;
   eventApi: any;
+  emailsEmployee: any;
+
+  //FORM
+  form!: FormGroup;
+
   constructor(
     private editService: EditActivityService,
     private apiService: ApiService,
@@ -36,10 +42,12 @@ export class EditComponent {
       apiService.getEvents(),
       apiService.getParticipants(),
       apiService.getRooms(),
-    ]).subscribe(([events, participants, rooms]) => {
+      apiService.getEmailEmployees(),
+    ]).subscribe(([events, participants, rooms, emails]) => {
       this.eventApi = events;
       this.roomsApi = rooms;
       this.participantsApi = participants;
+      this.emailsEmployee = emails;
       // console.log(this.eventApi);
       // console.log(this.roomsApi);
       // console.log(this.participantsApi);
@@ -217,6 +225,33 @@ export class EditComponent {
       message: [this.initialEvent.message, Validators.required],
     });
     this.radioInput = this.initialEvent.online_offline;
+  }
+  sendEmail() {
+    if (this.form.invalid) {
+      console.log(this.f);
+
+      this.alertService.onCallAlert('Fill Blank Inputs!', AlertType.Warning);
+      return;
+    }
+    let email = {
+      date: this.f['date'].value,
+      organizer: this.f['organizer'].value,
+      participants: this.f['participants'].value,
+      message: this.f['message'].value,
+    };
+    this.apiService.sendEmail(email).subscribe(
+      (em) => {
+        console.log('Email sent Success');
+        this.alertService.onCallAlert(
+          'Email Success Sended!',
+          AlertType.Success
+        );
+      },
+      (err) => {
+        this.alertService.onCallAlert('Send Email Failed!', AlertType.Success);
+        console.log('Email Failed');
+      }
+    );
   }
   onSubmit() {
     this.submitted = true;
