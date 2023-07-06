@@ -299,7 +299,7 @@ export class EditComponent {
       online_offline: this.f['online_offline'].value,
       url_online: this.f['url_online'].value,
       roomId: this.f['roomId'].value,
-      // participants: this.f['participants'].value,
+      participants: this.f['participants'].value,
       message: this.f['message'].value,
     };
     let email = {
@@ -314,9 +314,9 @@ export class EditComponent {
 
     // console.log(email.message);
 
-    this.arrayParicipants = this.f['participants'].value
-      .replace(/\s/g, '')
-      .split(',');
+    // this.arrayParicipants = this.f['participants'].value
+    //   .replace(/\s/g, '')
+    //   .split(',');
     // console.log(body);
 
     this.apiService.updateEvents(this.initialEvent.id, body).subscribe(
@@ -325,7 +325,7 @@ export class EditComponent {
 
         // this.alertServie.onCallAlert('Success Add Data', AlertType.Success)
         // this.router.navigate(['/dashboard/users']);
-        this.arrayParicipants.forEach((element) => {
+        // this.arrayParicipants.forEach((element) => {
           if (
             this.f['participants'].value !=
             this.joinParticipantById(this.initialEvent.id)
@@ -334,7 +334,7 @@ export class EditComponent {
             this.apiService
               .postParticipants({
                 eventId: this.initialEvent.id,
-                email: element,
+                email: email.participants,
               })
               .subscribe(
                 (subs) => {
@@ -358,7 +358,7 @@ export class EditComponent {
             this.alertService.onCallAlert('Update Success!', AlertType.Success);
             // window.location.reload();
           }
-        });
+        // });
         // this.apiService.sendEmail(email).subscribe(
         //   (em) => {
         //     console.log('Email sent Success');

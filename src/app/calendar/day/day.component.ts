@@ -283,16 +283,21 @@ export class DayComponent {
     this.apiService.deleteParticipantsByEvent(this.idEventOnDelete).subscribe(
       (response) => {
         console.log(response + 'Participants Delete Success');
-        this.apiService.deleteEvents(this.idEventOnDelete).subscribe(
-          (response) => {
-            console.log(response + 'Events Delete Success');
-            this.closeDeleteAlert();
-            window.location.reload();
-          },
-          (err) => {
-            console.log(err);
-          }
-        );
+        this.apiService.deleteAttachmentByEventid(this.idEventOnDelete).subscribe(res => {
+          console.log(res + 'Attachments Delete Success');
+          this.apiService.deleteEvents(this.idEventOnDelete).subscribe(
+            (respons) => {
+              console.log(respons + 'Events Delete Success');
+              this.closeDeleteAlert();
+              window.location.reload();
+            },
+            (err) => {
+              console.log(err);
+            }
+          );
+        })
+        
+        
       },
       (err) => {
         console.log(err);

@@ -13,7 +13,7 @@ import { DatePipe, formatDate } from '@angular/common';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { AlertType } from 'src/app/services/alert/alert.model';
 import { forkJoin, map, Observable, startWith } from 'rxjs';
-const URL = 'http://localhost:3555/upload/upload';
+const URL = 'http://127.0.0.1:3555/upload';
 
 @Component({
   selector: 'app-create',
@@ -43,7 +43,7 @@ export class CreateComponent implements OnInit {
   public uploader: FileUploader = new FileUploader({
     url: URL,
     itemAlias: 'files',
-    additionalParameter: { dataId: 1 },
+    additionalParameter: { dataId: 1, mail: null },
   });
 
   constructor(
@@ -87,6 +87,7 @@ export class CreateComponent implements OnInit {
     this.show = true;
   }
   closeModal() {
+    this.uploader.clearQueue();
     this.show = false;
   }
   convertDate(date: any) {
@@ -149,9 +150,16 @@ export class CreateComponent implements OnInit {
       );
     }
   }
+  inputFileChange(event: any) {
+    console.log(event);
+  }
 
   onSubmit() {
     this.submitted = true;
+    console.log(this.uploader);
+    this.uploader.options.additionalParameter = { dataId: 2 };
+    console.log(this.uploader.options.additionalParameter);
+
     if (this.form.invalid) {
       console.log(this.f);
 
@@ -186,7 +194,7 @@ export class CreateComponent implements OnInit {
       online_offline: this.f['online_offline'].value,
       url_online: this.f['url_online'].value,
       roomId: this.f['roomId'].value,
-      // participants: this.f['participants'].value,
+      participants: this.f['participants'].value,
       message: this.f['message'].value,
     };
     let email = {
@@ -201,50 +209,70 @@ export class CreateComponent implements OnInit {
 
     // console.log(email.message);
 
-    this.arrayParicipants = this.f['participants'].value
-      .replace(/\s/g, '')
-      .split(',');
+    // this.arrayParicipants = this.f['participants'].value
+    //   .replace(/\s/g, '')
+    //   .split(',');
     // console.log(body);
-
     this.apiService.postEvents(body).subscribe(
       (data) => {
         // console.log(data.id);
 
         // this.alertServie.onCallAlert('Success Add Data', AlertType.Success)
         // this.router.navigate(['/dashboard/users']);
-        this.arrayParicipants.forEach((element) => {
-          this.apiService
-            .postParticipants({
-              eventId: data.id,
-              email: element,
-            })
-            .subscribe(
-              (subs) => {
-                this.closeModal();
-                this.alertService.onCallAlert(
-                  'Create Meeting Success!',
-                  AlertType.Success
-                );
-                // this.ngOnInit();
-                // window.location.reload();
-              },
-              (err) => {
-                console.log(err);
-              }
-            );
-        });
-        if (this.f['emailDirectSend'].value) {
-          console.log('Sent Email');
-
-          this.apiService.sendEmail(email).subscribe(
-            (em) => {
-              console.log('Email sent Success');
+        // this.arrayParicipants.forEach((element) => {
+        this.apiService
+          .postParticipants({
+            eventId: data.id,
+            email: email.participants,
+          })
+          .subscribe(
+            (subs) => {
+              this.closeModal();
+              this.alertService.onCallAlert(
+                'Create Meeting Success!',
+                AlertType.Success
+              );
+              // this.ngOnInit();
+              // window.location.reload();
             },
             (err) => {
-              console.log('Email Failed');
+              console.log(err);
             }
           );
+        // });
+        if (this.uploader.queue.length > 0) {
+          if (this.f['emailDirectSend'].value) {
+            this.uploader.options.additionalParameter = {
+              dataId: data.id,
+              date: this.f['date'].value,
+              organizer: this.f['organizer'].value,
+              participants: this.f['participants'].value,
+              message: this.f['message'].value,
+            };
+            console.log(this.uploader.options.additionalParameter);
+
+            this.uploader.uploadAll();
+            console.log('Up + Email');
+          } else {
+            this.uploader.options.additionalParameter = { dataId: data.id };
+            this.uploader.uploadAll();
+            console.log('Up');
+          }
+        } else {
+          if (this.f['emailDirectSend'].value) {
+            console.log('Sent Email');
+
+            this.apiService.sendEmail(email).subscribe(
+              (em) => {
+                console.log('Email sent Success');
+              },
+              (err) => {
+                console.log('Email Failed');
+              }
+            );
+          }
         }
+
         this.ngOnInit();
         this.submitted = false;
       },

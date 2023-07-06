@@ -51,4 +51,9 @@ export class ApiService {
   getEmailEmployees(): Observable<any> {
     return this.http.get(this.baseUrl + 'employees/email');
   }
+
+  // ATTACHMENTS-----------------------------------------------------
+  deleteAttachmentByEventid(eventId: any): Observable<any> {
+    return this.http.delete(this.baseUrl + 'attachments/' + eventId);
+  }
 }
