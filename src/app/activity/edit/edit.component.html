@@ -223,6 +223,62 @@
               class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             ></textarea>
           </div>
+          <div class="flex justify-end flex-wrap space-y-1">
+            <label
+              for="inline-input-label-with-helper-text"
+              class="block text-sm mb-2 w-1/4"
+              >Attachment (Optional)</label
+            >
+
+            <label
+              class="w-3/4 flex flex-col items-center px-4 py-3 bg-white text-blue rounded-lg shadow-md tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue-300 hover:text-white transition-colors"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z"
+                />
+              </svg>
+              <span class="mt-1.5 text-sm leading-normal">Select a file</span>
+              <input
+                id="files"
+                type="file"
+                name="files"
+                multiple
+                ng2FileSelect
+                [uploader]="uploader"
+                class="hidden"
+              />
+            </label>
+            <div
+              *ngFor="let item of this.uploader.queue; index as i"
+              class="relative w-3/4 overflow-hidden mt-1 py-1.5 px-3 border border-gray-200 shadow-md rounded-md flex justify-end items-center"
+            >
+              <a
+                (click)="this.uploader.queue[i].remove()"
+                class="absolute left-0 w-1/12 h-full flex justify-center items-center bg-red-400 hover:bg-red-500 cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="20"
+                  viewBox="0 -960 960 960"
+                  width="20"
+                  fill="white"
+                >
+                  <path
+                    d="m361-299 119-121 120 121 47-48-119-121 119-121-47-48-120 121-119-121-48 48 120 121-120 121 48 48ZM261-120q-24 0-42-18t-18-42v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570Zm-438 0v570-570Z"
+                  />
+                </svg>
+              </a>
+              <span class="w-11/12 text-center text-sm">{{
+                item.file.name
+              }}</span>
+            </div>
+          </div>
           <div class="w-full flex"></div>
           <div class="flex justify-evenly pt-3">
             <a

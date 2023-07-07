@@ -56,4 +56,7 @@ export class ApiService {
   deleteAttachmentByEventid(eventId: any): Observable<any> {
     return this.http.delete(this.baseUrl + 'attachments/' + eventId);
   }
+  getAttachmentById(eventId: any): Observable<any> {
+    return this.http.get(this.baseUrl + 'attachments/' + eventId);
+  }
 }

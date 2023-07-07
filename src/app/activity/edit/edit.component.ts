@@ -3,11 +3,13 @@ import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { areIntervalsOverlapping, format, set } from 'date-fns';
-import { forkJoin } from 'rxjs';
+import { FileItem, FileUploader } from 'ng2-file-upload';
+import { filter, forkJoin } from 'rxjs';
 import { AlertType } from 'src/app/services/alert/alert.model';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { EditActivityService } from 'src/app/services/edit-activity/edit-activity.service';
+const URL = 'http://127.0.0.1:3555/';
 
 @Component({
   selector: 'app-edit',
@@ -26,9 +28,18 @@ export class EditComponent {
   participantsApi: any;
   eventApi: any;
   emailsEmployee: any;
+  attachApi: any;
 
   //FORM
   form!: FormGroup;
+
+  //Upload
+  public uploader: FileUploader = new FileUploader({
+    url: URL + 'upload',
+    itemAlias: 'files',
+    additionalParameter: { dataId: 1 },
+    disableMultipart: true,
+  });
 
   constructor(
     private editService: EditActivityService,
@@ -48,9 +59,6 @@ export class EditComponent {
       this.roomsApi = rooms;
       this.participantsApi = participants;
       this.emailsEmployee = emails;
-      // console.log(this.eventApi);
-      // console.log(this.roomsApi);
-      // console.log(this.participantsApi);
     });
     if (this.editService.subsVar == undefined) {
       this.editService.subsVar = this.editService.invokeAlert.subscribe(
@@ -71,6 +79,7 @@ export class EditComponent {
     this.show = true;
   }
   closeModal() {
+    this.uploader.clearQueue();
     this.show = false;
   }
   convertDate(date: any) {
@@ -200,10 +209,6 @@ export class EditComponent {
 
   ngOnInit(): void {}
   initialForm() {
-    // console.log(format(new Date (this.initialEvent.date), 'yyyy-MM-dd'));
-
-    // console.log(this.joinParticipantById(this.initialEvent.id));
-
     this.form = this.formBuilder.group({
       userId: [this.initialEvent.userId, Validators.required],
       date: [
@@ -225,8 +230,20 @@ export class EditComponent {
       message: [this.initialEvent.message, Validators.required],
     });
     this.radioInput = this.initialEvent.online_offline;
+    this.apiService
+      .getAttachmentById(this.initialEvent.id)
+      .subscribe((data) => {
+        console.log(data);
+        this.attachApi = data;
+        data?.forEach((element: any) => {
+          this.uploader.addToQueue([
+            new File([URL + element.path], element.realName),
+          ]);
+        });
+      });
   }
   sendEmail() {
+    console.log(this.uploader.queue);
     if (this.form.invalid) {
       console.log(this.f);
 
@@ -239,19 +256,48 @@ export class EditComponent {
       participants: this.f['participants'].value,
       message: this.f['message'].value,
     };
-    this.apiService.sendEmail(email).subscribe(
-      (em) => {
-        console.log('Email sent Success');
-        this.alertService.onCallAlert(
-          'Email Success Sended!',
-          AlertType.Success
-        );
-      },
-      (err) => {
-        this.alertService.onCallAlert('Send Email Failed!', AlertType.Success);
-        console.log('Email Failed');
-      }
-    );
+    
+    
+
+    if (this.uploader.queue.length > 0) {
+      this.uploader.queue.forEach(element => {
+        if(this.attachApi.filter(
+          (data: any) => data.realName == element.file.name
+        ).length != 0) {
+          this.uploader.removeFromQueue(element)
+        }
+      });
+      this.uploader.options.additionalParameter = {
+        dataId: this.initialEvent.id,
+        date: this.f['date'].value,
+        organizer: this.f['organizer'].value,
+        participants: this.f['participants'].value,
+        message: this.f['message'].value,
+      };
+      console.log(this.uploader.options.additionalParameter);
+
+      this.uploader.uploadAll();
+      console.log('Up + Email');
+    } else {
+      console.log('Sent Email');
+
+      this.apiService.sendEmail(email).subscribe(
+        (em) => {
+          console.log('Email sent Success');
+          this.alertService.onCallAlert(
+            'Email Success Sended!',
+            AlertType.Success
+          );
+        },
+        (err) => {
+          this.alertService.onCallAlert(
+            'Send Email Failed!',
+            AlertType.Success
+          );
+          console.log('Email Failed');
+        }
+      );
+    }
   }
   onSubmit() {
     this.submitted = true;
@@ -261,20 +307,6 @@ export class EditComponent {
       this.alertService.onCallAlert('Fill Blank Inputs!', AlertType.Warning);
       return;
     }
-    // if (
-    //   this.inBetweenTimeChecker(
-    //     this.f['time_start'].value,
-    //     this.f['time_end'].value,
-    //     this.f['date'].value
-    //   )
-    // ) {
-    //   this.alertService.onCallAlert(
-    //     'Time Booked, Choose Another!',
-    //     AlertType.Error
-    //   );
-
-    //   return;
-    // }
     if (
       this.isOverlappingTime(
         this.f['date'].value,
@@ -326,38 +358,38 @@ export class EditComponent {
         // this.alertServie.onCallAlert('Success Add Data', AlertType.Success)
         // this.router.navigate(['/dashboard/users']);
         // this.arrayParicipants.forEach((element) => {
-          if (
-            this.f['participants'].value !=
-            this.joinParticipantById(this.initialEvent.id)
-          ) {
-            this.apiService.deleteParticipantsByEvent(this.initialEvent.id);
-            this.apiService
-              .postParticipants({
-                eventId: this.initialEvent.id,
-                email: email.participants,
-              })
-              .subscribe(
-                (subs) => {
-                  this.closeModal();
-                  this.alertService.onCallAlert(
-                    'Update Success!',
-                    AlertType.Success
-                  );
-                },
-                (err) => {
-                  console.log(err);
-                }
-              );
-          } else {
-            this.closeModal();
+        if (
+          this.f['participants'].value !=
+          this.joinParticipantById(this.initialEvent.id)
+        ) {
+          this.apiService.deleteParticipantsByEvent(this.initialEvent.id);
+          this.apiService
+            .postParticipants({
+              eventId: this.initialEvent.id,
+              email: email.participants,
+            })
+            .subscribe(
+              (subs) => {
+                this.closeModal();
+                this.alertService.onCallAlert(
+                  'Update Success!',
+                  AlertType.Success
+                );
+              },
+              (err) => {
+                console.log(err);
+              }
+            );
+        } else {
+          this.closeModal();
 
-            console.log(this.router.getCurrentNavigation());
+          console.log(this.router.getCurrentNavigation());
 
-            // this.router.navigate(['/']);
-            // this.router.navigate([this.router.url]);
-            this.alertService.onCallAlert('Update Success!', AlertType.Success);
-            // window.location.reload();
-          }
+          // this.router.navigate(['/']);
+          // this.router.navigate([this.router.url]);
+          this.alertService.onCallAlert('Update Success!', AlertType.Success);
+          // window.location.reload();
+        }
         // });
         // this.apiService.sendEmail(email).subscribe(
         //   (em) => {
