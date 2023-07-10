@@ -3,12 +3,14 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 var baseApi = environment.baseApi;
+var defaultApi = environment.defaultApi;
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
   private baseUrl = baseApi + 'api/';
+  private defaultUrl = defaultApi + 'api/';
   private emailUrl = baseApi + 'email/';
 
   constructor(private http: HttpClient) {}
@@ -58,5 +60,36 @@ export class ApiService {
   }
   getAttachmentById(eventId: any): Observable<any> {
     return this.http.get(this.baseUrl + 'attachments/' + eventId);
+  }
+
+  //-----------------------------------------------------------RESERVATIONS
+  reservGet(): Observable<any> {
+    return this.http.get(this.defaultUrl + 'reserv');
+  }
+  reservGetById(id: any): Observable<any> {
+    return this.http.get(this.defaultUrl + 'reserv/' + id);
+  }
+  reservPost(body: any): Observable<any> {
+    return this.http.post(this.defaultUrl + 'reserv', body);
+  }
+  reservUpdate(id: any, body: any): Observable<any> {
+    return this.http.post(this.defaultUrl + 'reserv/' + id, body);
+  }
+  reservDelete(id: any): Observable<any> {
+    return this.http.delete(this.defaultUrl + 'reserv/' + id);
+  }
+
+  //-------------------------------------------------------------ACCESSORIES
+  accessoriesGet(): Observable<any> {
+    return this.http.get(this.defaultUrl + 'accessories');
+  }
+  accessoriesGetById(id: any): Observable<any> {
+    return this.http.get(this.defaultUrl + 'accessories/' + id);
+  }
+  accessoriesPost(body: any): Observable<any> {
+    return this.http.post(this.defaultUrl + 'accessories', body);
+  }
+  accessoriesUpdate(id: any, body: any): Observable<any> {
+    return this.http.post(this.defaultUrl + 'accessories/' + id, body);
   }
 }

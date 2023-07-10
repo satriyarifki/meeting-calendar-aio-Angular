@@ -39,21 +39,21 @@
       </div> -->
 
         <div class="w-full space-y-1">
-          <label class="text-[#D89C60] font-manrope" for="emailAddress"
-            >Email Address</label
+          <label class="text-[#D89C60] font-manrope" for="nikEmployee"
+            >NIK Employee</label
           >
           <input
-            id="emailAddress"
-            type="email"
-            formControlName="email"
+            id="nikEmployee"
+            type="text"
+            formControlName="nik"
             class="block w-full px-4 py-2 text-[#D89C60] font-manrope font-semibold bg-white border border-gray-300 rounded-md focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring"
           />
-          <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+          <div *ngIf="submitted && f['nik'].errors" class="invalid-feedback">
             <div
-              *ngIf="f['email'].errors['required']"
+              *ngIf="f['nik'].errors['required']"
               class="text-red-500 dark:text-red-500 text-sm text-end"
             >
-              Email is required
+              NIK is required
             </div>
           </div>
         </div>
@@ -63,7 +63,7 @@
             >Password</label
           >
           <div class="relative flex items-center">
-            <button
+            <a
               (click)="changeVisibilityPassword()"
               class="absolute right-0 focus:outline-none rtl:left-0 rtl:right-auto"
             >
@@ -79,7 +79,7 @@
                   clip-rule="evenodd"
                 />
               </svg>
-            </button>
+            </a>
             <input
               id="password"
               formControlName="password"

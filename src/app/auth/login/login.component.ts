@@ -22,7 +22,7 @@ export class LoginComponent {
     private router: Router
   ) {
     this.form = this.formBuilder.group({
-      email: ['', Validators.required],
+      nik: ['', Validators.required],
       password: ['', Validators.required],
     });
   }
@@ -38,7 +38,7 @@ export class LoginComponent {
     }
 
     this.authService
-      .login(this.f['email'].value, this.f['password'].value)
+      .login(this.f['nik'].value, this.f['password'].value)
       .subscribe(
         (data) => {
           // console.log(data.access_token);

@@ -9,7 +9,7 @@ import { AlertType } from 'src/app/services/alert/alert.model';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { EditActivityService } from 'src/app/services/edit-activity/edit-activity.service';
-const URL = 'http://127.0.0.1:3555/';
+const URL = 'http://127.0.0.1:3555/upload';
 
 @Component({
   selector: 'app-edit',
@@ -35,10 +35,9 @@ export class EditComponent {
 
   //Upload
   public uploader: FileUploader = new FileUploader({
-    url: URL + 'upload',
+    url: URL,
     itemAlias: 'files',
     additionalParameter: { dataId: 1 },
-    disableMultipart: true,
   });
 
   constructor(
@@ -73,7 +72,6 @@ export class EditComponent {
   }
   callModal(event: any) {
     this.initialEvent = event.id;
-    console.log(this.initialEvent);
     this.initialForm();
 
     this.show = true;
@@ -241,6 +239,13 @@ export class EditComponent {
           ]);
         });
       });
+    this.uploader.onAfterAddingFile = (file) => {
+      file.withCredentials = false;
+    };
+    this.uploader.onCompleteItem = (item: any, status: any) => {
+      console.log('Uploaded File Details:', item);
+      this.alertService.onCallAlert('Upload Success!', AlertType.Success);
+    };
   }
   sendEmail() {
     console.log(this.uploader.queue);
@@ -256,15 +261,15 @@ export class EditComponent {
       participants: this.f['participants'].value,
       message: this.f['message'].value,
     };
-    
-    
 
     if (this.uploader.queue.length > 0) {
-      this.uploader.queue.forEach(element => {
-        if(this.attachApi.filter(
-          (data: any) => data.realName == element.file.name
-        ).length != 0) {
-          this.uploader.removeFromQueue(element)
+      this.uploader.queue.forEach((element) => {
+        if (
+          this.attachApi.filter(
+            (data: any) => data.realName == element.file.name
+          ).length != 0
+        ) {
+          this.uploader.removeFromQueue(element);
         }
       });
       this.uploader.options.additionalParameter = {
@@ -353,11 +358,40 @@ export class EditComponent {
 
     this.apiService.updateEvents(this.initialEvent.id, body).subscribe(
       (data) => {
-        console.log(this.initialEvent.id);
-
         // this.alertServie.onCallAlert('Success Add Data', AlertType.Success)
         // this.router.navigate(['/dashboard/users']);
         // this.arrayParicipants.forEach((element) => {
+        if (this.uploader.queue.length > 0) {
+          console.log(this.uploader.queue[0]);
+          console.log(this.uploader.queue[1]);
+          console.log(this.uploader.queue.length);
+
+          this.uploader.queue.forEach((element, index) => {
+            // console.log(this.uploader.queue[index]);
+            console.log({
+              queue: element,
+              attach: this.attachApi.filter(
+                (data: any) => data.realName == element.file.name
+              ),
+            });
+            if (
+              this.attachApi.filter(
+                (data: any) => data.realName == element.file.name
+              ).length != 0
+            ) {
+              this.uploader.removeFromQueue(element);
+            }
+          });
+          console.log(this.uploader.queue);
+          
+
+          this.uploader.options.additionalParameter = {
+            dataId: this.initialEvent.id,
+          };
+
+          this.uploader.uploadAll();
+          console.log('Up + Email');
+        }
         if (
           this.f['participants'].value !=
           this.joinParticipantById(this.initialEvent.id)

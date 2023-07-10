@@ -17,11 +17,11 @@ const USER_KEY = 'auth-user';
 })
 export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
-  login(email: string, password: string): Observable<any> {
+  login(nik: string, password: string): Observable<any> {
     return this.http.post(
       authUrl + 'signin',
       {
-        email,
+        nik,
         password,
       },
       httpOptions

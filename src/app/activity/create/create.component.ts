@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { addHours, format, addDays, addMonths } from 'date-fns';
+import {
+  addHours,
+  format,
+  addDays,
+  addMonths,
+  differenceInMinutes,
+  set,
+} from 'date-fns';
 import { FileUploader } from 'ng2-file-upload';
 import { CreateActivityService } from 'src/app/services/create-activity/create-activity.service';
 import {
@@ -13,6 +20,7 @@ import { DatePipe, formatDate } from '@angular/common';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { AlertType } from 'src/app/services/alert/alert.model';
 import { forkJoin, map, Observable, startWith } from 'rxjs';
+import { AuthService } from 'src/app/services/auth/auth.service';
 const URL = 'http://127.0.0.1:3555/upload';
 
 @Component({
@@ -50,6 +58,7 @@ export class CreateComponent implements OnInit {
     private createService: CreateActivityService,
     private apiService: ApiService,
     private formBuilder: FormBuilder,
+    private authService: AuthService,
     private alertService: AlertService,
     private datePipe: DatePipe
   ) {}
@@ -83,6 +92,7 @@ export class CreateComponent implements OnInit {
   callModal(date: any) {
     this.initialDate = date;
     this.initialForm();
+    // console.log(this.authService.getUser()[0].lg_nik);
 
     this.show = true;
   }
@@ -142,6 +152,7 @@ export class CreateComponent implements OnInit {
       this.roomsAll = rooms;
       this.eventDatas = events;
     });
+
     if (this.createService.subsVar == undefined) {
       this.createService.subsVar = this.createService.invokeAlert.subscribe(
         (date) => {
@@ -197,6 +208,41 @@ export class CreateComponent implements OnInit {
       participants: this.f['participants'].value,
       message: this.f['message'].value,
     };
+    let bodyReserv = {
+      userId: this.authService.getUser()[0].lg_nik,
+      resourceId: this.f['roomId'].value - 1,
+      begin: set(new Date(body.date), {
+        hours: body.time_start.slice(0, 2),
+        minutes: body.time_start.slice(3, 5),
+      }),
+      end: set(new Date(body.date), {
+        hours: body.time_end.slice(0, 2),
+        minutes: body.time_end.slice(3, 5),
+      }),
+      length:
+        differenceInMinutes(
+          set(new Date(body.date), {
+            hours: body.time_end.slice(0, 2),
+            minutes: body.time_end.slice(3, 5),
+          }),
+          set(new Date(body.date), {
+            hours: body.time_start.slice(0, 2),
+            minutes: body.time_start.slice(3, 5),
+          })
+        ) / 60,
+      repeat: false,
+      title: this.f['title'].value,
+      description: this.f['message'].value,
+    };
+    let bodyAcs = {
+      reservationId: 0,
+      laptop: false,
+      panaboard: false,
+      papanTulis: false,
+      projector: false,
+      pocari: false,
+      soyjoy: false,
+    };
     let email = {
       date: this.f['date'].value,
       organizer: this.f['organizer'].value,
@@ -240,6 +286,46 @@ export class CreateComponent implements OnInit {
             }
           );
         // });
+        if (body.online_offline == 'Offline') {
+          if (bodyReserv.begin == null) {
+            console.log('stop');
+
+            return;
+          }
+          this.apiService.reservPost(bodyReserv).subscribe(
+            (data) => {
+              // console.log(data);
+              bodyAcs.reservationId = data.id;
+              this.apiService.accessoriesPost(bodyAcs).subscribe(
+                (elem) => {
+                  // console.log(elem);
+                  this.alertService.onCallAlert(
+                    'Booked Reservation Success!',
+                    AlertType.Success
+                  );
+                  // this.router.navigate(['/']);
+                },
+                (er) => {
+                  // console.log(er);
+
+                  this.alertService.onCallAlert(
+                    'Booked Reservation Fail!',
+                    AlertType.Error
+                  );
+                }
+              );
+            },
+            (err) => {
+              // console.log(err);
+
+              this.alertService.onCallAlert(
+                'Booked Reservation Fail!',
+                AlertType.Error
+              );
+            }
+          );
+        }
+
         if (this.uploader.queue.length > 0) {
           if (this.f['emailDirectSend'].value) {
             this.uploader.options.additionalParameter = {
