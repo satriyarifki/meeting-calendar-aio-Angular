@@ -256,10 +256,14 @@ export class EditComponent {
       return;
     }
     let email = {
+      title: this.f['title'].value,
       date: this.f['date'].value,
       organizer: this.f['organizer'].value,
       participants: this.f['participants'].value,
       message: this.f['message'].value,
+      online_offline: this.f['online_offline'].value,
+      url_online: this.f['url_online'].value,
+      roomId:this.f['roomId'].value,
     };
 
     if (this.uploader.queue.length > 0) {
