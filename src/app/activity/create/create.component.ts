@@ -35,13 +35,9 @@ export class CreateComponent implements OnInit {
   initialDate!: Date;
   arrayParicipants: Array<String> = [];
   options: string[] = ['link One', 'link Two', 'link Three'];
-  emailList: string[] = [
-    'rifkisatriya@gmail.com',
-    'satriaveiro@gmail.com',
-    'lazuardi@gmail.com',
-  ];
   //API
   emailsEmployee: any;
+  nameEmailEmployee: any;
   roomsAll: any;
   eventDatas: any;
 
@@ -146,9 +142,11 @@ export class CreateComponent implements OnInit {
     forkJoin(
       this.apiService.getEmailEmployees(),
       this.apiService.getRooms(),
-      this.apiService.getEvents()
-    ).subscribe(([emails, rooms, events]) => {
+      this.apiService.getEvents(),
+      this.apiService.getNameEmailEmployees()
+    ).subscribe(([emails, rooms, events,nameEmail]) => {
       this.emailsEmployee = emails;
+      this.nameEmailEmployee = nameEmail;
       this.roomsAll = rooms;
       this.eventDatas = events;
     });

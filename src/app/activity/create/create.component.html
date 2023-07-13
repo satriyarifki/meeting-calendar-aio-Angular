@@ -83,15 +83,21 @@
             <label
               for="inline-input-label-with-helper-text"
               class="block text-sm mb-2 w-1/4"
-              >Organizer Name</label
+              >Organizer</label
             >
             <input
               id="organizer"
               name="organizer"
               formControlName="organizer"
               type="text"
+              list="nameEmailList"
               class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             />
+            <datalist id="nameEmailList">
+              <option *ngFor="let item of nameEmailEmployee" [value]="item[0]">
+                {{ item[1] }} 
+              </option>
+            </datalist>
           </div>
           <div class="flex justify-between items-center flex-wrap">
             <label
@@ -207,8 +213,8 @@
               class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             />
             <datalist id="emailList">
-              <option *ngFor="let item of emailsEmployee" [value]="item">
-                {{ item }}
+              <option *ngFor="let item of nameEmailEmployee" [value]="item[0]">
+                {{ item[1] }} 
               </option>
             </datalist>
           </div>

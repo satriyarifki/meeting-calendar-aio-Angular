@@ -28,6 +28,7 @@ export class EditComponent {
   participantsApi: any;
   eventApi: any;
   emailsEmployee: any;
+  nameEmailEmployee: any;
   attachApi: any;
 
   //FORM
@@ -53,11 +54,13 @@ export class EditComponent {
       apiService.getParticipants(),
       apiService.getRooms(),
       apiService.getEmailEmployees(),
-    ]).subscribe(([events, participants, rooms, emails]) => {
+      apiService.getNameEmailEmployees(),
+    ]).subscribe(([events, participants, rooms, emails, nameEmail]) => {
       this.eventApi = events;
       this.roomsApi = rooms;
       this.participantsApi = participants;
       this.emailsEmployee = emails;
+      this.nameEmailEmployee = nameEmail;
     });
     if (this.editService.subsVar == undefined) {
       this.editService.subsVar = this.editService.invokeAlert.subscribe(
@@ -258,14 +261,23 @@ export class EditComponent {
     let email = {
       title: this.f['title'].value,
       date: this.f['date'].value,
+      year: new Date(this.f['date'].value).getFullYear(),
+      month: new Date(this.f['date'].value).getMonth(),
+      day: new Date(this.f['date'].value).getDate(),
+      hour_start: Number(this.f['time_start'].value.slice(0,2)),
+      minute_start: Number(this.f['time_start'].value.slice(3,5)),
+      hour_end: Number(this.f['time_end'].value.slice(0,2)),
+      minute_end: Number(this.f['time_end'].value.slice(3,5)),
+      // datetime_start: set(new Date(this.f['date'].value), {hours: this.f['time_start'].value.slice(0,2), minutes: this.f['time_start'].value.slice(3,5)}),
+      // datetime_end: set(new Date(this.f['date'].value), {hours: this.f['time_end'].value.slice(0,2), minutes: this.f['time_end'].value.slice(3,5)}),
       organizer: this.f['organizer'].value,
       participants: this.f['participants'].value,
       message: this.f['message'].value,
       online_offline: this.f['online_offline'].value,
       url_online: this.f['url_online'].value,
-      roomId:this.f['roomId'].value,
+      roomId: this.f['roomId'].value,
     };
-
+    
     if (this.uploader.queue.length > 0) {
       this.uploader.queue.forEach((element) => {
         if (
@@ -387,7 +399,6 @@ export class EditComponent {
             }
           });
           console.log(this.uploader.queue);
-          
 
           this.uploader.options.additionalParameter = {
             dataId: this.initialEvent.id,
