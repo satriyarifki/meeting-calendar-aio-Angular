@@ -87,6 +87,18 @@ export class EditComponent {
     return (date = new Date(date).toLocaleDateString());
   }
 
+  changeOrganizer(event: any) {
+    console.log(event.srcElement.value);
+    console.log(
+      this.nameEmailEmployee[
+        this.emailsEmployee.indexOf(event.srcElement.value)
+      ]
+    );
+  }
+  change(email: any) {
+    this.nameEmailEmployee[this.emailsEmployee.indexOf(email)];
+  }
+
   filterEvents(date: any) {
     return this.eventApi.filter(
       (data: any) => this.convertDate(data.date) == this.convertDate(date)
@@ -264,20 +276,23 @@ export class EditComponent {
       year: new Date(this.f['date'].value).getFullYear(),
       month: new Date(this.f['date'].value).getMonth(),
       day: new Date(this.f['date'].value).getDate(),
-      hour_start: Number(this.f['time_start'].value.slice(0,2)),
-      minute_start: Number(this.f['time_start'].value.slice(3,5)),
-      hour_end: Number(this.f['time_end'].value.slice(0,2)),
-      minute_end: Number(this.f['time_end'].value.slice(3,5)),
+      hour_start: Number(this.f['time_start'].value.slice(0, 2)),
+      minute_start: Number(this.f['time_start'].value.slice(3, 5)),
+      hour_end: Number(this.f['time_end'].value.slice(0, 2)),
+      minute_end: Number(this.f['time_end'].value.slice(3, 5)),
       // datetime_start: set(new Date(this.f['date'].value), {hours: this.f['time_start'].value.slice(0,2), minutes: this.f['time_start'].value.slice(3,5)}),
       // datetime_end: set(new Date(this.f['date'].value), {hours: this.f['time_end'].value.slice(0,2), minutes: this.f['time_end'].value.slice(3,5)}),
-      organizer: this.f['organizer'].value,
+      organizer:
+        this.nameEmailEmployee[
+          this.emailsEmployee.indexOf(this.f['organizer'].value)
+        ],
       participants: this.f['participants'].value,
       message: this.f['message'].value,
       online_offline: this.f['online_offline'].value,
       url_online: this.f['url_online'].value,
       roomId: this.f['roomId'].value,
     };
-    
+
     if (this.uploader.queue.length > 0) {
       this.uploader.queue.forEach((element) => {
         if (
