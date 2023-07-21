@@ -122,7 +122,7 @@
         routerLinkActive="router-link-active"
         class="w-full h-full flex hover:bg-gray-200 p-1"
         ><span
-          class="w-5 text-xl max-sm:text-[1rem] font-semibold"
+          class="w-6 pr-1 text-xl max-sm:text-[1rem] text-center font-semibold"
           [ngClass]="
             item.month != monthSelected.getMonth()
               ? 'text-gray-400'
@@ -158,7 +158,7 @@
                 {{ item.time_end.slice(0, -3) }}
               </div>
             </a> -->
-            <div class="flex-wrap flex justify-center py-1 pl-1 space-y-1 sm:hidden">
+            <div class="flex-wrap flex justify-center py-1 pl-2 space-y-1 sm:hidden">
               <span
                 class="bg-[#045174] bg-opacity-80 text-white text-xs text-center font-medium mr-1  rounded-sm w-full h-4"
                 >{{ item.time_start.slice(0, -6) }}</span
