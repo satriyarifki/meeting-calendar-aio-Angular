@@ -11,6 +11,24 @@ import { ApiService } from 'src/app/services/api.service';
 import { EditActivityService } from 'src/app/services/edit-activity/edit-activity.service';
 const URL = 'http://127.0.0.1:3555/upload';
 
+const listLink = [
+  {
+    name: 'Monthly Sharing Session',
+    link: 'http://bit.ly/MonthlySharingsession',
+  },
+  {
+    name: 'Weekly Morning Meeting Kejayan',
+    link: 'https://bit.ly/weeklyAIOKejayan',
+  },
+  {
+    name: 'Weekly Morning Meeting Sukabumi',
+    link: 'https://bit.ly/FactoryWMMSkb',
+  },
+  { name: 'Periodic Energy Meeting  ', link: 'http://bit.ly/MeetingEHSKJY' },
+  { name: 'Training HCD', link: 'https://bit.ly/TrainingHCDAIO' },
+  { name: 'CRP Meeting', link: 'https://bit.ly/CRPKEJAYAN ' },
+];
+
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
@@ -22,6 +40,7 @@ export class EditComponent {
   submitted: Boolean = false;
   initialEvent!: any;
   arrayParicipants: Array<String> = [];
+  listLink = listLink;
 
   // API
   roomsApi: any;

@@ -44,6 +44,7 @@
               >Date</label
             >
             <input
+              #dateinpu
               id="date"
               name="date"
               formControlName="date"
@@ -64,9 +65,7 @@
                 name="time_start"
                 formControlName="time_start"
                 type="time"
-                step="600"
-                min="07:00"
-                max="23:00"
+                step="1800"
                 class="py-2 px-2 grow border border-gray-300 rounded-md text-md focus:border-blue-500 ring:border-blue-500 outline-none"
               />
               <span class="w-5 text-center text-xl font-medium">-</span>
@@ -79,6 +78,12 @@
               />
             </div>
           </div>
+          <!-- <a
+            (click)="filterReservByDate(dateinpu.value)"
+            class="px-2 py-1.5 bg-slate-200"
+          >
+            click
+          </a> -->
           <div class="flex justify-between items-center flex-wrap">
             <label
               for="inline-input-label-with-helper-text"
@@ -95,7 +100,7 @@
             />
             <datalist id="nameEmailList">
               <option *ngFor="let item of nameEmailEmployee" [value]="item[0]">
-                {{ item[1] }} 
+                {{ item[1] }}
               </option>
             </datalist>
           </div>
@@ -164,8 +169,8 @@
               class="py-2 px-2 w-3/4 border form-select border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             />
             <datalist id="onlineList">
-              <option *ngFor="let item of options" [value]="item">
-                {{ item }}
+              <option *ngFor="let item of listLink" class="text-cyan-500" [value]="item.link">
+                {{ item.name }}
               </option>
             </datalist>
           </div>
@@ -214,7 +219,7 @@
             />
             <datalist id="emailList">
               <option *ngFor="let item of nameEmailEmployee" [value]="item[0]">
-                {{ item[1] }} 
+                {{ item[1] }}
               </option>
             </datalist>
           </div>

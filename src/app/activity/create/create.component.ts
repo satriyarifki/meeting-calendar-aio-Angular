@@ -6,6 +6,7 @@ import {
   addMonths,
   differenceInMinutes,
   set,
+  areIntervalsOverlapping,
 } from 'date-fns';
 import { FileUploader } from 'ng2-file-upload';
 import { CreateActivityService } from 'src/app/services/create-activity/create-activity.service';
@@ -23,6 +24,24 @@ import { forkJoin, map, Observable, startWith } from 'rxjs';
 import { AuthService } from 'src/app/services/auth/auth.service';
 const URL = 'http://127.0.0.1:3555/upload';
 
+const listLink = [
+  {
+    name: 'Monthly Sharing Session',
+    link: 'http://bit.ly/MonthlySharingsession',
+  },
+  {
+    name: 'Weekly Morning Meeting Kejayan',
+    link: 'https://bit.ly/weeklyAIOKejayan',
+  },
+  {
+    name: 'Weekly Morning Meeting Sukabumi',
+    link: 'https://bit.ly/FactoryWMMSkb',
+  },
+  { name: 'Periodic Energy Meeting  ', link: 'http://bit.ly/MeetingEHSKJY' },
+  { name: 'Training HCD', link: 'https://bit.ly/TrainingHCDAIO' },
+  { name: 'CRP Meeting', link: 'https://bit.ly/CRPKEJAYAN ' },
+];
+
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -34,12 +53,13 @@ export class CreateComponent implements OnInit {
   submitted: Boolean = false;
   initialDate!: Date;
   arrayParicipants: Array<String> = [];
-  options: string[] = ['link One', 'link Two', 'link Three'];
+  listLink = listLink;
   //API
   emailsEmployee: any;
   nameEmailEmployee: any;
   roomsAll: any;
   eventDatas: any;
+  reservs: any;
 
   //FORM
   form!: FormGroup;
@@ -110,7 +130,7 @@ export class CreateComponent implements OnInit {
     let result = true;
 
     for (const events of this.filterEvents(date)) {
-      console.log(events.time_start.slice(0, -3));
+      // console.log(events.time_start.slice(0, -3));
 
       if (
         (events.time_start.slice(0, -3) <= startHour &&
@@ -143,12 +163,14 @@ export class CreateComponent implements OnInit {
       this.apiService.getEmailEmployees(),
       this.apiService.getRooms(),
       this.apiService.getEvents(),
-      this.apiService.getNameEmailEmployees()
-    ).subscribe(([emails, rooms, events,nameEmail]) => {
+      this.apiService.getNameEmailEmployees(),
+      this.apiService.reservGet()
+    ).subscribe(([emails, rooms, events, nameEmail, reserv]) => {
       this.emailsEmployee = emails;
       this.nameEmailEmployee = nameEmail;
       this.roomsAll = rooms;
       this.eventDatas = events;
+      this.reservs = reserv;
     });
 
     if (this.createService.subsVar == undefined) {
@@ -161,6 +183,15 @@ export class CreateComponent implements OnInit {
   }
   inputFileChange(event: any) {
     console.log(event);
+  }
+  filterReservByDate(date: any) {
+    let reservbyDate = this.reservs.filter(
+      (data: any) => data.begin.slice(0, 10) == date
+    );
+    // console.log(reservbyDate);
+    // console.log(set(date,{hours:}));
+
+    // return reservbyDate;
   }
 
   onSubmit() {
@@ -175,25 +206,25 @@ export class CreateComponent implements OnInit {
       this.alertService.onCallAlert('Fill Blank Inputs!', AlertType.Warning);
       return;
     }
-    if (
-      !this.inBetweenTimeChecker(
-        this.f['time_start'].value,
-        this.f['time_end'].value,
-        this.f['date'].value
-      )
-    ) {
-      this.alertService.onCallAlert(
-        'Time Booked, Choose Another!',
-        AlertType.Error
-      );
+    // if (
+    //   !this.inBetweenTimeChecker(
+    //     this.f['time_start'].value,
+    //     this.f['time_end'].value,
+    //     this.f['date'].value
+    //   )
+    // ) {
+    //   this.alertService.onCallAlert(
+    //     'Time Booked, Choose Another!',
+    //     AlertType.Error
+    //   );
 
-      return;
-    }
+    //   return;
+    // }
 
-    this.f['userId'].setValue(1);
+    // this.f['userId'].setValue(1);
 
     let body = {
-      userId: this.f['userId'].value,
+      userId: this.authService.getUser()[0].lg_nik,
       date: this.f['date'].value,
       time_start: this.f['time_start'].value,
       time_end: this.f['time_end'].value,
@@ -232,6 +263,32 @@ export class CreateComponent implements OnInit {
       title: this.f['title'].value,
       description: this.f['message'].value,
     };
+
+    if (
+      body.online_offline == 'Offline' &&
+      this.isOverlappingTime(
+        bodyReserv.begin,
+        bodyReserv.end,
+        bodyReserv.resourceId
+      )
+    ) {
+      return;
+    } else if (body.online_offline == 'Online') {
+      if (
+        !this.inBetweenTimeChecker(
+          this.f['time_start'].value,
+          this.f['time_end'].value,
+          this.f['date'].value
+        )
+      ) {
+        this.alertService.onCallAlert(
+          'Time Booked, Choose Another!',
+          AlertType.Error
+        );
+
+        return;
+      }
+    }
     let bodyAcs = {
       reservationId: 0,
       laptop: false,
@@ -367,5 +424,50 @@ export class CreateComponent implements OnInit {
         this.submitted = false;
       }
     );
+  }
+
+  isOverlappingTime(begin: any, end: any, resourceId: any) {
+    let bool = false;
+    let reservation = this.reservs.filter(
+      (data: any) =>
+        format(new Date(data.begin), 'P') == format(new Date(begin), 'P') &&
+        data.resourceId == resourceId
+    );
+    try {
+      if (reservation.length != 0) {
+        // if (new Date(begin) > new Date(end)) {
+        //   return;
+        // } else {
+        reservation.forEach((element: any) => {
+          if (
+            areIntervalsOverlapping(
+              {
+                start: new Date(element.begin),
+                end: new Date(element.end),
+              },
+              { start: begin, end: end }
+            )
+          ) {
+            bool = true;
+            this.alertService.onCallAlert(
+              'Date & Resource Booked in MRIS! Choose Another!',
+              AlertType.Error
+            );
+            return;
+          }
+        });
+        // }
+      }
+    } catch (error) {
+      console.log('hh' + error);
+      bool = true;
+      this.alertService.onCallAlert(
+        'Fill Begin and End Correctly!',
+        AlertType.Error
+      );
+      return bool;
+    }
+
+    return bool;
   }
 }
