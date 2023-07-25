@@ -2,7 +2,12 @@ import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { areIntervalsOverlapping, format, set } from 'date-fns';
+import {
+  areIntervalsOverlapping,
+  differenceInMinutes,
+  format,
+  set,
+} from 'date-fns';
 import { FileItem, FileUploader } from 'ng2-file-upload';
 import { filter, forkJoin } from 'rxjs';
 import { AlertType } from 'src/app/services/alert/alert.model';
@@ -50,7 +55,7 @@ export class EditComponent {
   emailsEmployee: any;
   nameEmailEmployee: any;
   attachApi: any;
-  reservsApi:any
+  reservsApi: any;
 
   //FORM
   form!: FormGroup;
@@ -65,6 +70,7 @@ export class EditComponent {
   constructor(
     private editService: EditActivityService,
     private apiService: ApiService,
+    private authService: AuthService,
     private formBuilder: FormBuilder,
     private alertService: AlertService,
     private datePipe: DatePipe,
@@ -77,13 +83,13 @@ export class EditComponent {
       apiService.getEmailEmployees(),
       apiService.getNameEmailEmployees(),
       apiService.reservGet(),
-    ]).subscribe(([events, participants, rooms, emails, nameEmail,reserv]) => {
+    ]).subscribe(([events, participants, rooms, emails, nameEmail, reserv]) => {
       this.eventApi = events;
       this.roomsApi = rooms;
       this.participantsApi = participants;
       this.emailsEmployee = emails;
       this.nameEmailEmployee = nameEmail;
-      this.reservsApi = reserv
+      this.reservsApi = reserv;
     });
     if (this.editService.subsVar == undefined) {
       this.editService.subsVar = this.editService.invokeAlert.subscribe(
@@ -127,21 +133,23 @@ export class EditComponent {
       (data: any) => this.convertDate(data.date) == this.convertDate(date)
     );
   }
-  isOverlappingTime(date: any, begin: any, end: any, roomId: any) {
-    let bool = false;
-    console.log({
-      status:
-        format(new Date(this.eventApi[1].date), 'P') ==
-        format(new Date(date), 'P'),
-      dateE: format(new Date(this.eventApi[1].date), 'P'),
-      date: format(new Date(date), 'P'),
-    });
-
-    let reservation = this.eventApi.filter(
+  filterEventsByLink(date: any, link: any) {
+    return this.eventApi.filter(
       (data: any) =>
-        format(new Date(data.date), 'P') == format(new Date(date), 'P') &&
+        this.convertDate(data.date) == this.convertDate(date) &&
+        data.url_online == link &&
         data.id != this.initialEvent.id
     );
+  }
+  isOverlappingTime(date: any, begin: any, end: any, link: any) {
+    let bool = false;
+
+    let reservation = this.filterEventsByLink(date, link);
+    // let reservation = this.eventApi.filter(
+    //   (data: any) =>
+    //     format(new Date(data.date), 'P') == format(new Date(date), 'P') &&
+    //     data.id != this.initialEvent.id
+    // );
     console.log(reservation);
 
     try {
@@ -173,7 +181,7 @@ export class EditComponent {
           ) {
             bool = true;
             this.alertService.onCallAlert(
-              'Date & Resource Booked! Choose Another!',
+              'Time & Link Booked! Choose Another!',
               AlertType.Error
             );
             return;
@@ -193,7 +201,7 @@ export class EditComponent {
 
     return bool;
   }
-  inBetweenTimeChecker(startHour: any, endHour: any, date: any) {
+  inBetweenTimeChecker(startHour: any, endHour: any, date: any, link: any) {
     let result;
     if (
       startHour == this.initialEvent.time_strat &&
@@ -201,35 +209,58 @@ export class EditComponent {
     ) {
       return false;
     }
+    for (const events of this.filterEventsByLink(date, link)) {
+      // console.log(events.time_start.slice(0, -3));
 
-    for (const events of this.filterEvents(date)) {
       if (
-        startHour == this.initialEvent.time_strat &&
-        endHour != this.initialEvent.time_end
+        (events.time_start.slice(0, -3) <= startHour &&
+          events.time_end.slice(0, -3) >= startHour) ||
+        (events.time_start.slice(0, -3) <= endHour &&
+          events.time_end.slice(0, -3) >= endHour)
       ) {
-        if (
-          events.time_start.slice(0, -3) <= endHour &&
-          events.time_end.slice(0, -3) >= endHour
-        ) {
-          return true;
-        } else {
-          return false;
-        }
+        console.log(date + ' ' + startHour + ' ' + endHour);
+
+        result = false;
+        break;
       }
       if (
-        startHour != this.initialEvent.time_strat &&
-        endHour == this.initialEvent.time_end
+        events.time_start.slice(0, -3) > startHour &&
+        events.time_start.slice(0, -3) < endHour
       ) {
-        if (
-          events.time_start.slice(0, -3) <= startHour &&
-          events.time_end.slice(0, -3) >= startHour
-        ) {
-          return true;
-        } else {
-          return false;
-        }
+        console.log(date + ' ' + startHour + ' ' + endHour);
+
+        result = false;
+        break;
       }
     }
+    // for (const events of this.filterEvents(date)) {
+    //   if (
+    //     startHour == this.initialEvent.time_strat &&
+    //     endHour != this.initialEvent.time_end
+    //   ) {
+    //     if (
+    //       events.time_start.slice(0, -3) <= endHour &&
+    //       events.time_end.slice(0, -3) >= endHour
+    //     ) {
+    //       return true;
+    //     } else {
+    //       return false;
+    //     }
+    //   }
+    //   if (
+    //     startHour != this.initialEvent.time_strat &&
+    //     endHour == this.initialEvent.time_end
+    //   ) {
+    //     if (
+    //       events.time_start.slice(0, -3) <= startHour &&
+    //       events.time_end.slice(0, -3) >= startHour
+    //     ) {
+    //       return true;
+    //     } else {
+    //       return false;
+    //     }
+    //   }
+    // }
 
     return result;
   }
@@ -366,16 +397,16 @@ export class EditComponent {
       this.alertService.onCallAlert('Fill Blank Inputs!', AlertType.Warning);
       return;
     }
-    if (
-      this.isOverlappingTime(
-        this.f['date'].value,
-        this.f['time_start'].value,
-        this.f['time_end'].value,
-        0
-      )
-    ) {
-      return;
-    }
+    // if (
+    //   this.isOverlappingTime(
+    //     this.f['date'].value,
+    //     this.f['time_start'].value,
+    //     this.f['time_end'].value,
+    //     0
+    //   )
+    // ) {
+    //   return;
+    // }
 
     this.f['userId'].setValue(1);
 
@@ -399,6 +430,69 @@ export class EditComponent {
       participants: this.f['participants'].value,
       message: this.f['message'].value,
     };
+    let bodyReserv = {
+      userId: this.authService.getUser()[0].lg_nik,
+      resourceId: this.f['roomId'].value - 1,
+      begin: set(new Date(body.date), {
+        hours: body.time_start.slice(0, 2),
+        minutes: body.time_start.slice(3, 5),
+      }),
+      end: set(new Date(body.date), {
+        hours: body.time_end.slice(0, 2),
+        minutes: body.time_end.slice(3, 5),
+      }),
+      length:
+        differenceInMinutes(
+          set(new Date(body.date), {
+            hours: body.time_end.slice(0, 2),
+            minutes: body.time_end.slice(3, 5),
+          }),
+          set(new Date(body.date), {
+            hours: body.time_start.slice(0, 2),
+            minutes: body.time_start.slice(3, 5),
+          })
+        ) / 60,
+      repeat: false,
+      title: this.f['title'].value,
+      description: this.f['message'].value,
+    };
+
+    if (
+      body.online_offline == 'Offline' &&
+      this.isOverlappingTimeReserv(
+        bodyReserv.begin,
+        bodyReserv.end,
+        bodyReserv.resourceId
+      )
+    ) {
+      return;
+    } else if (body.online_offline == 'Online') {
+      if (
+        this.isOverlappingTime(
+          this.f['date'].value,
+          this.f['time_start'].value,
+          this.f['time_end'].value,
+          body.url_online
+        )
+      ) {
+        return;
+      }
+      // if (
+      //   !this.inBetweenTimeChecker(
+      //     this.f['time_start'].value,
+      //     this.f['time_end'].value,
+      //     this.f['date'].value,
+      //     body.url_online
+      //   )
+      // ) {
+      //   this.alertService.onCallAlert(
+      //     'Time & Link Booked, Choose Another!',
+      //     AlertType.Error
+      //   );
+
+      //   return;
+      // }
+    }
     if (body.online_offline == 'Online') {
       body.roomId = 1;
     }
