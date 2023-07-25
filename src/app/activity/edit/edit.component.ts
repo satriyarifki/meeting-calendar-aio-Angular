@@ -8,6 +8,7 @@ import { filter, forkJoin } from 'rxjs';
 import { AlertType } from 'src/app/services/alert/alert.model';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { EditActivityService } from 'src/app/services/edit-activity/edit-activity.service';
 const URL = 'http://127.0.0.1:3555/upload';
 
@@ -49,6 +50,7 @@ export class EditComponent {
   emailsEmployee: any;
   nameEmailEmployee: any;
   attachApi: any;
+  reservsApi:any
 
   //FORM
   form!: FormGroup;
@@ -74,12 +76,14 @@ export class EditComponent {
       apiService.getRooms(),
       apiService.getEmailEmployees(),
       apiService.getNameEmailEmployees(),
-    ]).subscribe(([events, participants, rooms, emails, nameEmail]) => {
+      apiService.reservGet(),
+    ]).subscribe(([events, participants, rooms, emails, nameEmail,reserv]) => {
       this.eventApi = events;
       this.roomsApi = rooms;
       this.participantsApi = participants;
       this.emailsEmployee = emails;
       this.nameEmailEmployee = nameEmail;
+      this.reservsApi = reserv
     });
     if (this.editService.subsVar == undefined) {
       this.editService.subsVar = this.editService.invokeAlert.subscribe(
@@ -492,5 +496,50 @@ export class EditComponent {
         this.submitted = false;
       }
     );
+  }
+
+  isOverlappingTimeReserv(begin: any, end: any, resourceId: any) {
+    let bool = false;
+    let reservation = this.reservsApi.filter(
+      (data: any) =>
+        format(new Date(data.begin), 'P') == format(new Date(begin), 'P') &&
+        data.resourceId == resourceId
+    );
+    try {
+      if (reservation.length != 0) {
+        // if (new Date(begin) > new Date(end)) {
+        //   return;
+        // } else {
+        reservation.forEach((element: any) => {
+          if (
+            areIntervalsOverlapping(
+              {
+                start: new Date(element.begin),
+                end: new Date(element.end),
+              },
+              { start: begin, end: end }
+            )
+          ) {
+            bool = true;
+            this.alertService.onCallAlert(
+              'Date & Resource Booked in MRIS! Choose Another!',
+              AlertType.Error
+            );
+            return;
+          }
+        });
+        // }
+      }
+    } catch (error) {
+      console.log('hh' + error);
+      bool = true;
+      this.alertService.onCallAlert(
+        'Fill Begin and End Correctly!',
+        AlertType.Error
+      );
+      return bool;
+    }
+
+    return bool;
   }
 }

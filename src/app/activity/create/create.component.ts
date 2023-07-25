@@ -125,11 +125,18 @@ export class CreateComponent implements OnInit {
       (data: any) => this.convertDate(data.date) == this.convertDate(date)
     );
   }
+  filterEventsByLink(date: any, link: any) {
+    return this.eventDatas.filter(
+      (data: any) =>
+        this.convertDate(data.date) == this.convertDate(date) &&
+        data.url_online == link
+    );
+  }
 
-  inBetweenTimeChecker(startHour: any, endHour: any, date: any) {
+  inBetweenTimeChecker(startHour: any, endHour: any, date: any, link: any) {
     let result = true;
 
-    for (const events of this.filterEvents(date)) {
+    for (const events of this.filterEventsByLink(date, link)) {
       // console.log(events.time_start.slice(0, -3));
 
       if (
@@ -278,11 +285,12 @@ export class CreateComponent implements OnInit {
         !this.inBetweenTimeChecker(
           this.f['time_start'].value,
           this.f['time_end'].value,
-          this.f['date'].value
+          this.f['date'].value,
+          body.url_online
         )
       ) {
         this.alertService.onCallAlert(
-          'Time Booked, Choose Another!',
+          'Time & Link Booked, Choose Another!',
           AlertType.Error
         );
 
