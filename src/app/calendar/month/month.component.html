@@ -1,10 +1,11 @@
 <div class="mx-10 pt-8 pb-5 flex justify-between">
   <div class="flex flex-wrap w-1/4 max-[560px]:hidden">
-    <img src="assets/img/otsuka-white.png" class="h-10 mx-3"  alt="">
+    <img src="assets/img/otsuka-white.png" class="h-10 mx-3" alt="" />
   </div>
   <div class="flex flex-wrap space-x-3 max-[560px]:space-x-2">
     <a
       (click)="previousMonth()"
+      
       class="inline-flex cursor-pointer shadow-md items-center px-4 max-[560px]:px-2 py-2 text-sm font-medium text-[#54086B] bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700"
     >
       <svg
@@ -34,7 +35,8 @@
     </div>
     <a
       (click)="nextMonth()"
-      class="inline-flex cursor-pointer shadow-md items-center px-4 max-[560px]:px-2 py-2 text-sm font-medium text-[#54086B] bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700"
+      
+      class="inline-flex cursor-pointer shadow-md  items-center px-4 max-[560px]:px-2 py-2 text-sm font-medium text-[#54086B] bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -48,8 +50,9 @@
       </svg>
     </a>
   </div>
-  <div class="flex flex-wrap w-1/4 justify-end">
-    <a *ngIf="onAuthCheck()"
+  <div class="flex flex-wrap w-1/4 justify-end ">
+    <a
+      *ngIf="onAuthCheck()"
       [routerLink]="['/login']"
       routerLinkActive="router-link-active"
       class="relative cursor-pointer inline-flex items-center justify-start px-5 max-[560px]:px-3 max-[560px]:text-sm py-1.5 overflow-hidden font-medium transition-all bg-[#D89C60] rounded-md hover:bg-white group"
@@ -62,7 +65,8 @@
         >Login</span
       >
     </a>
-    <a *ngIf="!onAuthCheck()"
+    <a
+      *ngIf="!onAuthCheck()"
       (click)="signOut()"
       class="relative cursor-pointer inline-flex items-center justify-start px-5 max-[560px]:px-3 max-[560px]:text-sm py-1.5 overflow-hidden font-medium transition-all bg-[#ff3526] rounded-md hover:bg-white group"
     >
@@ -121,7 +125,8 @@
         [routerLink]="['/day/', item.full]"
         routerLinkActive="router-link-active"
         class="w-full h-full flex hover:bg-gray-200 p-1"
-        ><span
+        >
+        <div><span
           class="w-6 pr-1 text-xl max-sm:text-[1rem] text-center font-semibold"
           [ngClass]="
             item.month != monthSelected.getMonth()
@@ -135,13 +140,32 @@
         >
           {{ item.date }}
         </span>
+        <div *ngIf="filterM2upBirthday(item.month, item.date).length != 0">
+          <a class="hover:bg-slate-100" (mouseout)="consoletest()" [tooltip]=" foearchM2up(filterM2upBirthday(item.month, item.date))"
+          placement="top">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="20"
+              viewBox="0 -960 960 960"
+              width="20"
+            >
+              <path
+                d="M160-80q-17 0-28.5-11.5T120-120v-219q0-24.75 17.625-42.375T180-399h27v-182q0-24.75 17.625-42.375T267-641h183v-64q-20-14-30.5-30.534T409-775.411q0-14.589 5.5-28.089Q420-817 430-827l50-53 50 53q10 10 16 23.5t6 28.089q0 23.343-11 39.877Q530-719 510-705v64h183q24.75 0 42.375 17.625T753-581v182h27q24.75 0 42.375 17.625T840-339v219q0 17-11.5 28.5T800-80H160Zm107-319h426v-182H267v182Zm-87 259h600v-199H180v199Zm87-259h426-426Zm-87 259h600-600Zm600-259H180h600Z"
+              />
+            </svg>
+          </a>
+        </div></div>
+        
         <div class="w-full" *ngIf="filterEvents(item.localeString).length != 0">
-          <div *ngFor="let item of filterEvents(item.localeString)" class="pb-0.5">
+          <div
+            *ngFor="let item of filterEvents(item.localeString)"
+            class="pb-0.5"
+          >
             <div
-                class="w-full h-fit py-0.5 bg-[#045174] bg-opacity-80 text-white hover:bg-[#0c4c6a] rounded-sm text-center text-sm font-manrope max-sm:hidden"
-              >
-                {{ item.title}}
-              </div>
+              class="w-full h-fit py-0.5 bg-[#045174] bg-opacity-80 text-white hover:bg-[#0c4c6a] rounded-sm text-center text-sm font-manrope max-sm:hidden"
+            >
+              {{ item.title }}
+            </div>
             <!-- <a
               (click)="activityBool()"
               class="max-sm:hidden flex-wrap flex py-1 px-2 lg:space-x-1.5 max-lg:space-y-1 border hover:bg-gray-200"
@@ -158,9 +182,11 @@
                 {{ item.time_end.slice(0, -3) }}
               </div>
             </a> -->
-            <div class="flex-wrap flex justify-center py-1 pl-2 space-y-1 sm:hidden">
+            <div
+              class="flex-wrap flex justify-center py-1 pl-1 space-y-1 sm:hidden"
+            >
               <span
-                class="bg-[#045174] bg-opacity-80 text-white text-xs text-center font-medium mr-1  rounded-sm w-full h-4"
+                class="bg-[#045174] bg-opacity-80 text-white text-xs text-center font-medium mr-1 rounded-sm w-full h-4"
                 >{{ item.time_start.slice(0, -6) }}</span
               >
             </div>

@@ -16,6 +16,7 @@ import { AlertComponent } from './alert/alert.component';
 import { EditComponent } from './activity/edit/edit.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FileUploadModule } from 'ng2-file-upload';
+import { TooltipDirective } from './directive/tooltip/tooltip.directive';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { FileUploadModule } from 'ng2-file-upload';
     LoginComponent,
     AlertComponent,
     EditComponent,
+    TooltipDirective,
   ],
   imports: [
     BrowserModule,

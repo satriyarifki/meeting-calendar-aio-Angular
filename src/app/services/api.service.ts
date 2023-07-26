@@ -53,6 +53,9 @@ export class ApiService {
   getEmailEmployees(): Observable<any> {
     return this.http.get(this.baseUrl + 'employees/email');
   }
+  getM2UpEmployees(): Observable<any> {
+    return this.http.get(this.baseUrl + 'employees/m2up');
+  }
   getNameEmailEmployees(): Observable<any> {
     return this.http.get(this.baseUrl + 'employees/name-email');
   }

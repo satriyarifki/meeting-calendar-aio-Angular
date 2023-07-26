@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { Router } from '@angular/router';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { AlertType } from 'src/app/services/alert/alert.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-month',
@@ -21,7 +22,10 @@ export class MonthComponent {
   lastDateMonth!: Date;
   detailsActivity: Boolean = false;
   title: any;
+
+  //API
   eventData: any[] = [];
+  m2upData: any[] = [];
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
@@ -32,11 +36,15 @@ export class MonthComponent {
     this.dateAgo.setDate(this.currentDate.getDate() - 14);
 
     this.loopDate(this.dateChanged);
-
-    apiService.getEvents().subscribe((data) => {
-      this.eventData = data;
-      // console.log(this.formatTime(this.eventData[0].time_start));
-    });
+    forkJoin(apiService.getEvents(), apiService.getM2UpEmployees()).subscribe(
+      ([events, m2up]) => {
+        this.eventData = events;
+        this.m2upData = m2up;
+        console.log(new Date(m2up[0].date_of_birth).getMonth());
+        console.log(new Date().getMonth());
+        console.log(new Date().getDate());
+      }
+    );
   }
   filterEvents(date: any) {
     return this.eventData.filter(
@@ -50,6 +58,33 @@ export class MonthComponent {
     console.log(time);
 
     return format(new Date(), 'kk:mm');
+  }
+  consoletest(){
+    console.log('test');
+    
+  }
+
+  filterM2upBirthday(month: any, date: any) {
+    const dataFilter = this.m2upData.filter(
+      (value: any) =>
+        new Date(value.date_of_birth).getMonth() == month &&
+        new Date(value.date_of_birth).getDate() == date
+    );
+    
+    return dataFilter;
+    // console.log(month + 1 + '-' + date + '/n ' + dataFilter);
+  }
+
+  foearchM2up(m2up:Array<any>){
+    let text = ''
+    m2up.forEach((element,i) => {
+      if(i==0){
+        text += element.employee_name
+      } else {
+        text += '\n ' + element.employee_name
+      }
+    });
+    return text;
   }
 
   // Get 1 Month Date
@@ -66,10 +101,16 @@ export class MonthComponent {
         date: firstDay.getDate(),
         year: firstDay.getFullYear(),
         month: firstDay.getMonth(),
-        full: (firstDay.getMonth() + 1) + '/' + firstDay.getDate() + '/' + firstDay.getFullYear(),
-        localeString : firstDay.toLocaleDateString(),
+        full:
+          firstDay.getMonth() +
+          1 +
+          '/' +
+          firstDay.getDate() +
+          '/' +
+          firstDay.getFullYear(),
+        localeString: firstDay.toLocaleDateString(),
       });
-      
+
       firstDay.setDate(firstDay.getDate() + 1);
     }
   }
