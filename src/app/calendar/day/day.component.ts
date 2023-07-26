@@ -39,11 +39,14 @@ export class DayComponent {
   detailActivity: any;
   deleteAlertBool: Boolean = false;
   idEventOnDelete: any;
+
+  //API
   roomsData: any[] = [];
   dataParticipants: any[] = [];
   arrayDateinMonth: any[] = [];
-  test: any;
   eventData: any[] = [];
+  m2upData:any[] = []
+  
   constructor(
     private actRoute: ActivatedRoute,
     private apiService: ApiService,
@@ -58,12 +61,16 @@ export class DayComponent {
     forkJoin(
       apiService.getEvents(),
       apiService.getParticipants(),
-      apiService.getRooms()
-    ).subscribe(([events, participants, rooms]) => {
+      apiService.getRooms(),
+      apiService.getM2UpEmployees()
+    ).subscribe(([events, participants, rooms,m2up]) => {
       this.eventData = events;
       this.dataParticipants = participants;
       this.roomsData = rooms;
+      this.m2upData = m2up;
       // console.log((this.inBetweenTimeChecker('10')!.minutes/60));
+      console.log(this.filterM2upBirthday(this.dateParams.getMonth(), this.dateParams.getDate()));
+      
 
       this.eventData.sort(function (a, b) {
         return a.time_start >= b.time_start ? 1 : -1; // sort in descending order
@@ -84,6 +91,28 @@ export class DayComponent {
     return this.eventData.filter(
       (data: any) => this.convertDate(data.date) == this.convertDate(date)
     );
+  }
+  filterM2upBirthday(month: any, date: any) {
+    const dataFilter = this.m2upData.filter(
+      (value: any) =>
+        new Date(value.date_of_birth).getMonth() == month &&
+        new Date(value.date_of_birth).getDate() == date
+    );
+    
+    return dataFilter;
+    // console.log(month + 1 + '-' + date + '/n ' + dataFilter);
+  }
+
+  foearchM2up(m2up:Array<any>){
+    let text = ''
+    m2up.forEach((element,i) => {
+      if(i==0){
+        text += element.employee_name
+      } else {
+        text += '\n ' + element.employee_name
+      }
+    });
+    return text;
   }
   convertDate(date: any) {
     return (date = new Date(date).toLocaleDateString());
