@@ -1,11 +1,17 @@
-import { Directive, ElementRef, HostListener, Input, OnDestroy, Renderer2 } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  HostListener,
+  Input,
+  OnDestroy,
+  Renderer2,
+} from '@angular/core';
+import { Router } from '@angular/router';
 
 @Directive({
   selector: '[tooltip]',
-  
 })
-export class TooltipDirective{
-
+export class TooltipDirective {
   @Input('tooltip') tooltipTitle!: any;
   @Input() placement!: string;
   @Input() delay!: string;
@@ -13,14 +19,27 @@ export class TooltipDirective{
   // 호스트 요소와 tooltip 요소 간의 거리
   offset = 10;
 
-  constructor(private el: ElementRef, private renderer: Renderer2) { }
+  constructor(
+    private el: ElementRef,
+    private renderer: Renderer2,
+    private router: Router
+  ) {
+    router.events.subscribe((val) => {
+      // see also
+      this.hide();
+    });
+  }
 
   @HostListener('mouseenter') onMouseEnter() {
-    if (!this.tooltip) { this.show(); }
+    if (!this.tooltip) {
+      this.show();
+    }
   }
 
   @HostListener('mouseleave') onMouseLeave() {
-    if (this.tooltip) { this.hide(); }
+    if (this.tooltip) {
+      this.hide();
+    }
   }
 
   show() {
@@ -31,12 +50,14 @@ export class TooltipDirective{
   }
 
   hide() {
-    this.renderer.removeClass(this.tooltip, 'ng-tooltip-show');
-    this.renderer.removeClass(this.tooltip, 'opacity-100');
-    window.setTimeout(() => {
-      this.renderer.removeChild(document.body, this.tooltip);
-      this.tooltip = null;
-    });
+    if (this.tooltip != undefined) {
+      this.renderer.removeClass(this.tooltip, 'ng-tooltip-show');
+      this.renderer.removeClass(this.tooltip, 'opacity-100');
+      window.setTimeout(() => {
+        this.renderer.removeChild(document.body, this.tooltip);
+        this.tooltip = null;
+      });
+    }
   }
 
   create() {
@@ -64,10 +85,26 @@ export class TooltipDirective{
     this.renderer.addClass(this.tooltip, `ng-tooltip-${this.placement}`);
 
     // delay 설정
-    this.renderer.setStyle(this.tooltip, '-webkit-transition', `opacity ${this.delay}ms`);
-    this.renderer.setStyle(this.tooltip, '-moz-transition', `opacity ${this.delay}ms`);
-    this.renderer.setStyle(this.tooltip, '-o-transition', `opacity ${this.delay}ms`);
-    this.renderer.setStyle(this.tooltip, 'transition', `opacity ${this.delay}ms`);
+    this.renderer.setStyle(
+      this.tooltip,
+      '-webkit-transition',
+      `opacity ${this.delay}ms`
+    );
+    this.renderer.setStyle(
+      this.tooltip,
+      '-moz-transition',
+      `opacity ${this.delay}ms`
+    );
+    this.renderer.setStyle(
+      this.tooltip,
+      '-o-transition',
+      `opacity ${this.delay}ms`
+    );
+    this.renderer.setStyle(
+      this.tooltip,
+      'transition',
+      `opacity ${this.delay}ms`
+    );
   }
 
   setPosition() {
@@ -80,7 +117,11 @@ export class TooltipDirective{
     // window의 scroll top
     // getBoundingClientRect 메소드는 viewport에서의 상대적인 위치를 반환한다.
     // 스크롤이 발생한 경우, tooltip 요소의 top에 세로 스크롤 좌표값을 반영하여야 한다.
-    const scrollPos = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    const scrollPos =
+      window.pageYOffset ||
+      document.documentElement.scrollTop ||
+      document.body.scrollTop ||
+      0;
 
     let top, left;
 
@@ -108,6 +149,4 @@ export class TooltipDirective{
     this.renderer.setStyle(this.tooltip, 'top', `${top + scrollPos}px`);
     this.renderer.setStyle(this.tooltip, 'left', `${left}px`);
   }
-
-
 }

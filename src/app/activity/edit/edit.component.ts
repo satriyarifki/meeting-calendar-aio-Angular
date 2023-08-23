@@ -87,6 +87,8 @@ export class EditComponent {
       this.eventApi = events;
       this.roomsApi = rooms;
       this.participantsApi = participants;
+      console.log(this.participantsApi);
+
       this.emailsEmployee = emails;
       this.nameEmailEmployee = nameEmail;
       this.reservsApi = reserv;
@@ -556,6 +558,7 @@ export class EditComponent {
                   'Update Success!',
                   AlertType.Success
                 );
+                this.ngOnInit()
               },
               (err) => {
                 console.log(err);
@@ -597,7 +600,8 @@ export class EditComponent {
     let reservation = this.reservsApi.filter(
       (data: any) =>
         format(new Date(data.begin), 'P') == format(new Date(begin), 'P') &&
-        data.resourceId == resourceId
+        data.resourceId == resourceId &&
+        data.title != this.f['title'].value
     );
     try {
       if (reservation.length != 0) {
