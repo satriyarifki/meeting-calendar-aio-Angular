@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "meeting-calendar-aio": {
+    "meetcalendar": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/meeting-calendar-aio",
+            "outputPath": "dist/meetcalendar",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -59,10 +59,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "meeting-calendar-aio:build:production"
+              "browserTarget": "meetcalendar:build:production"
             },
             "development": {
-              "browserTarget": "meeting-calendar-aio:build:development"
+              "browserTarget": "meetcalendar:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -70,7 +70,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "meeting-calendar-aio:build"
+            "browserTarget": "meetcalendar:build"
           }
         },
         "test": {
