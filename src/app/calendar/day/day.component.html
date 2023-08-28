@@ -1,5 +1,5 @@
 <a
-  [routerLink]="['/']"
+  [routerLink]="['/']" [queryParams]="{ date: this.dateParams.toLocaleDateString() }"
   routerLinkActive="router-link-active"
   class="bg-white hover:bg-gray-700 hover:fill-white transition-colors w-10 h-10 justify-center grid content-center absolute left-3 top-3 rounded max-md:hidden"
 >

@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,6 +17,7 @@ import { EditComponent } from './activity/edit/edit.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FileUploadModule } from 'ng2-file-upload';
 import { TooltipDirective } from './directive/tooltip/tooltip.directive';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
   declarations: [
@@ -40,7 +41,9 @@ import { TooltipDirective } from './directive/tooltip/tooltip.directive';
     FormsModule,
     BrowserAnimationsModule,
     FileUploadModule,
+    NgxSpinnerModule,
   ],
+  schemas:[CUSTOM_ELEMENTS_SCHEMA],
   providers: [DatePipe],
   bootstrap: [AppComponent],
 })

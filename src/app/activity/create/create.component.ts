@@ -16,6 +16,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiService } from 'src/app/services/api.service';
 import { DatePipe, formatDate } from '@angular/common';
 import { AlertService } from 'src/app/services/alert/alert.service';
@@ -76,7 +77,8 @@ export class CreateComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private alertService: AlertService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private spinner: NgxSpinnerService,
   ) {}
   initialForm() {
     this.form = this.formBuilder.group({
@@ -202,6 +204,7 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit() {
+    this.spinner.show()
     this.submitted = true;
     console.log(this.uploader);
     this.uploader.options.additionalParameter = { dataId: 2 };
@@ -211,6 +214,7 @@ export class CreateComponent implements OnInit {
       console.log(this.f);
 
       this.alertService.onCallAlert('Fill Blank Inputs!', AlertType.Warning);
+      this.spinner.hide()
       return;
     }
     // if (
@@ -279,6 +283,7 @@ export class CreateComponent implements OnInit {
         bodyReserv.resourceId
       )
     ) {
+      this.spinner.hide()
       return;
     } else if (body.online_offline == 'Online') {
       if (
@@ -293,7 +298,7 @@ export class CreateComponent implements OnInit {
           'Time & Link Booked, Choose Another!',
           AlertType.Error
         );
-
+        this.spinner.hide()
         return;
       }
     }
@@ -341,7 +346,7 @@ export class CreateComponent implements OnInit {
                 'Create Meeting Success!',
                 AlertType.Success
               );
-              // this.ngOnInit();
+              this.ngOnInit();
               // window.location.reload();
             },
             (err) => {
@@ -351,7 +356,7 @@ export class CreateComponent implements OnInit {
         // });
         if (body.online_offline == 'Offline') {
           if (bodyReserv.begin == null) {
-            console.log('stop');
+            // console.log('stop');
 
             return;
           }
@@ -363,9 +368,10 @@ export class CreateComponent implements OnInit {
                 (elem) => {
                   // console.log(elem);
                   this.alertService.onCallAlert(
-                    'Booked Reservation Success!',
+                    'Meeting Reservation Success!',
                     AlertType.Success
                   );
+                  this.ngOnInit();
                   // this.router.navigate(['/']);
                 },
                 (er) => {
@@ -380,11 +386,13 @@ export class CreateComponent implements OnInit {
             },
             (err) => {
               // console.log(err);
-
+              this.spinner.hide()
               this.alertService.onCallAlert(
                 'Booked Reservation Fail!',
                 AlertType.Error
               );
+            }, ()=>{
+              
             }
           );
         }
@@ -398,14 +406,14 @@ export class CreateComponent implements OnInit {
               participants: this.f['participants'].value,
               message: this.f['message'].value,
             };
-            console.log(this.uploader.options.additionalParameter);
+            // console.log(this.uploader.options.additionalParameter);
 
             this.uploader.uploadAll();
-            console.log('Up + Email');
+            // console.log('Up + Email');
           } else {
             this.uploader.options.additionalParameter = { dataId: data.id };
             this.uploader.uploadAll();
-            console.log('Up');
+            // console.log('Up');
           }
         } else {
           if (this.f['emailDirectSend'].value) {
@@ -422,14 +430,19 @@ export class CreateComponent implements OnInit {
           }
         }
 
-        this.ngOnInit();
+        setTimeout(() => {
+          window.location.reload();
+        }, 5000);
         this.submitted = false;
       },
       (err) => {
-        console.log('Error');
+        // console.log('Error');
+        this.spinner.hide()
         // this.alertServie.setAlert('Add Data Failed', AlertType.Error)
         console.log(err);
         this.submitted = false;
+      }, () => {
+        this.spinner.hide()
       }
     );
   }

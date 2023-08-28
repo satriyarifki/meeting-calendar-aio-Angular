@@ -9,12 +9,14 @@ import {
   set,
 } from 'date-fns';
 import { FileItem, FileUploader } from 'ng2-file-upload';
-import { filter, forkJoin } from 'rxjs';
+import { filter, forkJoin, timeout } from 'rxjs';
 import { AlertType } from 'src/app/services/alert/alert.model';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { EditActivityService } from 'src/app/services/edit-activity/edit-activity.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { DayComponent } from 'src/app/calendar/day/day.component';
 const URL = 'http://127.0.0.1:3555/upload';
 
 const listLink = [
@@ -39,6 +41,7 @@ const listLink = [
   selector: 'app-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css'],
+  providers: [DayComponent]
 })
 export class EditComponent {
   radioInput: any;
@@ -74,32 +77,46 @@ export class EditComponent {
     private formBuilder: FormBuilder,
     private alertService: AlertService,
     private datePipe: DatePipe,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService,
+    private dayComp: DayComponent
   ) {
-    forkJoin([
-      apiService.getEvents(),
-      apiService.getParticipants(),
-      apiService.getRooms(),
-      apiService.getEmailEmployees(),
-      apiService.getNameEmailEmployees(),
-      apiService.reservGet(),
-    ]).subscribe(([events, participants, rooms, emails, nameEmail, reserv]) => {
-      this.eventApi = events;
-      this.roomsApi = rooms;
-      this.participantsApi = participants;
-      console.log(this.participantsApi);
-
-      this.emailsEmployee = emails;
-      this.nameEmailEmployee = nameEmail;
-      this.reservsApi = reserv;
-    });
     if (this.editService.subsVar == undefined) {
+      // spinner.show();
       this.editService.subsVar = this.editService.invokeAlert.subscribe(
         (event: any) => {
+          this.spinner.show();
           this.callModal(event);
+        },
+        (err) => {},
+        () => {
+          // spinner.hide();
         }
       );
     }
+  }
+  ngOnInit(): void {
+    forkJoin([
+      this.apiService.getEvents(),
+      this.apiService.getParticipants(),
+      this.apiService.getRooms(),
+      this.apiService.getEmailEmployees(),
+      this.apiService.getNameEmailEmployees(),
+      this.apiService.reservGet(),
+    ]).subscribe(
+      ([events, participants, rooms, emails, nameEmail, reserv]) => {
+        this.eventApi = events;
+        this.roomsApi = rooms;
+        this.participantsApi = participants;
+        // console.log(this.participantsApi);
+
+        this.emailsEmployee = emails;
+        this.nameEmailEmployee = nameEmail;
+        this.reservsApi = reserv;
+      },
+      (err) => {},
+      () => {}
+    );
   }
   get f() {
     return this.form.controls;
@@ -109,6 +126,7 @@ export class EditComponent {
     this.initialForm();
 
     this.show = true;
+    this.spinner.hide();
   }
   closeModal() {
     this.uploader.clearQueue();
@@ -276,7 +294,6 @@ export class EditComponent {
     return par.join(', ');
   }
 
-  ngOnInit(): void {}
   initialForm() {
     this.form = this.formBuilder.group({
       userId: [this.initialEvent.userId, Validators.required],
@@ -397,6 +414,7 @@ export class EditComponent {
       console.log(this.f);
 
       this.alertService.onCallAlert('Fill Blank Inputs!', AlertType.Warning);
+      this.spinner.hide()
       return;
     }
     // if (
@@ -467,6 +485,7 @@ export class EditComponent {
         bodyReserv.resourceId
       )
     ) {
+      this.spinner.hide()
       return;
     } else if (body.online_offline == 'Online') {
       if (
@@ -477,6 +496,7 @@ export class EditComponent {
           body.url_online
         )
       ) {
+        this.spinner.hide()
         return;
       }
       // if (
@@ -558,7 +578,7 @@ export class EditComponent {
                   'Update Success!',
                   AlertType.Success
                 );
-                this.ngOnInit()
+                this.ngOnInit();
               },
               (err) => {
                 console.log(err);
@@ -569,10 +589,11 @@ export class EditComponent {
 
           console.log(this.router.getCurrentNavigation());
 
-          // this.router.navigate(['/']);
-          // this.router.navigate([this.router.url]);
           this.alertService.onCallAlert('Update Success!', AlertType.Success);
-          // window.location.reload();
+          // this.dayComp.ngOnInit();
+          setTimeout(() => {
+            window.location.reload();
+          }, 5000);
         }
         // });
         // this.apiService.sendEmail(email).subscribe(
@@ -591,6 +612,10 @@ export class EditComponent {
         // this.alertServie.setAlert('Add Data Failed', AlertType.Error)
         console.log(err);
         this.submitted = false;
+      },
+      () => {
+        // this.dayComp.ngOnInit();
+        // this.router.navigate(['/day/' + body.date]);
       }
     );
   }

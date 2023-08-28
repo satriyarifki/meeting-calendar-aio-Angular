@@ -15,6 +15,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { CreateActivityService } from 'src/app/services/create-activity/create-activity.service';
 import { EditActivityService } from 'src/app/services/edit-activity/edit-activity.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 const HoursOfDay = [
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
@@ -53,23 +54,28 @@ export class DayComponent {
     private router: Router,
     public authService: AuthService,
     private createService: CreateActivityService,
-    private editService: EditActivityService
+    private editService: EditActivityService,
+    private spinner: NgxSpinnerService,
   ) {
+    
+  }
+  ngOnInit(){
+    this.spinner.show()
     this.loopDate(this.dateNow);
     // console.log(authService.getToken());
     
     forkJoin(
-      apiService.getEvents(),
-      apiService.getParticipants(),
-      apiService.getRooms(),
-      apiService.getM2UpEmployees()
+      this.apiService.getEvents(),
+      this.apiService.getParticipants(),
+      this.apiService.getRooms(),
+      this.apiService.getM2UpEmployees()
     ).subscribe(([events, participants, rooms,m2up]) => {
       this.eventData = events;
       this.dataParticipants = participants;
       this.roomsData = rooms;
       this.m2upData = m2up;
       // console.log((this.inBetweenTimeChecker('10')!.minutes/60));
-      console.log(this.filterM2upBirthday(this.dateParams.getMonth(), this.dateParams.getDate()));
+      // console.log(this.filterM2upBirthday(this.dateParams.getMonth(), this.dateParams.getDate()));
       
 
       this.eventData.sort(function (a, b) {
@@ -77,7 +83,7 @@ export class DayComponent {
       });
 
       // console.log(this.filterParticipants(1));
-    });
+    },(err)=>{}, ()=>{this.spinner.hide()});
   }
 
   callCreateService() {
@@ -309,16 +315,19 @@ export class DayComponent {
     this.deleteAlertBool = true;
   }
   deleteEvents() {
+    this.spinner.show()
     this.apiService.deleteParticipantsByEvent(this.idEventOnDelete).subscribe(
       (response) => {
-        console.log(response + 'Participants Delete Success');
+        // console.log(response + 'Participants Delete Success');
         this.apiService.deleteAttachmentByEventid(this.idEventOnDelete).subscribe(res => {
-          console.log(res + 'Attachments Delete Success');
+          // console.log(res + 'Attachments Delete Success');
           this.apiService.deleteEvents(this.idEventOnDelete).subscribe(
             (respons) => {
-              console.log(respons + 'Events Delete Success');
+              // console.log(respons + 'Events Delete Success');
               this.closeDeleteAlert();
+              this.spinner.hide()
               window.location.reload();
+              
             },
             (err) => {
               console.log(err);
@@ -330,6 +339,7 @@ export class DayComponent {
       },
       (err) => {
         console.log(err);
+        this.spinner.hide()
       }
     );
   }

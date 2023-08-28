@@ -1,3 +1,10 @@
+<ngx-spinner
+  color="white"
+  type="ball-fussion"
+  [fullScreen]="true"
+  size="medium"
+  ><p style="color: white">Loading...</p></ngx-spinner
+>
 <div class="mx-10 pt-8 pb-5 flex justify-between">
   <div class="flex flex-wrap w-1/4 max-[560px]:hidden">
     <img src="assets/img/otsuka-white.png" class="h-10 mx-3" alt="" />
@@ -141,7 +148,7 @@
           {{ item.date }}
         </span>
         <div *ngIf="filterM2upBirthday(item.month, item.date).length != 0">
-          <a class="hover:bg-slate-100" (mouseout)="consoletest()" [tooltip]=" foearchM2up(filterM2upBirthday(item.month, item.date))"
+          <a class="hover:bg-slate-100" [tooltip]="foearchM2up(filterM2upBirthday(item.month, item.date))"
           placement="top">
             <svg
               xmlns="http://www.w3.org/2000/svg"

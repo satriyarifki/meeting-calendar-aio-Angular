@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 import { format, parseISO, hoursToMilliseconds } from 'date-fns';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { AlertType } from 'src/app/services/alert/alert.model';
 import { forkJoin } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-month',
@@ -13,6 +14,7 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./month.component.css'],
 })
 export class MonthComponent {
+  dateParams = new Date(this.actRoute.snapshot.queryParams['date']);
   arrayDateinMonth: any[] = [];
   dateChanged = new Date();
   monthSelected = new Date();
@@ -30,19 +32,32 @@ export class MonthComponent {
     private apiService: ApiService,
     private alertService: AlertService,
     private authService: AuthService,
-    private router: Router
+    private actRoute: ActivatedRoute,
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) {
+    spinner.show();
     this.endDate.setMonth(this.currentDate.getMonth() + 2);
     this.dateAgo.setDate(this.currentDate.getDate() - 14);
 
-    this.loopDate(this.dateChanged);
+    if (isFinite(+this.dateParams)) {
+      this.monthSelected = this.dateParams;
+      this.loopDate(this.dateParams);
+    } else {
+      this.loopDate(this.dateChanged);
+    }
+
     forkJoin(apiService.getEvents(), apiService.getM2UpEmployees()).subscribe(
       ([events, m2up]) => {
         this.eventData = events;
         this.m2upData = m2up;
-        console.log(new Date(m2up[0].date_of_birth).getMonth());
-        console.log(new Date().getMonth());
-        console.log(new Date().getDate());
+        // console.log(new Date(m2up[0].date_of_birth).getMonth());
+        // console.log(new Date().getMonth());
+        // console.log(new Date().getDate());
+      },
+      () => {},
+      () => {
+        spinner.hide();
       }
     );
   }
@@ -55,13 +70,9 @@ export class MonthComponent {
     return (date = new Date(date).toLocaleDateString());
   }
   formatTime(time: any) {
-    console.log(time);
+    // console.log(time);
 
     return format(new Date(), 'kk:mm');
-  }
-  consoletest(){
-    console.log('test');
-    
   }
 
   filterM2upBirthday(month: any, date: any) {
@@ -70,18 +81,18 @@ export class MonthComponent {
         new Date(value.date_of_birth).getMonth() == month &&
         new Date(value.date_of_birth).getDate() == date
     );
-    
+
     return dataFilter;
     // console.log(month + 1 + '-' + date + '/n ' + dataFilter);
   }
 
-  foearchM2up(m2up:Array<any>){
-    let text = ''
-    m2up.forEach((element,i) => {
-      if(i==0){
-        text += element.employee_name
+  foearchM2up(m2up: Array<any>) {
+    let text = '';
+    m2up.forEach((element, i) => {
+      if (i == 0) {
+        text += element.employee_name;
       } else {
-        text += '\n ' + element.employee_name
+        text += '\n ' + element.employee_name;
       }
     });
     return text;
@@ -145,15 +156,22 @@ export class MonthComponent {
     return lastDay;
   }
   nextMonth() {
-    console.log('next');
+    // console.log('next');
 
     this.monthSelected.setMonth(this.monthSelected.getMonth() + 1);
+    this.router.navigate([], {
+      relativeTo: this.actRoute,
+      queryParams: { date: this.monthSelected.toLocaleDateString() },
+    });
     this.loopDate(this.monthSelected);
   }
   previousMonth() {
-    console.log('prev');
+    // console.log('prev');
     this.monthSelected.setMonth(this.monthSelected.getMonth() - 1);
-
+    this.router.navigate([], {
+      relativeTo: this.actRoute,
+      queryParams: { date: this.monthSelected.toLocaleDateString() },
+    });
     this.loopDate(this.monthSelected);
   }
 

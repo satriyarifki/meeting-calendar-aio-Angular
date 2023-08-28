@@ -22,6 +22,7 @@
     "date-fns": "^2.29.3",
     "flowbite-datepicker": "^1.2.2",
     "ng2-file-upload": "^3.0.0",
+    "ngx-spinner": "^16.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
