@@ -626,8 +626,11 @@ export class EditComponent {
       (data: any) =>
         format(new Date(data.begin), 'P') == format(new Date(begin), 'P') &&
         data.resourceId == resourceId &&
-        data.title != this.f['title'].value
+        data.title != this.initialEvent.title
     );
+    // console.log(this.initialEvent);
+    // console.log(reservation);
+    
     try {
       if (reservation.length != 0) {
         // if (new Date(begin) > new Date(end)) {

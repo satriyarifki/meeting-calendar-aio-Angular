@@ -59,6 +59,19 @@
   </div>
   <div class="flex flex-wrap w-1/4 justify-end ">
     <a
+      href="http://192.168.9.47/mris-kjy/schedule"
+      routerLinkActive="router-link-active"
+      class="relative cursor-pointer inline-flex mx-2 items-center justify-start px-5 max-[560px]:px-3 max-[560px]:text-sm py-1.5 overflow-hidden font-medium transition-all bg-[#50d3ee] rounded-md hover:bg-white group"
+    >
+      <span
+        class="absolute inset-0 border-0 group-hover:border-[25px] ease-linear duration-100 transition-all border-white rounded-md"
+      ></span>
+      <span
+        class="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-[#50d3ee]"
+        >MRIS</span
+      >
+    </a>
+    <a
       *ngIf="onAuthCheck()"
       [routerLink]="['/login']"
       routerLinkActive="router-link-active"
@@ -72,6 +85,7 @@
         >Login</span
       >
     </a>
+    
     <a
       *ngIf="!onAuthCheck()"
       (click)="signOut()"
