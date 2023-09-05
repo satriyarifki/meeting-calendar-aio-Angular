@@ -8,7 +8,7 @@ import { OnAuthGuard, OutAuthGuard } from './services/guard/auth.guard';
 
 const routes: Routes = [
   { path: '', component: MonthComponent },
-  { path: 'day/:date', component: DayComponent },
+  { path: 'day', component: DayComponent },
   { path: 'create', component: CreateComponent },
   { path: 'login', component: LoginComponent, canActivate: [OutAuthGuard] },
 ];

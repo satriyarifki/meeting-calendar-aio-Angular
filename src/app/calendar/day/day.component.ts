@@ -32,8 +32,8 @@ const eachHours = eachHourOfInterval({
   styleUrls: ['./day.component.css'],
 })
 export class DayComponent {
-  dateParams = new Date(this.actRoute.snapshot.params['date']);
-  dateNow = new Date(this.actRoute.snapshot.params['date']);
+  dateParams = new Date(this.actRoute.snapshot.queryParams['date']);
+  dateNow = new Date(this.actRoute.snapshot.queryParams['date']);
   hoursOfDay = eachHours;
   currentDate = new Date();
   showActivity: Boolean = false;
@@ -129,7 +129,8 @@ export class DayComponent {
     this.dateParams = addDays(this.dateParams, 1);
     this.loopDate(date);
     this.showActivity = false;
-    this.router.navigate(['/day/', date.toLocaleDateString()]);
+    this.router.navigate(['/day'],{
+      queryParams: { date: date.toLocaleDateString() }});
 
     // console.log(this.dateParams);
     // console.log(this.filterEvents(this.dateParams).length);
@@ -140,7 +141,8 @@ export class DayComponent {
     this.dateParams = addDays(this.dateParams, -1);
     this.loopDate(date);
     this.showActivity = false;
-    this.router.navigate(['/day/', date.toLocaleDateString()]);
+    this.router.navigate(['/day'],{
+      queryParams: { date: date.toLocaleDateString() }});
     // console.log(this.dateParams);
   }
   toNextMonth() {
@@ -150,7 +152,8 @@ export class DayComponent {
     // console.log(date);
     this.loopDate(date);
     this.showActivity = false;
-    this.router.navigate(['/day/', date.toLocaleDateString()]);
+    this.router.navigate(['/day'],{
+      queryParams: { date: date.toLocaleDateString() }});
 
     // console.log(this.dateParams);
   }
@@ -161,7 +164,8 @@ export class DayComponent {
     // console.log(date);
     this.loopDate(date);
     this.showActivity = false;
-    this.router.navigate(['/day/', date.toLocaleDateString()]);
+    this.router.navigate(['/day', ],{
+      queryParams: { date: date.toLocaleDateString() }});
     // console.log(this.dateParams);
   }
   subscribeParticipants() {
@@ -222,7 +226,8 @@ export class DayComponent {
     this.dateParams = new Date(date);
     var pickDate = new Date(date);
     this.loopDate(pickDate);
-    this.router.navigate(['/day/', pickDate.toLocaleDateString()]);
+    this.router.navigate(['/day'],{
+      queryParams: { filter: date.toLocaleDateString() }});
   }
   enterActivityHover() {
     this.showActivity = true;
