@@ -78,7 +78,7 @@ export class CreateComponent implements OnInit {
     private authService: AuthService,
     private alertService: AlertService,
     private datePipe: DatePipe,
-    private spinner: NgxSpinnerService,
+    private spinner: NgxSpinnerService
   ) {}
   initialForm() {
     this.form = this.formBuilder.group({
@@ -204,7 +204,7 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit() {
-    this.spinner.show()
+    this.spinner.show();
     this.submitted = true;
     console.log(this.uploader);
     this.uploader.options.additionalParameter = { dataId: 2 };
@@ -214,7 +214,7 @@ export class CreateComponent implements OnInit {
       console.log(this.f);
 
       this.alertService.onCallAlert('Fill Blank Inputs!', AlertType.Warning);
-      this.spinner.hide()
+      this.spinner.hide();
       return;
     }
     // if (
@@ -283,7 +283,7 @@ export class CreateComponent implements OnInit {
         bodyReserv.resourceId
       )
     ) {
-      this.spinner.hide()
+      this.spinner.hide();
       return;
     } else if (body.online_offline == 'Online') {
       if (
@@ -298,7 +298,28 @@ export class CreateComponent implements OnInit {
           'Time & Link Booked, Choose Another!',
           AlertType.Error
         );
-        this.spinner.hide()
+        this.spinner.hide();
+        return;
+      }
+    } else {
+      if (
+        !this.inBetweenTimeChecker(
+          this.f['time_start'].value,
+          this.f['time_end'].value,
+          this.f['date'].value,
+          body.url_online
+        ) ||
+        this.isOverlappingTime(
+          bodyReserv.begin,
+          bodyReserv.end,
+          bodyReserv.resourceId
+        )
+      ) {
+        this.alertService.onCallAlert(
+          'Time & Link Booked, Choose Another!',
+          AlertType.Error
+        );
+        this.spinner.hide();
         return;
       }
     }
@@ -313,7 +334,10 @@ export class CreateComponent implements OnInit {
     };
     let email = {
       date: this.f['date'].value,
-      organizer: this.f['organizer'].value,
+      organizer:
+        this.nameEmailEmployee[
+          this.emailsEmployee.indexOf(this.f['organizer'].value)
+        ],
       participants: this.f['participants'].value,
       message: this.f['message'].value,
     };
@@ -386,14 +410,13 @@ export class CreateComponent implements OnInit {
             },
             (err) => {
               // console.log(err);
-              this.spinner.hide()
+              this.spinner.hide();
               this.alertService.onCallAlert(
                 'Booked Reservation Fail!',
                 AlertType.Error
               );
-            }, ()=>{
-              
-            }
+            },
+            () => {}
           );
         }
 
@@ -418,6 +441,7 @@ export class CreateComponent implements OnInit {
         } else {
           if (this.f['emailDirectSend'].value) {
             console.log('Sent Email');
+            console.log(email);
 
             this.apiService.sendEmail(email).subscribe(
               (em) => {
@@ -437,12 +461,13 @@ export class CreateComponent implements OnInit {
       },
       (err) => {
         // console.log('Error');
-        this.spinner.hide()
+        this.spinner.hide();
         // this.alertServie.setAlert('Add Data Failed', AlertType.Error)
         console.log(err);
         this.submitted = false;
-      }, () => {
-        this.spinner.hide()
+      },
+      () => {
+        this.spinner.hide();
       }
     );
   }

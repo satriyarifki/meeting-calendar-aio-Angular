@@ -149,6 +149,18 @@
                   formControlName="online_offline"
                   [(ngModel)]="radioInput"
                   type="radio"
+                  value="Hybrid"
+                  id="hybrid"
+                  name="online_offline"
+                  class="py-3 mx-2 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+                />
+                <label for="offline" class="align-middle">Hybrid</label>
+              </div>
+              <div class="grow flex">
+                <input
+                  formControlName="online_offline"
+                  [(ngModel)]="radioInput"
+                  type="radio"
                   value="Online"
                   id="online"
                   name="online_offline"
@@ -160,7 +172,7 @@
           </div>
           <div
             class="flex justify-between items-center flex-wrap"
-            *ngIf="radioInput == 'Online'"
+            *ngIf="radioInput == 'Online' || radioInput == 'Hybrid'"
           >
             <label
               for="inline-input-label-with-helper-text"
@@ -183,7 +195,7 @@
           </div>
           <div
             class="flex justify-between items-center flex-wrap"
-            *ngIf="radioInput == 'Offline'"
+            *ngIf="radioInput == 'Offline' || radioInput == 'Hybrid'"
           >
             <label
               for="inline-input-label-with-helper-text"
