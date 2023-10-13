@@ -514,6 +514,27 @@ export class EditComponent {
 
       //   return;
       // }
+    } else {
+      if (
+        this.isOverlappingTime(
+          this.f['date'].value,
+          this.f['time_start'].value,
+          this.f['time_end'].value,
+          body.url_online
+        ) ||
+        this.isOverlappingTimeReserv(
+          bodyReserv.begin,
+          bodyReserv.end,
+          bodyReserv.resourceId
+        )
+      ) {
+        this.alertService.onCallAlert(
+          'Time Or Resource Room Already Booked, Choose Another!',
+          AlertType.Error
+        );
+        this.spinner.hide();
+        return;
+      }
     }
     if (body.online_offline == 'Online') {
       body.roomId = 1;
