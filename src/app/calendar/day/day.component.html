@@ -1,5 +1,6 @@
 <a
-  [routerLink]="['/']" [queryParams]="{ date: this.dateParams.toLocaleDateString() }"
+  [routerLink]="['/']"
+  [queryParams]="{ date: this.dateParams.toLocaleDateString() }"
   routerLinkActive="router-link-active"
   class="bg-white hover:bg-gray-700 hover:fill-white transition-colors w-10 h-10 justify-center grid content-center absolute left-3 top-3 rounded max-md:hidden"
 >
@@ -286,24 +287,30 @@
 
                 <h3
                   class="font-manrope text-sm"
-                  *ngIf="item.online_offline == 'Online'"
-                >
-                  <a
-                    class="text-indigo-700 "
-                    href="{{ item.url_online }}"
-                    target="_blank"
-                  >
-                    {{ item.url_online }}</a
-                  >
-                </h3>
-                <h3
-                  class="font-manrope text-sm"
-                  *ngIf="item.online_offline == 'Offline'"
+                  *ngIf="
+                    item.online_offline == 'Offline' ||
+                    item.online_offline == 'Hybrid'
+                  "
                 >
                   <span class="text-gray-500">Room :</span>
 
                   <span class="text-black" target="_blank">
                     {{ filterRoomById(item.roomId)[0].room_name }}</span
+                  >
+                </h3>
+                <h3
+                  class="font-manrope text-sm"
+                  *ngIf="
+                    item.online_offline == 'Online' ||
+                    item.online_offline == 'Hybrid'
+                  "
+                >
+                  <a
+                    class="text-indigo-700 break-all"
+                    href="{{ item.url_online }}"
+                    target="_blank"
+                  >
+                    {{ item.url_online }}</a
                   >
                 </h3>
                 <!-- <h3 class="font-manrope text-sm">End : </h3> -->
@@ -392,9 +399,9 @@
             </svg>
           </a>
         </div>
-        <div class="px-3 space-y-3">
+        <div class="px-3 space-y-3 h-[90%] overflow-y-auto">
           <div class="flex justify-between flex-row items-center flex-wrap">
-            <div class="w-1/3 justify-between flex  items-center">
+            <div class="w-1/3 justify-between flex items-center">
               <label
                 for="inline-input-label-with-helper-text"
                 class="block text-sm font-manrope text-gray-600"
@@ -418,8 +425,8 @@
               >
               <!-- <h1 class="text-xl font-semibold">:</h1> -->
             </div>
-            <div class="grow px-4">
-              <h2 class="font-manrope font-medium max-lg:text-sm">
+            <div class="w-2/3 px-4">
+              <h2 class="font-manrope font-medium max-lg:text-sm break-all">
                 {{ detailActivity.time_start.slice(0, -3) }} WIB -
                 <br class="max-sm:hidden lg:hidden" />
                 {{ detailActivity.time_end.slice(0, -3) }} WIB
@@ -440,8 +447,8 @@
               >
               <!-- <h1 class="text-xl font-semibold">:</h1> -->
             </div>
-            <div class="grow px-4">
-              <h2 class="font-manrope font-medium max-lg:text-sm">
+            <div class="w-2/3 px-4">
+              <h2 class="font-manrope font-medium max-lg:text-sm break-all">
                 {{ detailActivity.organizer }}
               </h2>
             </div>
@@ -455,8 +462,8 @@
               >
               <!-- <h1 class="text-xl font-semibold">:</h1> -->
             </div>
-            <div class="grow px-4">
-              <h2 class="font-manrope font-medium max-lg:text-sm">
+            <div class="w-2/3 px-4">
+              <h2 class="font-manrope font-medium max-lg:text-sm break-all">
                 {{ detailActivity.title }}
               </h2>
             </div>
@@ -485,9 +492,9 @@
               >
               <!-- <h1 class="text-xl font-semibold">:</h1> -->
             </div>
-            <div class="grow px-4">
+            <div class="w-2/3 px-4">
               <a
-                class="text-indigo-700"
+                class="text-indigo-700 break-all"
                 href="https://www.{{ detailActivity.url_online }}"
                 target="_blank"
               >
@@ -504,32 +511,32 @@
               >
               <!-- <h1 class="text-xl font-semibold">:</h1> -->
             </div>
-            <div class="grow px-4">
-              <h2 class="font-manrope font-medium max-lg:text-sm">
+            <div class="w-2/3 px-4">
+              <h2 class="font-manrope font-medium max-lg:text-sm break-all">
                 {{ filterRoomById(detailActivity.roomId)[0].room_name }}
               </h2>
             </div>
           </div>
-          <div class="flex justify-between items-center flex-wrap">
-            <div class="w-1/3 justify-between flex items-center">
+          <div class="flex justify-center items-center flex-wrap border py-2 rounded-md gap-y-1">
+            <div class="w-1/3 justify-center flex items-center">
               <label
                 for="inline-input-label-with-helper-text"
-                class="block text-sm font-manrope text-gray-600"
+                class="block text-sm font-manrope text-center text-gray-600"
                 >Participants</label
               >
               <!-- <h1 class="text-xl font-semibold">:</h1> -->
             </div>
             <div class="grow px-4 space-y-1">
               <h1
-                class="font-manrope text-sm font-medium max-lg:text-sm bg-blue-100 p-1 rounded-md w-fit"
+                class="font-manrope text-sm font-medium max-lg:text-sm bg-blue-100 p-1 rounded-md w-fit break-all"
                 *ngFor="let item of this.filterParticipants(detailActivity.id)"
               >
                 {{ item.email }}
               </h1>
             </div>
           </div>
-          <div class="flex justify-between flex-wrap">
-            <div class="w-1/3 justify-between flex items-center">
+          <div class="flex justify-center flex-wrap gap-y-1.5">
+            <div class="w-full justify-center flex items-center">
               <label
                 for="inline-input-label-with-helper-text"
                 class="block text-sm font-manrope text-gray-600"
@@ -603,7 +610,7 @@
               <h1 class="text-2xl max-md:text-lg font-semibold">
                 {{ dateParams | date : " dd" }}
               </h1>
-              <h1 class="text-2xl max-md:text-lg ">
+              <h1 class="text-2xl max-md:text-lg">
                 {{ dateParams | date : "EEEE" }}
               </h1>
             </div>
