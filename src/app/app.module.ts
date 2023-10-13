@@ -18,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FileUploadModule } from 'ng2-file-upload';
 import { TooltipDirective } from './directive/tooltip/tooltip.directive';
 import { NgxSpinnerModule } from "ngx-spinner";
+import { FooterComponent } from './layouts/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
     AlertComponent,
     EditComponent,
     TooltipDirective,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,

@@ -316,7 +316,7 @@ export class CreateComponent implements OnInit {
         )
       ) {
         this.alertService.onCallAlert(
-          'Time & Link Booked, Choose Another!',
+          'Time Or Resource Room Already Booked, Choose Another!',
           AlertType.Error
         );
         this.spinner.hide();
