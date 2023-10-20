@@ -28,6 +28,10 @@ export class ApiService {
     return this.http.delete(this.baseUrl + 'events/' + id);
   }
 
+  getEventsHo(): Observable<any> {
+    return this.http.get(this.baseUrl + 'events/ho');
+  }
+
   //PARTICIPANTS----------------------------------------------------
   getParticipants(): Observable<any> {
     return this.http.get(this.baseUrl + 'participants');

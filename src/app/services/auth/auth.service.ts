@@ -86,7 +86,7 @@ export class AuthService {
     window.localStorage.removeItem(USER_KEY);
     window.localStorage.removeItem(USER_DATA_KEY);
     window.localStorage.setItem(USER_KEY, JSON.stringify(user));
-    this.employeesGetById(this.getUser().lg_nik).subscribe((data) => {
+    this.employeesGetById(this.getUser()[0].lg_nik).subscribe((data) => {
       console.log(data);
       
       window.localStorage.setItem(USER_DATA_KEY, JSON.stringify(data[0]));

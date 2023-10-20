@@ -28,6 +28,8 @@ export class MonthComponent {
   //API
   eventData: any[] = [];
   m2upData: any[] = [];
+  eventHoData: any[] = [];
+
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
@@ -47,10 +49,11 @@ export class MonthComponent {
       this.loopDate(this.dateChanged);
     }
 
-    forkJoin(apiService.getEvents(), apiService.getM2UpEmployees()).subscribe(
-      ([events, m2up]) => {
+    forkJoin(apiService.getEvents(), apiService.getM2UpEmployees(),apiService.getEventsHo()).subscribe(
+      ([events, m2up,ho]) => {
         this.eventData = events;
         this.m2upData = m2up;
+        this.eventHoData = ho
         // console.log(new Date(m2up[0].date_of_birth).getMonth());
         // console.log(new Date().getMonth());
         // console.log(new Date().getDate());
@@ -80,6 +83,16 @@ export class MonthComponent {
       (value: any) =>
         new Date(value.date_of_birth).getMonth() == month &&
         new Date(value.date_of_birth).getDate() == date
+    );
+
+    return dataFilter;
+    // console.log(month + 1 + '-' + date + '/n ' + dataFilter);
+  }
+  filterEventHo(month: any, date: any) {
+    const dataFilter = this.eventHoData.filter(
+      (value: any) =>
+        new Date(value.start_time).getMonth() == month &&
+        new Date(value.start_time).getDate() == date
     );
 
     return dataFilter;
