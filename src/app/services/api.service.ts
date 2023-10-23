@@ -31,6 +31,9 @@ export class ApiService {
   getEventsHo(): Observable<any> {
     return this.http.get(this.baseUrl + 'events/ho');
   }
+  getEventsHoByDate(date:any): Observable<any> {
+    return this.http.get(this.baseUrl + 'event/ho/'+ date);
+  }
 
   //PARTICIPANTS----------------------------------------------------
   getParticipants(): Observable<any> {

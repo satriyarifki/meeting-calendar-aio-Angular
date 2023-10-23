@@ -47,6 +47,7 @@ export class DayComponent {
   arrayDateinMonth: any[] = [];
   eventData: any[] = [];
   m2upData:any[] = []
+  eventHoData:any[] = []
   
   constructor(
     private actRoute: ActivatedRoute,
@@ -63,17 +64,25 @@ export class DayComponent {
     this.spinner.show()
     this.loopDate(this.dateNow);
     // console.log(authService.getToken());
+    console.log(this.dateParams);
+    
     
     forkJoin(
       this.apiService.getEvents(),
       this.apiService.getParticipants(),
       this.apiService.getRooms(),
-      this.apiService.getM2UpEmployees()
-    ).subscribe(([events, participants, rooms,m2up]) => {
+      this.apiService.getM2UpEmployees(),
+      this.apiService.getEventsHoByDate(format(this.dateParams, 'yyyy-MM-dd')),
+    ).subscribe(([events, participants, rooms,m2up,eventHo]) => {
       this.eventData = events;
       this.dataParticipants = participants;
       this.roomsData = rooms;
       this.m2upData = m2up;
+      this.eventHoData = eventHo
+      console.log(format(new Date(this.eventHoData[0].start_time),'HH:mm'));
+      console.log(this.eventHoData);
+      
+      
       // console.log((this.inBetweenTimeChecker('10')!.minutes/60));
       // console.log(this.filterM2upBirthday(this.dateParams.getMonth(), this.dateParams.getDate()));
       
@@ -98,6 +107,15 @@ export class DayComponent {
       (data: any) => this.convertDate(data.date) == this.convertDate(date)
     );
   }
+  filterEventsHo(date: any) {
+    return this.eventHoData.filter(
+      (data: any) => this.convertDate(data.date) == this.convertDate(date)
+    );
+  }
+  formatDateToTime(date:any){
+    return format(new Date(date),'HH:mm')
+  }
+  
   filterM2upBirthday(month: any, date: any) {
     const dataFilter = this.m2upData.filter(
       (value: any) =>

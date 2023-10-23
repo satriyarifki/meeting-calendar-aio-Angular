@@ -88,9 +88,10 @@ export class MonthComponent {
     return dataFilter;
     // console.log(month + 1 + '-' + date + '/n ' + dataFilter);
   }
-  filterEventHo(month: any, date: any) {
+  filterEventHo(year:any,month: any, date: any) {
     const dataFilter = this.eventHoData.filter(
       (value: any) =>
+        new Date(value.start_time).getFullYear() == year &&
         new Date(value.start_time).getMonth() == month &&
         new Date(value.start_time).getDate() == date
     );
