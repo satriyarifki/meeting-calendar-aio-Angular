@@ -378,7 +378,7 @@ export class CreateComponent implements OnInit {
             }
           );
         // });
-        if (body.online_offline == 'Offline') {
+        if (body.online_offline == 'Offline' || body.online_offline == 'Hybrid') {
           if (bodyReserv.begin == null) {
             // console.log('stop');
 

@@ -63,9 +63,7 @@ export class DayComponent {
   ngOnInit(){
     this.spinner.show()
     this.loopDate(this.dateNow);
-    // console.log(authService.getToken());
-    console.log(this.dateParams);
-    
+    // console.log(authService.getToken());   
     
     forkJoin(
       this.apiService.getEvents(),
@@ -79,8 +77,6 @@ export class DayComponent {
       this.roomsData = rooms;
       this.m2upData = m2up;
       this.eventHoData = eventHo
-      console.log(format(new Date(this.eventHoData[0].start_time),'HH:mm'));
-      console.log(this.eventHoData);
       
       
       // console.log((this.inBetweenTimeChecker('10')!.minutes/60));
