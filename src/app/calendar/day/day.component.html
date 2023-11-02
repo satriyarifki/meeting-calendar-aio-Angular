@@ -687,6 +687,7 @@
         class="my-3 mr-3 p-3 shadow-xl bg-white rounded-sm flex max-md:hidden"
         [ngClass]="!onAuthCheck() ? 'justify-between' : 'justify-end'"
       >
+      <div class="space-x-2">
         <a
           *ngIf="!onAuthCheck()"
           (click)="callCreateService()"
@@ -694,6 +695,15 @@
         >
           Add Activity
         </a>
+        <a
+          *ngIf="!onAuthCheck()"
+          (click)="callVoteService()"
+          class="inline-flex cursor-pointer items-center justify-center h-10 px-3 font-medium tracking-wide text-white transition duration-200 bg-[#0a575c] font-manrope rounded-md hover:bg-gray-800 focus:shadow-outline focus:outline-none"
+        >
+          Vote
+        </a>
+
+      </div>
         <a
           *ngIf="onAuthCheck()"
           [routerLink]="['/login']"

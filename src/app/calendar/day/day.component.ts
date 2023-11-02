@@ -16,6 +16,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { CreateActivityService } from 'src/app/services/create-activity/create-activity.service';
 import { EditActivityService } from 'src/app/services/edit-activity/edit-activity.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { VoteActivityService } from 'src/app/services/vote-activity/vote-activity.service';
 
 const HoursOfDay = [
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
@@ -56,6 +57,7 @@ export class DayComponent {
     public authService: AuthService,
     private createService: CreateActivityService,
     private editService: EditActivityService,
+    private voteService: VoteActivityService,
     private spinner: NgxSpinnerService,
   ) {
     
@@ -96,6 +98,9 @@ export class DayComponent {
   }
   callEditService(event:any) {
     this.editService.onCallEditModal(event);
+  }
+  callVoteService() {
+    this.voteService.onCallVoteModal();
   }
 
   filterEvents(date: any) {

@@ -1,0 +1,62 @@
+<div
+  #signOutModal
+  id="popup-modal"
+  tabindex="-1"
+  class="fixed top-0 left-0 right-0 z-20 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-screen md:h-full bg-gray-900 bg-opacity-50"
+  *ngIf="show"
+>
+  <div class="relative w-full h-full mx-auto max-w-lg md:h-auto">
+    <div class="relative rounded-lg shadow bg-white">
+      <button
+        (click)="closeModal()"
+        type="button"
+        class="absolute transition duration-200 top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-gray-800 hover:text-white"
+      >
+        <svg
+          aria-hidden="true"
+          class="w-5 h-5"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <span class="sr-only">Close modal</span>
+      </button>
+      <div class="px-6 pt-4">
+        <h2 class="font-medium text-xl">Add Vote Meeting</h2>
+      </div>
+      <div class="p-6">
+
+      </div>
+      <!-- <div class="wrapper px-10">
+        <label
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          for="file_input"
+          >Upload file</label
+        >
+        <input
+          class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+          id="files"
+          type="file"
+          name="files"
+          multiple
+          ng2FileSelect
+          [uploader]="uploader"
+        />
+        <button
+          type="button"
+          (click)="uploader.uploadAll()"
+          [disabled]="!uploader.getNotUploadedItems().length"
+          class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
+        >
+          Purple
+        </button>
+      </div> -->
+    </div>
+  </div>
+</div>
