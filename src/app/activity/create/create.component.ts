@@ -23,6 +23,7 @@ import { AlertService } from 'src/app/services/alert/alert.service';
 import { AlertType } from 'src/app/services/alert/alert.model';
 import { forkJoin, map, Observable, startWith } from 'rxjs';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { Router } from '@angular/router';
 const URL = 'http://127.0.0.1:3555/upload';
 
 const listLink = [
@@ -78,7 +79,8 @@ export class CreateComponent implements OnInit {
     private authService: AuthService,
     private alertService: AlertService,
     private datePipe: DatePipe,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private router: Router
   ) {}
   initialForm() {
     this.form = this.formBuilder.group({
@@ -147,7 +149,7 @@ export class CreateComponent implements OnInit {
         (events.time_start.slice(0, -3) <= endHour &&
           events.time_end.slice(0, -3) >= endHour)
       ) {
-        console.log(date + ' ' + startHour + ' ' + endHour);
+        // console.log(date + ' ' + startHour + ' ' + endHour);
 
         result = false;
         break;
@@ -156,13 +158,13 @@ export class CreateComponent implements OnInit {
         events.time_start.slice(0, -3) > startHour &&
         events.time_start.slice(0, -3) < endHour
       ) {
-        console.log(date + ' ' + startHour + ' ' + endHour);
+        // console.log(date + ' ' + startHour + ' ' + endHour);
 
         result = false;
         break;
       }
     }
-    console.log(result);
+    // console.log(result);
 
     return result;
   }
@@ -191,7 +193,7 @@ export class CreateComponent implements OnInit {
     }
   }
   inputFileChange(event: any) {
-    console.log(event);
+    // console.log(event);
   }
   filterReservByDate(date: any) {
     let reservbyDate = this.reservs.filter(
@@ -206,12 +208,12 @@ export class CreateComponent implements OnInit {
   onSubmit() {
     this.spinner.show();
     this.submitted = true;
-    console.log(this.uploader);
+    // console.log(this.uploader);
     this.uploader.options.additionalParameter = { dataId: 2 };
-    console.log(this.uploader.options.additionalParameter);
+    // console.log(this.uploader.options.additionalParameter);
 
     if (this.form.invalid) {
-      console.log(this.f);
+      // console.log(this.f);
 
       this.alertService.onCallAlert('Fill Blank Inputs!', AlertType.Warning);
       this.spinner.hide();
@@ -235,7 +237,7 @@ export class CreateComponent implements OnInit {
     // this.f['userId'].setValue(1);
 
     let body = {
-      userId: this.authService.getUser()[0].lg_nik,
+      userId: this.authService.getUser()[0]?.lg_nik,
       date: this.f['date'].value,
       time_start: this.f['time_start'].value,
       time_end: this.f['time_end'].value,
@@ -274,17 +276,19 @@ export class CreateComponent implements OnInit {
       title: this.f['title'].value,
       description: this.f['message'].value,
     };
+    // console.log(body);
 
-    if (
-      body.online_offline == 'Offline' &&
-      this.isOverlappingTime(
-        bodyReserv.begin,
-        bodyReserv.end,
-        bodyReserv.resourceId
-      )
-    ) {
-      this.spinner.hide();
-      return;
+    if (body.online_offline == 'Offline') {
+      if (
+        this.isOverlappingTime(
+          bodyReserv.begin,
+          bodyReserv.end,
+          bodyReserv.resourceId
+        )
+      ) {
+        this.spinner.hide();
+        return;
+      }
     } else if (body.online_offline == 'Online') {
       if (
         !this.inBetweenTimeChecker(
@@ -371,6 +375,11 @@ export class CreateComponent implements OnInit {
                 AlertType.Success
               );
               this.ngOnInit();
+              if (body.online_offline == 'Online') {
+                this.router.onSameUrlNavigation = 'reload';
+                this.router.navigateByUrl(this.router.url);
+              }
+
               // window.location.reload();
             },
             (err) => {
@@ -378,7 +387,10 @@ export class CreateComponent implements OnInit {
             }
           );
         // });
-        if (body.online_offline == 'Offline' || body.online_offline == 'Hybrid') {
+        if (
+          body.online_offline == 'Offline' ||
+          body.online_offline == 'Hybrid'
+        ) {
           if (bodyReserv.begin == null) {
             // console.log('stop');
 
@@ -395,7 +407,8 @@ export class CreateComponent implements OnInit {
                     'Meeting Reservation Success!',
                     AlertType.Success
                   );
-                  this.ngOnInit();
+                  this.router.onSameUrlNavigation = 'reload';
+                  this.router.navigateByUrl(this.router.url);
                   // this.router.navigate(['/']);
                 },
                 (er) => {
@@ -441,7 +454,7 @@ export class CreateComponent implements OnInit {
         } else {
           if (this.f['emailDirectSend'].value) {
             console.log('Sent Email');
-            console.log(email);
+            // console.log(email);
 
             this.apiService.sendEmail(email).subscribe(
               (em) => {
@@ -454,9 +467,9 @@ export class CreateComponent implements OnInit {
           }
         }
 
-        setTimeout(() => {
-          window.location.reload();
-        }, 5000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 5000);
         this.submitted = false;
       },
       (err) => {

@@ -60,7 +60,9 @@ export class DayComponent {
     private voteService: VoteActivityService,
     private spinner: NgxSpinnerService,
   ) {
-    
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
   }
   ngOnInit(){
     this.spinner.show()

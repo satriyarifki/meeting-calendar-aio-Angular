@@ -41,7 +41,7 @@ const listLink = [
   selector: 'app-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css'],
-  providers: [DayComponent]
+  providers: [DayComponent],
 })
 export class EditComponent {
   radioInput: any;
@@ -137,12 +137,12 @@ export class EditComponent {
   }
 
   changeOrganizer(event: any) {
-    console.log(event.srcElement.value);
-    console.log(
-      this.nameEmailEmployee[
-        this.emailsEmployee.indexOf(event.srcElement.value)
-      ]
-    );
+    // console.log(event.srcElement.value);
+    // console.log(
+    //   this.nameEmailEmployee[
+    //     this.emailsEmployee.indexOf(event.srcElement.value)
+    //   ]
+    // );
   }
   change(email: any) {
     this.nameEmailEmployee[this.emailsEmployee.indexOf(email)];
@@ -170,7 +170,7 @@ export class EditComponent {
     //     format(new Date(data.date), 'P') == format(new Date(date), 'P') &&
     //     data.id != this.initialEvent.id
     // );
-    console.log(reservation);
+    // console.log(reservation);
 
     try {
       if (reservation.length != 0) {
@@ -238,7 +238,7 @@ export class EditComponent {
         (events.time_start.slice(0, -3) <= endHour &&
           events.time_end.slice(0, -3) >= endHour)
       ) {
-        console.log(date + ' ' + startHour + ' ' + endHour);
+        // console.log(date + ' ' + startHour + ' ' + endHour);
 
         result = false;
         break;
@@ -247,7 +247,7 @@ export class EditComponent {
         events.time_start.slice(0, -3) > startHour &&
         events.time_start.slice(0, -3) < endHour
       ) {
-        console.log(date + ' ' + startHour + ' ' + endHour);
+        // console.log(date + ' ' + startHour + ' ' + endHour);
 
         result = false;
         break;
@@ -319,7 +319,7 @@ export class EditComponent {
     this.apiService
       .getAttachmentById(this.initialEvent.id)
       .subscribe((data) => {
-        console.log(data);
+        // console.log(data);
         this.attachApi = data;
         data?.forEach((element: any) => {
           this.uploader.addToQueue([
@@ -336,7 +336,7 @@ export class EditComponent {
     };
   }
   sendEmail() {
-    console.log(this.uploader.queue);
+    // console.log(this.uploader.queue);
     if (this.form.invalid) {
       console.log(this.f);
 
@@ -383,7 +383,7 @@ export class EditComponent {
         participants: this.f['participants'].value,
         message: this.f['message'].value,
       };
-      console.log(this.uploader.options.additionalParameter);
+      // console.log(this.uploader.options.additionalParameter);
 
       this.uploader.uploadAll();
       console.log('Up + Email');
@@ -411,10 +411,10 @@ export class EditComponent {
   onSubmit() {
     this.submitted = true;
     if (this.form.invalid) {
-      console.log(this.f);
+      // console.log(this.f);
 
       this.alertService.onCallAlert('Fill Blank Inputs!', AlertType.Warning);
-      this.spinner.hide()
+      this.spinner.hide();
       return;
     }
     // if (
@@ -478,15 +478,18 @@ export class EditComponent {
     };
 
     if (
-      body.online_offline == 'Offline' &&
-      this.isOverlappingTimeReserv(
+      body.online_offline == 'Offline'
+      
+    ) {
+      if (this.isOverlappingTimeReserv(
         bodyReserv.begin,
         bodyReserv.end,
         bodyReserv.resourceId
-      )
-    ) {
-      this.spinner.hide()
-      return;
+      )) {
+        
+        this.spinner.hide();
+        return;
+      }
     } else if (body.online_offline == 'Online') {
       if (
         this.isOverlappingTime(
@@ -496,7 +499,7 @@ export class EditComponent {
           body.url_online
         )
       ) {
-        this.spinner.hide()
+        this.spinner.hide();
         return;
       }
       // if (
@@ -553,18 +556,15 @@ export class EditComponent {
         // this.router.navigate(['/dashboard/users']);
         // this.arrayParicipants.forEach((element) => {
         if (this.uploader.queue.length > 0) {
-          console.log(this.uploader.queue[0]);
-          console.log(this.uploader.queue[1]);
-          console.log(this.uploader.queue.length);
 
           this.uploader.queue.forEach((element, index) => {
             // console.log(this.uploader.queue[index]);
-            console.log({
-              queue: element,
-              attach: this.attachApi.filter(
-                (data: any) => data.realName == element.file.name
-              ),
-            });
+            // console.log({
+            //   queue: element,
+            //   attach: this.attachApi.filter(
+            //     (data: any) => data.realName == element.file.name
+            //   ),
+            // });
             if (
               this.attachApi.filter(
                 (data: any) => data.realName == element.file.name
@@ -573,7 +573,7 @@ export class EditComponent {
               this.uploader.removeFromQueue(element);
             }
           });
-          console.log(this.uploader.queue);
+          // console.log(this.uploader.queue);
 
           this.uploader.options.additionalParameter = {
             dataId: this.initialEvent.id,
@@ -600,6 +600,8 @@ export class EditComponent {
                   AlertType.Success
                 );
                 this.ngOnInit();
+                this.router.onSameUrlNavigation = 'reload';
+                this.router.navigateByUrl(this.router.url);
               },
               (err) => {
                 console.log(err);
@@ -608,23 +610,16 @@ export class EditComponent {
         } else {
           this.closeModal();
 
-          console.log(this.router.getCurrentNavigation());
+          // console.log(this.router.getCurrentNavigation());
 
           this.alertService.onCallAlert('Update Success!', AlertType.Success);
           // this.dayComp.ngOnInit();
-          setTimeout(() => {
-            window.location.reload();
-          }, 5000);
+          this.router.onSameUrlNavigation = 'reload';
+          this.router.navigateByUrl(this.router.url);
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 5000);
         }
-        // });
-        // this.apiService.sendEmail(email).subscribe(
-        //   (em) => {
-        //     console.log('Email sent Success');
-        //   },
-        //   (err) => {
-        //     console.log('Email Failed');
-        //   }
-        // );
 
         this.submitted = false;
       },
@@ -651,7 +646,7 @@ export class EditComponent {
     );
     // console.log(this.initialEvent);
     // console.log(reservation);
-    
+
     try {
       if (reservation.length != 0) {
         // if (new Date(begin) > new Date(end)) {
