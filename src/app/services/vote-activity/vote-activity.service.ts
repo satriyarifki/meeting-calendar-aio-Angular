@@ -5,10 +5,10 @@ import { Subscription } from 'rxjs';
   providedIn: 'root'
 })
 export class VoteActivityService {
-  invokeAlert = new EventEmitter();
+  invokeCreate = new EventEmitter();
   subsVar: Subscription | undefined;
   constructor() {}
-  onCallVoteModal() {
-    this.invokeAlert.emit({data:0});
+  onCallCreateVote() {
+    this.invokeCreate.emit({data:0});
   }
 }

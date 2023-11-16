@@ -19,7 +19,9 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { TooltipDirective } from './directive/tooltip/tooltip.directive';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { FooterComponent } from './layouts/footer/footer.component';
-import { VoteComponent } from './activity/vote/vote.component';
+import { CreateVoteComponent } from './vote/create-vote/create-vote.component';
+import { ViewVoteComponent } from './vote/view-vote/view-vote.component';
+import { SubmitVoteComponent } from './vote/submit-vote/submit-vote.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import { VoteComponent } from './activity/vote/vote.component';
     EditComponent,
     TooltipDirective,
     FooterComponent,
-    VoteComponent,
+    CreateVoteComponent,
+    ViewVoteComponent,
+    SubmitVoteComponent,
   ],
   imports: [
     BrowserModule,

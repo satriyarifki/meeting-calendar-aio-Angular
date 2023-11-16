@@ -102,7 +102,7 @@ export class DayComponent {
     this.editService.onCallEditModal(event);
   }
   callVoteService() {
-    this.voteService.onCallVoteModal();
+    this.voteService.onCallCreateVote();
   }
 
   filterEvents(date: any) {

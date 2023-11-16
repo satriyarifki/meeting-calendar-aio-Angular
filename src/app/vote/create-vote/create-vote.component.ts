@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { VoteActivityService } from 'src/app/services/vote-activity/vote-activity.service';
 
 @Component({
-  selector: 'app-vote',
-  templateUrl: './vote.component.html',
-  styleUrls: ['./vote.component.css']
+  selector: 'app-create-vote',
+  templateUrl: './create-vote.component.html',
+  styleUrls: ['./create-vote.component.css']
 })
-export class VoteComponent {
+export class CreateVoteComponent {
   show:Boolean = false
 
   constructor(private voteService:VoteActivityService){
@@ -15,8 +15,8 @@ export class VoteComponent {
   ngOnInit(): void {
 
     if (this.voteService.subsVar == undefined) {
-      this.voteService.subsVar = this.voteService.invokeAlert.subscribe(
-        (data) => {
+      this.voteService.subsVar = this.voteService.invokeCreate.subscribe(
+        (data: any) => {
           this.callModal(data);
         }
       );
