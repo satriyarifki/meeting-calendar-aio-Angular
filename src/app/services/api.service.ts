@@ -105,4 +105,20 @@ export class ApiService {
   accessoriesUpdate(id: any, body: any): Observable<any> {
     return this.http.post(this.defaultUrl + 'accessories/' + id, body);
   }
+  
+
+  // ---------------------------VOTE
+  votesGet(): Observable<any> {
+    return this.http.get(this.baseUrl + 'vote');
+  }
+  votesPost(body:any): Observable<any> {
+    return this.http.post(this.baseUrl + 'vote',body);
+  }
+  // ---------------------------VOTE DETAILS
+  voteDetailsGet(): Observable<any> {
+    return this.http.get(this.baseUrl + 'vote_details');
+  }
+  voteDetailsPost(body:any): Observable<any> {
+    return this.http.post(this.baseUrl + 'vote_details',body);
+  }
 }

@@ -1,8 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { addMonths, format } from 'date-fns';
 import { forkJoin } from 'rxjs';
+import { AlertType } from 'src/app/services/alert/alert.model';
+import { AlertService } from 'src/app/services/alert/alert.service';
 import { ApiService } from 'src/app/services/api.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { VoteActivityService } from 'src/app/services/vote-activity/vote-activity.service';
 
 @Component({
@@ -11,9 +15,15 @@ import { VoteActivityService } from 'src/app/services/vote-activity/vote-activit
   styleUrls: ['./create-vote.component.css']
 })
 export class CreateVoteComponent {
-  show:Boolean = true
+  show:Boolean = false
   stepper = 1;
+
+  //FORMS
+  form! : FormGroup
   participantInput:any
+  itemsParticipants!: FormArray;
+  itemsDates!: FormArray;
+  @ViewChild('particip') particip!:ElementRef;
 
   //Date
   currentDate = new Date();
@@ -25,11 +35,17 @@ export class CreateVoteComponent {
   nameEmailEmployee:any[] = []
   choosenEmployee:any[] = []
 
-  constructor(private voteService:VoteActivityService, private router:Router,private apiService:ApiService){
+  constructor(private voteService:VoteActivityService, private router:Router,private apiService:ApiService,private alertService:AlertService,private authService:AuthService,private formBuilder:FormBuilder){
 
   }
   ngOnInit(): void {
-
+    
+    this.form = this.formBuilder.group({
+      title: ['',Validators.required],
+      desc: '',
+      userId: this.authService.getUser()[0].lg_nik,
+    })
+    this.itemsParticipants = this.formBuilder.array([])
     if (this.voteService.subsVar == undefined) {
       this.voteService.subsVar = this.voteService.invokeCreate.subscribe(
         (data: any) => {
@@ -61,13 +77,66 @@ export class CreateVoteComponent {
   }
 
   onSubmit(){
+
+    if (this.form.invalid) {
+      this.alertService.onCallAlert("Title can`t blank",AlertType.Warning)
+      return
+    }
+    if (this.itemsParticipants.invalid || this.choosenDate.length == 0) {
+      this.alertService.onCallAlert("Date or Participant can`t blank",AlertType.Warning)
+      return
+    }
+    // console.log(this.form);
     
+    // console.log(this.choosenDate);
+    // console.log(this.itemsParticipants.value);
+    let details:any[] = []
+    this.itemsParticipants.value.forEach((parc:any) => {
+      this.choosenDate.forEach(date => {
+        // console.log(parc.userId + ' ' + date);
+        details.push({voteId: 0,userId: parc.userId, date:date, agree:false})
+      });
+    });
+    console.log(details);
+    console.log(this.form);
+    
+    this.apiService.votesPost(this.form.value).subscribe(res=>{
+      console.log(res);
+      details.forEach((element,i) => {
+        details[i].voteId = res.id
+      });
+      this.apiService.voteDetailsPost(details).subscribe(resd=>{
+        console.log(resd);
+      })
+    })
+    // const votes = {
+    //   title: '',
+    //   desc: ''
+    //   userId: AuthService.
+    // }
+  }
+
+  fillFormItems() {
+   
   }
 
   pushParticipant(){
-    console.log(this.participantInput);
-    this.choosenEmployee.push(this.participantInput)
-    this.participantInput = '' 
+    console.log(this.particip.nativeElement.value);
+    this.choosenEmployee.push(this.particip.nativeElement.value)
+    let c = this.nameEmailEmployee.filter(data=>data[2] == this.particip.nativeElement.value)[0]
+    console.log(c);
+    
+    this.itemsParticipants.push(
+      this.formBuilder.group({
+        userId: [this.particip.nativeElement.value, Validators.required],
+        email: [c[0], Validators.required],
+      })
+    );
+    console.log(this.itemsParticipants.value);
+    
+    console.log(this.particip.nativeElement.value);
+    this.particip.nativeElement.value = '' 
+    
   }
 
   removeChoosenParticipant(date:any){

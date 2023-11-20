@@ -47,9 +47,7 @@
             >
               1
             </span>
-            <span class="hidden sm:inline-flex sm:ms-2 text-sm"
-              >Select Date</span
-            >
+            <span class="hidden sm:inline-flex sm:ms-2 text-sm">Title</span>
           </li>
           <svg
             class="w-3 h-3 ms-2 sm:ms-4 rtl:rotate-180"
@@ -77,8 +75,36 @@
             >
               2
             </span>
+            <span class="hidden sm:inline-flex sm:ms-2 text-sm">Date</span>
+          </li>
+          <svg
+            class="w-3 h-3 ms-2 sm:ms-4 rtl:rotate-180"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 12 10"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m7 9 4-4-4-4M1 9l4-4-4-4"
+            />
+          </svg>
+          <li
+            (click)="stepper = 3"
+            [ngClass]="stepper == 3 ? 'text-blue-600 ' : ''"
+            class="flex items-center cursor-pointer"
+          >
+            <span
+              [ngClass]="stepper == 3 ? 'border-blue-600' : 'border-gray-500'"
+              class="flex items-center justify-center w-5 h-5 text-xs border-2 font-semibold rounded-full shrink-0"
+            >
+              3
+            </span>
             <span class="hidden sm:inline-flex sm:ms-2 text-sm"
-              >Select Paricipant</span
+              >Paricipant</span
             >
             <!-- <svg
               class="w-3 h-3 ms-2 sm:ms-4 rtl:rotate-180"
@@ -107,8 +133,58 @@
         </ol>
       </div>
 
-      <!-- SELECT DATE -->
+      <form (ngSubmit)="onSubmit()" [formGroup]="form">
+        <!-- INPUT TITLE -->
       <div *ngIf="stepper == 1" class="flex flex-wrap gap-y-4">
+        <!--  -->
+        <div class="w-full pl-1.5">
+          <div
+            class="h-full rounded-md border text-center text-sm space-y-2 p-2"
+          >
+            <div class="flex justify-between items-center flex-wrap">
+              <label
+                for="inline-input-label-with-helper-text"
+                class="block text-sm mb-2 w-1/4 font-semibold"
+                >Meeting Name <span [ngClass]="form.invalid? '' : 'hidden'" class="text-red-600">*</span></label
+              >
+              <input
+                id="title"
+                name="title"
+                formControlName="title"
+                type="text"
+                class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+              />
+              
+            </div>
+            <div class="flex justify-between items-center flex-wrap">
+              <label
+                for="inline-input-label-with-helper-text"
+                class="block text-sm mb-2 w-1/4 font-semibold"
+                >Meeting Description</label
+              >
+              <input
+                id="desc"
+                name="desc"
+                formControlName="desc"
+                type="text"
+                class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="w-full flex justify-center">
+          <button
+            (click)="stepper = 2"
+            type="button"
+            class="px-4 py-1 bg-teal-600 hover:bg-teal-700 rounded-md text-white"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+      <!-- SELECT DATE -->
+      <div *ngIf="stepper == 2" class="flex flex-wrap gap-y-4">
         <!-- CALENDAR -->
         <div class="w-3/5 p-2 border rounded-md">
           <div class="flex justify-evenly pb-2 items-center">
@@ -263,9 +339,16 @@
           </div>
         </div>
 
-        <div class="w-full flex justify-center">
+        <div class="w-full flex justify-evenly">
           <button
-            (click)="stepper = 2"
+            (click)="stepper = 1"
+            type="button"
+            class="px-4 py-1 bg-lime-600 hover:bg-lime-700 rounded-md text-white"
+          >
+            Back
+          </button>
+          <button
+            (click)="stepper = 3"
             type="button"
             class="px-4 py-1 bg-teal-600 hover:bg-teal-700 rounded-md text-white"
           >
@@ -275,7 +358,7 @@
       </div>
 
       <!-- SELECT PARTICIPANTS -->
-      <div *ngIf="stepper == 2" class="flex flex-wrap gap-y-4">
+      <div *ngIf="stepper == 3" class="flex flex-wrap gap-y-4">
         <!-- PARTICIPANT -->
         <div class="w-3/5 p-2 border rounded-md">
           <div class="flex justify-center items-center flex-wrap">
@@ -285,18 +368,19 @@
               >Search Participant</label
             >
             <input
+            #particip
               id="participants"
               name="participants"
               (change)="pushParticipant()"
               type="email"
               list="emailList"
-              [(ngModel)]="participantInput"
+              
               multiple
               class="py-2 px-2 w-full border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
             />
             <datalist id="emailList">
-              <option *ngFor="let item of nameEmailEmployee" [value]="item[0]">
-                {{ item[1] + ' ' +item[2] }}
+              <option *ngFor="let item of nameEmailEmployee" [value]="item[2]">
+                <span class="font-semibold">{{item[1]}}</span> - {{ item[0] }}
               </option>
             </datalist>
           </div>
@@ -335,20 +419,23 @@
 
         <div class="w-full flex justify-evenly gap-2">
           <button
-            (click)="stepper = 1"
+            (click)="stepper = 2"
             type="button"
-            class="px-4 py-1 bg-teal-600 hover:bg-teal-700 rounded-md text-white"
+            class="px-4 py-1 bg-lime-600 hover:bg-lime-700 rounded-md text-white"
           >
             Back
           </button>
           <button
-            type="button"
+            type="submit"
+            
             class="px-4 py-1 bg-sky-500 hover:bg-sky-600 rounded-md text-white"
           >
             Submit
           </button>
         </div>
       </div>
+      </form>
+      
     </div>
   </div>
 </div>
