@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { addMonths, format } from 'date-fns';
+import { forkJoin } from 'rxjs';
+import { ApiService } from 'src/app/services/api.service';
 import { VoteActivityService } from 'src/app/services/vote-activity/vote-activity.service';
 
 @Component({
@@ -11,6 +13,7 @@ import { VoteActivityService } from 'src/app/services/vote-activity/vote-activit
 export class CreateVoteComponent {
   show:Boolean = true
   stepper = 1;
+  participantInput:any
 
   //Date
   currentDate = new Date();
@@ -19,8 +22,10 @@ export class CreateVoteComponent {
   //Array
   arrayDateinMonth:any[] = []
   choosenDate:any[] = []
+  nameEmailEmployee:any[] = []
+  choosenEmployee:any[] = []
 
-  constructor(private voteService:VoteActivityService, private router:Router){
+  constructor(private voteService:VoteActivityService, private router:Router,private apiService:ApiService){
 
   }
   ngOnInit(): void {
@@ -29,24 +34,44 @@ export class CreateVoteComponent {
       this.voteService.subsVar = this.voteService.invokeCreate.subscribe(
         (data: any) => {
           this.callModal(data);
+          this.callApiService();
         }
       );
     }
   }
 
   callModal(data: any) {
-    this.initialForm();
+    // this.initialForm();
     // console.log(this.authService.getUser()[0].lg_nik);
     this.loopDate(this.currentDate)
 
     this.show = true;
   }
+
+  callApiService(){
+    forkJoin(this.apiService.getNameEmailEmployees()).subscribe((res)=>{
+      // console.log(res[0]);
+      this.nameEmailEmployee = res[0]
+    })
+  }
   closeModal() {
     this.show = false;
+    this.choosenEmployee = []
+    this.choosenDate = []
   }
 
-  initialForm(){
+  onSubmit(){
+    
+  }
 
+  pushParticipant(){
+    console.log(this.participantInput);
+    this.choosenEmployee.push(this.participantInput)
+    this.participantInput = '' 
+  }
+
+  removeChoosenParticipant(date:any){
+    this.choosenEmployee = this.choosenEmployee.filter(data=> data != date)
   }
 
   pushChoosenDate(date:any){
