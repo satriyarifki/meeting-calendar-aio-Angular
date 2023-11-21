@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 export class TooltipDirective {
   @Input('tooltip') tooltipTitle!: any;
   @Input() placement!: string;
+  @Input() color!: string;
   @Input() delay!: string;
   tooltip: HTMLElement | any;
   // 호스트 요소와 tooltip 요소 간의 거리
@@ -79,7 +80,12 @@ export class TooltipDirective {
     this.renderer.addClass(this.tooltip, 'px-3');
     this.renderer.addClass(this.tooltip, 'rounded-md');
     this.renderer.addClass(this.tooltip, 'font-medium');
-    this.renderer.addClass(this.tooltip, 'text-cyan-800');
+    if (this.color) {
+      this.renderer.addClass(this.tooltip, this.color);
+    } else {
+      this.renderer.addClass(this.tooltip, 'text-cyan-800');
+    }
+    
     this.renderer.addClass(this.tooltip, 'whitespace-pre-line');
     this.renderer.addClass(this.tooltip, 'z-50');
     this.renderer.addClass(this.tooltip, `ng-tooltip-${this.placement}`);

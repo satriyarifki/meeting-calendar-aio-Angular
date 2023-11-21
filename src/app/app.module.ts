@@ -22,6 +22,7 @@ import { FooterComponent } from './layouts/footer/footer.component';
 import { CreateVoteComponent } from './vote/create-vote/create-vote.component';
 import { ViewVoteComponent } from './vote/view-vote/view-vote.component';
 import { SubmitVoteComponent } from './vote/submit-vote/submit-vote.component';
+import { NavbarComponent } from './layouts/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { SubmitVoteComponent } from './vote/submit-vote/submit-vote.component';
     CreateVoteComponent,
     ViewVoteComponent,
     SubmitVoteComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,

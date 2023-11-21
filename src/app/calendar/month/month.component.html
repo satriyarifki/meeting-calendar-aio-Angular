@@ -55,7 +55,7 @@
     <a
       href="http://192.168.9.47/mris-kjy/schedule"
       routerLinkActive="router-link-active"
-      class="relative cursor-pointer inline-flex mx-2 items-center justify-start px-5 max-[560px]:px-3 max-[560px]:text-sm py-1.5 overflow-hidden font-medium transition-all bg-[#50d3ee] rounded-md hover:bg-white group"
+      class="relative h-fit cursor-pointer inline-flex  items-center justify-start px-5 max-[560px]:px-3 max-[560px]:text-sm py-1.5 overflow-hidden font-medium transition-all bg-[#50d3ee] rounded-md hover:bg-white group"
     >
       <span
         class="absolute inset-0 border-0 group-hover:border-[25px] ease-linear duration-100 transition-all border-white rounded-md"
@@ -65,11 +65,12 @@
         >MRIS</span
       >
     </a>
+    
     <a
       *ngIf="onAuthCheck()"
       [routerLink]="['/login']"
       routerLinkActive="router-link-active"
-      class="relative cursor-pointer inline-flex items-center justify-start px-5 max-[560px]:px-3 max-[560px]:text-sm py-1.5 overflow-hidden font-medium transition-all bg-[#D89C60] rounded-md hover:bg-white group"
+      class="relative h-fit cursor-pointer inline-flex items-center justify-start px-5 max-[560px]:px-3 max-[560px]:text-sm py-1.5 overflow-hidden font-medium transition-all bg-[#D89C60] rounded-md hover:bg-white group"
     >
       <span
         class="absolute inset-0 border-0 group-hover:border-[25px] ease-linear duration-100 transition-all border-white rounded-md"
@@ -83,7 +84,7 @@
     <a
       *ngIf="!onAuthCheck()"
       (click)="signOut()"
-      class="relative cursor-pointer inline-flex items-center justify-start px-5 max-[560px]:px-3 max-[560px]:text-sm py-1.5 overflow-hidden font-medium transition-all bg-[#ff3526] rounded-md hover:bg-white group"
+      class="relative h-fit cursor-pointer inline-flex items-center justify-start px-5 max-[560px]:px-3 max-[560px]:text-sm py-1.5 overflow-hidden font-medium transition-all bg-[#ff3526] rounded-md hover:bg-white group"
     >
       <span
         class="absolute inset-0 border-0 group-hover:border-[25px] ease-linear duration-100 transition-all border-white rounded-md"
@@ -185,7 +186,7 @@
         </div>
 
         <div
-          class="w-full"
+          class="w-full overflow-y-auto"
           *ngIf="
             filterEvents(item.localeString).length != 0 ||
             filterEventHo(item.year, item.month, item.date).length != 0
