@@ -49,6 +49,8 @@ export class CreateVoteComponent {
     if (this.voteService.subsVar == undefined) {
       this.voteService.subsVar = this.voteService.invokeCreate.subscribe(
         (data: any) => {
+          console.log();
+          
           this.callModal(data);
           this.callApiService();
         }
@@ -121,10 +123,10 @@ export class CreateVoteComponent {
   }
 
   pushParticipant(){
-    console.log(this.particip.nativeElement.value);
+    // console.log(this.particip.nativeElement.value);
     this.choosenEmployee.push(this.particip.nativeElement.value)
     let c = this.nameEmailEmployee.filter(data=>data[2] == this.particip.nativeElement.value)[0]
-    console.log(c);
+    // console.log(c);
     
     this.itemsParticipants.push(
       this.formBuilder.group({
@@ -132,9 +134,9 @@ export class CreateVoteComponent {
         email: [c[0], Validators.required],
       })
     );
-    console.log(this.itemsParticipants.value);
+    // console.log(this.itemsParticipants.value);
     
-    console.log(this.particip.nativeElement.value);
+    // console.log(this.particip.nativeElement.value);
     this.particip.nativeElement.value = '' 
     
   }

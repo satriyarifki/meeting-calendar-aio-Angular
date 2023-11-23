@@ -118,10 +118,16 @@ export class ApiService {
   voteDetailsGet(): Observable<any> {
     return this.http.get(this.baseUrl + 'vote-details');
   }
+  voteDetailsByVoteGet(voteId:any): Observable<any> {
+    return this.http.get(this.baseUrl + 'vote-details/'+voteId);
+  }
   voteDetailsByUserGet(userId:any): Observable<any> {
     return this.http.get(this.baseUrl + 'vote-details/group/'+userId);
   }
   voteDetailsPost(body:any): Observable<any> {
     return this.http.post(this.baseUrl + 'vote-details',body);
+  }
+  voteDetailsUpdatePut(body:any): Observable<any> {
+    return this.http.put(this.baseUrl + 'vote-details',body);
   }
 }
