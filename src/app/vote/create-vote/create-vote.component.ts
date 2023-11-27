@@ -74,6 +74,7 @@ export class CreateVoteComponent {
   }
   closeModal() {
     this.show = false;
+    this.arrayDateinMonth = []
     this.choosenEmployee = []
     this.choosenDate = []
   }
@@ -99,8 +100,8 @@ export class CreateVoteComponent {
         details.push({voteId: 0,userId: parc.userId, date:date, agree:false})
       });
     });
-    console.log(details);
-    console.log(this.form);
+    // console.log(details);
+    // console.log(this.form);
     
     this.apiService.votesPost(this.form.value).subscribe(res=>{
       console.log(res);
@@ -108,8 +109,14 @@ export class CreateVoteComponent {
         details[i].voteId = res.id
       });
       this.apiService.voteDetailsPost(details).subscribe(resd=>{
-        console.log(resd);
+        // console.log(resd);
+        this.alertService.onCallAlert('Success added vote!', AlertType.Success)
+        this.closeModal()
+      }, err=>{
+        this.alertService.onCallAlert('Failed added vote', AlertType.Error)
       })
+    }, er=>{
+      this.alertService.onCallAlert('Failed added vote', AlertType.Error)
     })
     // const votes = {
     //   title: '',

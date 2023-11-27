@@ -7,8 +7,10 @@ import { Subscription } from 'rxjs';
 export class VoteActivityService {
   invokeCreate = new EventEmitter();
   invokeSubmit = new EventEmitter();
+  invokeView = new EventEmitter();
   subsVar: Subscription | undefined;
   subsSubmit: Subscription | undefined;
+  subsView: Subscription | undefined;
   constructor() {}
   onCallCreateVote() {
     // console.log(this.subsVar);
@@ -16,7 +18,10 @@ export class VoteActivityService {
   }
   onCallSubmitVote(data:any) {
     // console.log(this.subsVar);
-    
     this.invokeSubmit.emit(data);
+  }
+  onCallViewVote(data:any) {
+    // console.log(this.subsVar);
+    this.invokeView.emit(data);
   }
 }

@@ -111,6 +111,12 @@ export class ApiService {
   votesGet(): Observable<any> {
     return this.http.get(this.baseUrl + 'vote');
   }
+  votesByIdGet(id:number): Observable<any> {
+    return this.http.get(this.baseUrl + 'vote/'+id);
+  }
+  votesByUserGet(userId:any): Observable<any> {
+    return this.http.get(this.baseUrl + 'vote/user/'+userId);
+  }
   votesPost(body:any): Observable<any> {
     return this.http.post(this.baseUrl + 'vote',body);
   }

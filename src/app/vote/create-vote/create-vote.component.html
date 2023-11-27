@@ -39,7 +39,7 @@
           <li
             (click)="stepper = 1"
             [ngClass]="stepper == 1 ? 'text-blue-600 ' : ''"
-            class="flex items-center cursor-pointer"
+            class="flex items-center cursor-pointer transition-colors duration-100 ease-in-out"
           >
             <span
               [ngClass]="stepper == 1 ? 'border-blue-600' : 'border-gray-500'"
@@ -67,7 +67,7 @@
           <li
             (click)="stepper = 2"
             [ngClass]="stepper == 2 ? 'text-blue-600 ' : ''"
-            class="flex items-center cursor-pointer"
+            class="flex items-center cursor-pointer transition-colors duration-100 ease-in-out"
           >
             <span
               [ngClass]="stepper == 2 ? 'border-blue-600' : 'border-gray-500'"
@@ -95,7 +95,7 @@
           <li
             (click)="stepper = 3"
             [ngClass]="stepper == 3 ? 'text-blue-600 ' : ''"
-            class="flex items-center cursor-pointer"
+            class="flex items-center cursor-pointer transition-colors duration-100 ease-in-out"
           >
             <span
               [ngClass]="stepper == 3 ? 'border-blue-600' : 'border-gray-500'"
@@ -135,7 +135,7 @@
 
       <form (ngSubmit)="onSubmit()" [formGroup]="form">
         <!-- INPUT TITLE -->
-      <div *ngIf="stepper == 1" class="flex flex-wrap gap-y-4">
+      <div [ngClass]="stepper == 1? '':'hidden'" class="flex flex-wrap gap-y-4">
         <!--  -->
         <div class="w-full pl-1.5">
           <div
@@ -174,24 +174,23 @@
         </div>
 
         <div class="w-full flex justify-center">
-          <button
+          <a
             (click)="stepper = 2"
-            type="button"
-            class="px-4 py-1 bg-teal-600 hover:bg-teal-700 rounded-md text-white"
+            class="px-4 py-1 bg-teal-600 hover:bg-teal-700 rounded-md text-white cursor-pointer"
           >
             Next
-          </button>
+          </a>
         </div>
       </div>
       <!-- SELECT DATE -->
-      <div *ngIf="stepper == 2" class="flex flex-wrap gap-y-4">
+      <div [ngClass]="stepper == 2? '':'hidden'"  class="flex flex-wrap gap-y-4">
         <!-- CALENDAR -->
         <div class="w-3/5 p-2 border rounded-md">
           <div class="flex justify-evenly pb-2 items-center">
-            <button
+            <a
               (click)="toPrevMonth()"
               title="left arrow"
-              class="p-2 text-gray-800 transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
+              class="p-2 text-gray-800 cursor-pointer transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -207,7 +206,7 @@
                   d="M15 19l-7-7 7-7"
                 />
               </svg>
-            </button>
+            </a>
             <h1
               class="font-manrope text-md font-medium max-md:text-md text-center"
             >
@@ -215,10 +214,10 @@
               {{ dateParams.getFullYear() }}
             </h1>
 
-            <button
+            <a
               (click)="toNextMonth()"
               title="right arrow"
-              class="p-2 text-gray-800 transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
+              class="p-2 text-gray-800 cursor-pointer transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -234,7 +233,7 @@
                   d="M9 5l7 7-7 7"
                 />
               </svg>
-            </button>
+            </a>
           </div>
           <div
             class="flex flex-wrap text-[#D89C60] font-medium text-sm rounded-sm rounded-b-none font-manrope max-lg:hidden"
@@ -340,25 +339,23 @@
         </div>
 
         <div class="w-full flex justify-evenly">
-          <button
+          <a
             (click)="stepper = 1"
-            type="button"
-            class="px-4 py-1 bg-lime-600 hover:bg-lime-700 rounded-md text-white"
+            class="px-4 py-1 bg-lime-600 hover:bg-lime-700 rounded-md text-white cursor-pointer"
           >
             Back
-          </button>
-          <button
+          </a>
+          <a
             (click)="stepper = 3"
-            type="button"
-            class="px-4 py-1 bg-teal-600 hover:bg-teal-700 rounded-md text-white"
+            class="px-4 py-1 bg-teal-600 hover:bg-teal-700 rounded-md text-white cursor-pointer"
           >
             Next
-          </button>
+          </a>
         </div>
       </div>
 
       <!-- SELECT PARTICIPANTS -->
-      <div *ngIf="stepper == 3" class="flex flex-wrap gap-y-4">
+      <div [ngClass]="stepper == 3? '':'hidden'"  class="flex flex-wrap gap-y-4">
         <!-- PARTICIPANT -->
         <div class="w-3/5 p-2 border rounded-md">
           <div class="flex justify-center items-center flex-wrap">

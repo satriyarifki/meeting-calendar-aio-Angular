@@ -1,1 +1,185 @@
-<p>view-vote works!</p>
+<div
+  #signOutModal
+  id="popup-modal"
+  tabindex="-1"
+  class="fixed top-0 left-0 right-0 z-20 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-screen md:h-full bg-gray-900 bg-opacity-50"
+  *ngIf="show"
+>
+  <div
+    class="relative w-full md:w-fit h-full mx-auto md:h-auto font-manrope"
+  >
+    <div class="relative rounded-lg shadow bg-white p-4">
+      <button
+        (click)="closeModal()"
+        type="button"
+        class="absolute transition duration-200 top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center hover:bg-gray-800 hover:text-white"
+      >
+        <svg
+          aria-hidden="true"
+          class="w-5 h-5"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+        <span class="sr-only">Close modal</span>
+      </button>
+      <div class="px-2">
+        <h2 class="font-semibold text-xl">View Vote</h2>
+      </div>
+      <!-- <hr class="py-1.5" /> -->
+
+      <div *ngIf="load" class="flex justify-center w-40 py-5">
+        <div class="animate-spin inline-block w-10 h-10 border-[4px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500" role="status" aria-label="loading">
+            <span class="sr-only">Loading...</span>
+          </div>
+      </div> 
+      <div [ngClass]="load? 'hidden' : ''" class="px-3 py-1">
+        <div class="py-2 space-y-3">
+          <div class="w-full mx-auto px-3 py-1 text-base font-medium rounded-sm">
+            <div class="flex flex-row">
+              <h1 class="w-48">Meeting Name</h1>
+              <h1 class="">: {{ vote.title }}</h1>
+            </div>
+            <div class="flex flex-row">
+              <h1 class="w-48">Meeting Description</h1>
+              <h1 class="">: {{ vote.desc }}</h1>
+            </div>
+            <div class="flex flex-row">
+              <h1 class="w-48">Meeting Creator</h1>
+              <h1 class="">: {{ vote.userId }}</h1>
+            </div>
+          </div>
+
+          <!-- <h1 class="text-gray-500 text-center">Choose your availibility!</h1> -->
+           
+        </div>
+        <div class="p-2 flex flex-col border rounded ">
+          <div class="flex flex-col sm:max-w-5xl">
+            <div class="-m-1.5 overflow-x-auto">
+              <div class="p-1.5 min-w-full inline-block align-middle">
+                <div class="overflow-hidden">
+                  <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                      <tr>
+                        <th
+                          scope="col"
+                          class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                        >
+                          Email
+                        </th>
+                        <th
+                        *ngFor="
+                            let item of voteDetailsByUser(
+                              voteDetails[0]?.userId
+                            );odd as odd
+                          "
+                          scope="col"
+                          [ngClass]="odd? 'bg-slate-100' : ''"
+                          class="w-28 py-3 text-center text-sm font-semibold  text-gray-600"
+                          
+                        >
+                          {{ item.date|date: 'mediumDate' }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                      <tr *ngFor="let item of distinctVoteDetails; index as i">
+                        <td
+                          class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-800"
+                        >
+                          {{ usersData[i]?.mail_id }}
+                        </td>
+                        <td
+                          class="py-2 whitespace-nowrap text-sm text-gray-800"
+                          [attr.colspan]="
+                            voteDetailsByUser(voteDetails[0]?.userId).length
+                          "
+                        >
+                          <ul class="w-full flex flex-row">
+                            <li
+                              *ngFor="
+                                let unit of voteDetailsByUser(item.userId);odd as odd
+                              "
+                              [ngClass]="odd? 'bg-slate-100' : ''"
+                              class="w-full inline-flex items-center gap-x-2.5 py-3 px-4 text-sm font-medium bg-white border text-gray-800 -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg sm:-ms-px sm:mt-0 sm:first:rounded-se-none sm:first:rounded-es-lg sm:last:rounded-es-none sm:last:rounded-se-lg"
+                            >
+                              <div
+                                class="relative flex justify-center items-start w-full"
+                              >
+                              {{unit.date}}
+                                <div
+                                  class="flex items-center h-5 justify-center"
+                                >
+                                  <svg
+                                    *ngIf="unit.agree"
+                                    class="text-sky-600"
+                                    width="24px"
+                                    height="24px"
+                                    viewBox="0 0 24 24"
+                                    version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                                  >
+                                    <g
+                                      stroke="none"
+                                      stroke-width="1"
+                                      fill="currentColor"
+                                      fill-rule="evenodd"
+                                    >
+                                      <g
+                                        fill="currentColor"
+                                        fill-rule="nonzero"
+                                      >
+                                        <path
+                                          d="M18,3 C19.6568542,3 21,4.34314575 21,6 L21,18 C21,19.6568542 19.6568542,21 18,21 L6,21 C4.34314575,21 3,19.6568542 3,18 L3,6 C3,4.34314575 4.34314575,3 6,3 L18,3 Z M16.4696699,7.96966991 L10,14.4393398 L7.53033009,11.9696699 C7.23743687,11.6767767 6.76256313,11.6767767 6.46966991,11.9696699 C6.1767767,12.2625631 6.1767767,12.7374369 6.46966991,13.0303301 L9.46966991,16.0303301 C9.76256313,16.3232233 10.2374369,16.3232233 10.5303301,16.0303301 L17.5303301,9.03033009 C17.8232233,8.73743687 17.8232233,8.26256313 17.5303301,7.96966991 C17.2374369,7.6767767 16.7625631,7.6767767 16.4696699,7.96966991 Z"
+                                          id="🎨-Color"
+                                        ></path>
+                                      </g>
+                                    </g>
+                                  </svg>
+                                  <svg
+                                    *ngIf="!unit.agree"
+                                    width="24px"
+                                    height="24px"
+                                    viewBox="0 0 24 24"
+                                    version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                                  >
+                                    <g
+                                      stroke="none"
+                                      stroke-width="1"
+                                      fill="none"
+                                      fill-rule="evenodd"
+                                    >
+                                      <g fill="#212121" fill-rule="nonzero">
+                                        <path
+                                          d="M5.75,3 L18.25,3 C19.7687831,3 21,4.23121694 21,5.75 L21,18.25 C21,19.7687831 19.7687831,21 18.25,21 L5.75,21 C4.23121694,21 3,19.7687831 3,18.25 L3,5.75 C3,4.23121694 4.23121694,3 5.75,3 Z M5.75,4.5 C5.05964406,4.5 4.5,5.05964406 4.5,5.75 L4.5,18.25 C4.5,18.9403559 5.05964406,19.5 5.75,19.5 L18.25,19.5 C18.9403559,19.5 19.5,18.9403559 19.5,18.25 L19.5,5.75 C19.5,5.05964406 18.9403559,4.5 18.25,4.5 L5.75,4.5 Z"
+                                          id="🎨Color"
+                                        ></path>
+                                      </g>
+                                    </g>
+                                  </svg>
+                                </div>
+                              </div>
+                            </li>
+                          </ul>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { AlertType } from 'src/app/services/alert/alert.model';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -13,12 +14,15 @@ import { VoteActivityService } from 'src/app/services/vote-activity/vote-activit
 })
 export class NavbarComponent {
   notifBool:Boolean = false
+
+  //API
   voteNotif:any[] = []
+  voteSelf:any[] = []
 
   constructor(private authService:AuthService,private alertService:AlertService,private apiService:ApiService, public router:Router, private voteService : VoteActivityService){
-    apiService.voteDetailsByUserGet(authService.getUser()[0]?.lg_nik).subscribe(res=>{
-      console.log(res);
-      this.voteNotif = res
+    forkJoin(apiService.voteDetailsByUserGet(authService.getUser()[0]?.lg_nik), apiService.votesByUserGet(authService.getUser()[0]?.lg_nik)).subscribe(res=>{
+      this.voteNotif = res[0]
+      this.voteSelf = res[1]
       
     })
   }
@@ -38,5 +42,8 @@ export class NavbarComponent {
   }
   openSubmitVote(params:any){
     this.voteService.onCallSubmitVote(params)
+  }
+  openViewVote(params:any){
+    this.voteService.onCallViewVote(params)
   }
 }

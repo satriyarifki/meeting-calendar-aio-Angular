@@ -16,6 +16,7 @@ export class TooltipDirective {
   @Input() placement!: string;
   @Input() color!: string;
   @Input() delay!: string;
+  @Input() condition: Boolean = true;
   tooltip: HTMLElement | any;
   // 호스트 요소와 tooltip 요소 간의 거리
   offset = 10;
@@ -32,7 +33,7 @@ export class TooltipDirective {
   }
 
   @HostListener('mouseenter') onMouseEnter() {
-    if (!this.tooltip) {
+    if (!this.tooltip && this.condition) {
       this.show();
     }
   }
