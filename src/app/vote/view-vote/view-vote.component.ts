@@ -68,7 +68,7 @@ export class ViewVoteComponent {
   }
   voteDetailsByUser(userId: any) {
     let data = this.voteDetails.filter((data) => data.userId == userId);
-    data = data.sort((a, b) => a.date - b.date);
+    data = data.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
     console.log(data);
     
     return data 
