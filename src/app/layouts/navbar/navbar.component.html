@@ -7,10 +7,10 @@
         ? !onAuthCheck()? 'translate-x-[230px]' : 'translate-x-[160px]'
         : ''
     "
-  class="fixed z-10 top-3 right-0 px-3 py-2 bg-white bg-opacity-30 backdrop-blur-sm shadow-lg rounded-l-2xl transition-all font-manrope"
+  class="fixed z-10 top-3 right-0 px-3 py-2 bg-white bg-opacity-70 backdrop-blur-sm shadow-lg rounded-l-2xl transition-all font-manrope"
 >
 <div *ngIf="!onAuthCheck()" class="px-3 pb-3 ">
-  <h1 class="px-1 py-0.5 rounded bg-white text-center text-sm font-medium text-slate-700">Halo, <span class="font-semibold">{{userData?.lg_name}}</span> !</h1>
+  <h1 class="px-1 py-0.5 rounded bg-white border text-center text-sm font-medium text-slate-700">Halo, <span class="font-semibold">{{userData?.lg_name}}</span> !</h1>
 </div>
   <div class="flex px-4 space-x-3">
     <a

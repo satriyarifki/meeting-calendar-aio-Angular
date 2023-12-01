@@ -5,7 +5,7 @@
   class="fixed top-0 left-0 right-0 z-20 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-screen md:h-full bg-gray-900 bg-opacity-50"
   *ngIf="show"
 >
-  <div class="relative w-full h-full mx-auto max-w-xl md:h-auto font-manrope">
+  <div class="relative w-full h-full mx-auto max-w-2xl md:h-auto font-manrope">
     <div class="relative rounded-lg shadow bg-white p-4">
       <button
         (click)="closeModal()"
@@ -28,7 +28,9 @@
         <span class="sr-only">Close modal</span>
       </button>
       <div class="px-2">
-        <h2 class="font-medium text-xl">Add Vote Meeting</h2>
+        <h2 class="font-medium text-xl" (click)="loopDate(this.currentDate)">
+          Add Vote Meeting
+        </h2>
       </div>
 
       <!-- STEPPER -->
@@ -103,6 +105,34 @@
             >
               3
             </span>
+            <span class="hidden sm:inline-flex sm:ms-2 text-sm">Time</span>
+          </li>
+          <svg
+            class="w-3 h-3 ms-2 sm:ms-4 rtl:rotate-180"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 12 10"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m7 9 4-4-4-4M1 9l4-4-4-4"
+            />
+          </svg>
+          <li
+            (click)="stepper = 4"
+            [ngClass]="stepper == 4 ? 'text-blue-600 ' : ''"
+            class="flex items-center cursor-pointer transition-colors duration-100 ease-in-out"
+          >
+            <span
+              [ngClass]="stepper == 4 ? 'border-blue-600' : 'border-gray-500'"
+              class="flex items-center justify-center w-5 h-5 text-xs border-2 font-semibold rounded-full shrink-0"
+            >
+              4
+            </span>
             <span class="hidden sm:inline-flex sm:ms-2 text-sm"
               >Paricipant</span
             >
@@ -135,255 +165,320 @@
 
       <form (ngSubmit)="onSubmit()" [formGroup]="form">
         <!-- INPUT TITLE -->
-      <div [ngClass]="stepper == 1? '':'hidden'" class="flex flex-wrap gap-y-4">
-        <!--  -->
-        <div class="w-full pl-1.5">
-          <div
-            class="h-full rounded-md border text-center text-sm space-y-2 p-2"
-          >
-            <div class="flex justify-between items-center flex-wrap">
-              <label
-                for="inline-input-label-with-helper-text"
-                class="block text-sm mb-2 w-1/4 font-semibold"
-                >Meeting Name <span [ngClass]="form.invalid? '' : 'hidden'" class="text-red-600">*</span></label
-              >
-              <input
-                id="title"
-                name="title"
-                formControlName="title"
-                type="text"
-                class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
-              />
-              
-            </div>
-            <div class="flex justify-between items-center flex-wrap">
-              <label
-                for="inline-input-label-with-helper-text"
-                class="block text-sm mb-2 w-1/4 font-semibold"
-                >Meeting Description</label
-              >
-              <input
-                id="desc"
-                name="desc"
-                formControlName="desc"
-                type="text"
-                class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div class="w-full flex justify-center">
-          <a
-            (click)="stepper = 2"
-            class="px-4 py-1 bg-teal-600 hover:bg-teal-700 rounded-md text-white cursor-pointer"
-          >
-            Next
-          </a>
-        </div>
-      </div>
-      <!-- SELECT DATE -->
-      <div [ngClass]="stepper == 2? '':'hidden'"  class="flex flex-wrap gap-y-4">
-        <!-- CALENDAR -->
-        <div class="w-3/5 p-2 border rounded-md">
-          <div class="flex justify-evenly pb-2 items-center">
-            <a
-              (click)="toPrevMonth()"
-              title="left arrow"
-              class="p-2 text-gray-800 cursor-pointer transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </a>
-            <h1
-              class="font-manrope text-md font-medium max-md:text-md text-center"
-            >
-              {{ dateParams.toLocaleString("default", { month: "long" }) }}
-              {{ dateParams.getFullYear() }}
-            </h1>
-
-            <a
-              (click)="toNextMonth()"
-              title="right arrow"
-              class="p-2 text-gray-800 cursor-pointer transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </a>
-          </div>
-          <div
-            class="flex flex-wrap text-[#D89C60] font-medium text-sm rounded-sm rounded-b-none font-manrope max-lg:hidden"
-          >
-            <div class="w-[14.2%] py-2 text-center text-sm grow">Mon</div>
-            <div class="w-[14.2%] py-2 text-center text-sm grow">Tue</div>
-            <div class="w-[14.2%] py-2 text-center text-sm grow">Wed</div>
-            <div class="w-[14.2%] py-2 text-center text-sm grow">Thu</div>
-            <div class="w-[14.2%] py-2 text-center text-sm grow">Fri</div>
-            <div class="w-[14.2%] py-2 text-center text-sm grow">Sat</div>
-            <div class="w-[14.2%] py-2 text-center text-sm grow">Sun</div>
-          </div>
-          <div
-            class="flex flex-wrap text-[#D89C60] font-medium text-sm rounded-sm rounded-b-none font-manrope lg:hidden"
-          >
-            <div class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow">
-              M
-            </div>
-            <div class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow">
-              T
-            </div>
-            <div class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow">
-              W
-            </div>
-            <div class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow">
-              T
-            </div>
-            <div class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow">
-              F
-            </div>
-            <div class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow">
-              S
-            </div>
-            <div class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow">
-              S
-            </div>
-          </div>
-          <div class="flex flex-wrap mt-0.5">
+        <div
+          [ngClass]="stepper == 1 ? '' : 'hidden'"
+          class="flex flex-wrap gap-y-4"
+        >
+          <!--  -->
+          <div class="w-full pl-1.5">
             <div
-              class="w-[14.2%] grow flex justify-start text-center cursor-pointer"
-              *ngFor="let item of arrayDateinMonth; index as i"
-              [ngClass]="
-                item.date == currentDate.getDate() &&
-                item.month == currentDate.getMonth() &&
-                item.year == currentDate.getFullYear()
-                  ? 'border-1 border-green-600'
-                  : ''
-              "
+              class="h-full rounded-md border text-center text-sm space-y-2 p-2"
             >
-              <a
-                (click)="pushChoosenDate(item.dateFull)"
-                class="w-full h-full flex justify-center rounded-full hover:bg-gray-200 p-1"
-                ><span
-                  class="w-5 text-sm max-lg:text-xs font-semibold font-manrope"
-                  [ngClass]="
-                    item.month != dateParams.getMonth()
-                      ? 'text-gray-400'
-                      : item.date == currentDate.getDate() &&
-                        item.month == currentDate.getMonth() &&
-                        item.year == currentDate.getFullYear()
-                      ? 'text-blue-600'
-                      : item.day == 0 || item.day == 6
-                      ? 'text-red-500'
-                      : ''
-                  "
+              <div class="flex justify-between items-center flex-wrap">
+                <label
+                  for="inline-input-label-with-helper-text"
+                  class="block text-sm mb-2 w-1/4 font-semibold"
+                  >Meeting Name
+                  <span
+                    [ngClass]="form.invalid ? '' : 'hidden'"
+                    class="text-red-600"
+                    >*</span
+                  ></label
                 >
-                  {{ item.date }}
-                </span>
-              </a>
+                <input
+                  id="title"
+                  name="title"
+                  formControlName="title"
+                  type="text"
+                  class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+                />
+              </div>
+              <div class="flex justify-between items-center flex-wrap">
+                <label
+                  for="inline-input-label-with-helper-text"
+                  class="block text-sm mb-2 w-1/4 font-semibold"
+                  >Meeting Description</label
+                >
+                <input
+                  id="desc"
+                  name="desc"
+                  formControlName="desc"
+                  type="text"
+                  class="py-2 px-2 w-3/4 border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <!-- CHOOSEN DATE -->
-        <div class="w-2/5 pl-1.5">
-          <div
-            class="h-full rounded-md border text-center text-sm space-y-2 p-2"
-          >
-            <h1 class="font-semibold text-gray-400">Choosen Date:</h1>
-            <div
-              *ngFor="let item of choosenDate"
-              class="flex rounded-md border"
+
+          <div class="w-full flex justify-center">
+            <a
+              (click)="stepper = 2"
+              class="px-4 py-1 bg-teal-600 hover:bg-teal-700 rounded-md text-white cursor-pointer"
             >
+              Next
+            </a>
+          </div>
+        </div>
+        <!-- SELECT DATE -->
+        <div
+          [ngClass]="stepper == 2 ? '' : 'hidden'"
+          class="flex flex-wrap gap-y-4"
+        >
+          <!-- CALENDAR -->
+          <div class="w-3/5 p-2 border rounded-md">
+            <div class="flex justify-evenly pb-2 items-center">
               <a
-                (click)="removeChoosenDate(item)"
-                class="overflow-hidden cursor-pointer w-[12%] flex justify-center items-center bg-red-500 hover:bg-red-400 shadow-sm rounded-md transition-colors"
-                ><svg
+                (click)="toPrevMonth()"
+                title="left arrow"
+                class="p-2 text-gray-800 cursor-pointer transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
+              >
+                <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  height="14"
-                  viewBox="0 96 960 960"
-                  width="14"
-                  fill="white"
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
                 >
                   <path
-                    d="M261 936q-24.75 0-42.375-17.625T201 876V306h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438V306ZM367 790h60V391h-60v399Zm166 0h60V391h-60v399ZM261 306v570-570Z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15 19l-7-7 7-7"
                   />
                 </svg>
               </a>
-              <h1 class="w-full font-medium">
-                {{ item }}
+              <h1
+                class="font-manrope text-md font-medium max-md:text-md text-center"
+              >
+                {{ dateParams.toLocaleString("default", { month: "long" }) }}
+                {{ dateParams.getFullYear() }}
               </h1>
+
+              <a
+                (click)="toNextMonth()"
+                title="right arrow"
+                class="p-2 text-gray-800 cursor-pointer transition-colors duration-300 border rounded-full rtl:-scale-x-100 hover:bg-gray-100"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </a>
+            </div>
+            <div
+              class="flex flex-wrap text-[#D89C60] font-medium text-sm rounded-sm rounded-b-none font-manrope max-lg:hidden"
+            >
+              <div class="w-[14.2%] py-2 text-center text-sm grow">Mon</div>
+              <div class="w-[14.2%] py-2 text-center text-sm grow">Tue</div>
+              <div class="w-[14.2%] py-2 text-center text-sm grow">Wed</div>
+              <div class="w-[14.2%] py-2 text-center text-sm grow">Thu</div>
+              <div class="w-[14.2%] py-2 text-center text-sm grow">Fri</div>
+              <div class="w-[14.2%] py-2 text-center text-sm grow">Sat</div>
+              <div class="w-[14.2%] py-2 text-center text-sm grow">Sun</div>
+            </div>
+            <div
+              class="flex flex-wrap text-[#D89C60] font-medium text-sm rounded-sm rounded-b-none font-manrope lg:hidden"
+            >
+              <div
+                class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow"
+              >
+                M
+              </div>
+              <div
+                class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow"
+              >
+                T
+              </div>
+              <div
+                class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow"
+              >
+                W
+              </div>
+              <div
+                class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow"
+              >
+                T
+              </div>
+              <div
+                class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow"
+              >
+                F
+              </div>
+              <div
+                class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow"
+              >
+                S
+              </div>
+              <div
+                class="w-[14.2%] py-2 text-center text-sm max-md:text-xs grow"
+              >
+                S
+              </div>
+            </div>
+            <div class="flex flex-wrap mt-0.5">
+              <div
+                class="w-[14.2%] grow flex justify-start text-center cursor-pointer"
+                *ngFor="let item of arrayDateinMonth; index as i"
+                [ngClass]="
+                  item.date == currentDate.getDate() &&
+                  item.month == currentDate.getMonth() &&
+                  item.year == currentDate.getFullYear()
+                    ? 'border-1 border-green-600'
+                    : ''
+                "
+              >
+                <a
+                  (click)="pushChoosenDate(item.dateFull)"
+                  class="w-full h-full flex justify-center rounded-full hover:bg-gray-200 p-1"
+                  ><span
+                    class="w-5 text-sm max-lg:text-xs font-semibold font-manrope"
+                    [ngClass]="
+                      item.month != dateParams.getMonth()
+                        ? 'text-gray-400'
+                        : item.date == currentDate.getDate() &&
+                          item.month == currentDate.getMonth() &&
+                          item.year == currentDate.getFullYear()
+                        ? 'text-blue-600'
+                        : item.day == 0 || item.day == 6
+                        ? 'text-red-500'
+                        : ''
+                    "
+                  >
+                    {{ item.date }}
+                  </span>
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="w-full flex justify-evenly">
-          <a
-            (click)="stepper = 1"
-            class="px-4 py-1 bg-lime-600 hover:bg-lime-700 rounded-md text-white cursor-pointer"
-          >
-            Back
-          </a>
-          <a
-            (click)="stepper = 3"
-            class="px-4 py-1 bg-teal-600 hover:bg-teal-700 rounded-md text-white cursor-pointer"
-          >
-            Next
-          </a>
-        </div>
-      </div>
-
-      <!-- SELECT PARTICIPANTS -->
-      <div [ngClass]="stepper == 3? '':'hidden'"  class="flex flex-wrap gap-y-4">
-        <!-- PARTICIPANT -->
-        <div class="w-3/5 p-2 border rounded-md">
-          <div class="flex justify-center items-center flex-wrap">
-            <label
-              for="inline-input-label-with-helper-text"
-              class="block text-sm mb-2 w-full font-semibold"
-              >Search Participant</label
+          <!-- CHOOSEN DATE -->
+          <div class="w-2/5 pl-1.5">
+            <div
+              class="h-full rounded-md border text-center text-sm space-y-2 p-2"
             >
-            <input
-            #particip
-              id="participants"
-              name="participants"
-              (change)="pushParticipant()"
-              type="email"
-              list="emailList"
-              
-              multiple
-              class="py-2 px-2 w-full border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
-            />
-            <datalist id="emailList">
-              <option *ngFor="let item of nameEmailEmployee" [value]="item[2]">
-                <span class="font-semibold">{{item[1]}}</span> - {{ item[0] }}
-              </option>
-            </datalist>
+              <h1 class="font-semibold text-gray-400">Choosen Date:</h1>
+              <div
+                *ngFor="let item of choosenDate"
+                class="flex rounded-md border"
+              >
+                <a
+                  (click)="removeChoosenDate(item)"
+                  class="overflow-hidden cursor-pointer w-[12%] flex justify-center items-center bg-red-500 hover:bg-red-400 shadow-sm rounded-md transition-colors"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="14"
+                    viewBox="0 96 960 960"
+                    width="14"
+                    fill="white"
+                  >
+                    <path
+                      d="M261 936q-24.75 0-42.375-17.625T201 876V306h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438V306ZM367 790h60V391h-60v399Zm166 0h60V391h-60v399ZM261 306v570-570Z"
+                    />
+                  </svg>
+                </a>
+                <h1 class="w-full font-medium">
+                  {{ item }}
+                </h1>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full flex justify-evenly">
+            <a
+              (click)="stepper = 1"
+              class="px-4 py-1 bg-lime-600 hover:bg-lime-700 rounded-md text-white cursor-pointer"
+            >
+              Back
+            </a>
+            <a
+              (click)="stepper = 3"
+              class="px-4 py-1 bg-teal-600 hover:bg-teal-700 rounded-md text-white cursor-pointer"
+            >
+              Next
+            </a>
           </div>
         </div>
-        <!-- CHOOSEN PARTICIPANTS -->
-        <div class="w-2/5 pl-1.5">
+        <!-- SELECT TIME -->
+        <div
+          [ngClass]="stepper == 3 ? '' : 'hidden'"
+          class="flex flex-wrap gap-y-3"
+        >
+          <!-- PARTICIPANT -->
+          <div
+            *ngIf="choosenDate.length == 0"
+            class="py-1.5 px-3 bg-yellow-200 rounded-lg my-8 mx-auto"
+          >
+            <h1 class="text-md text-center font-medium">Choose date first!</h1>
+          </div>
+          <div
+            [ngClass]="choosenDate.length != 0 ? '' : 'hidden'"
+            class="w-full"
+          >
+            <div class="px-4 space-y-1 mb-2">
+              <label
+                for="inline-input-label-with-helper-text"
+                class="block text-md w-full text-center font-bold text-slate-500"
+                >Choose Time</label
+              >
+              <h1 class="text-sm font-medium text-center">
+                Please enter times (e.g. 13:00 - 15:00)
+              </h1>
+            </div>
+            <div
+              class="flex justify-center p-2 border gap-5 rounded-md items-center flex-wrap"
+            >
+              <div
+                *ngFor="let item of formArrayTime; index as i"
+                [formGroup]="item"
+                class="w-full flex"
+              >
+                <div class="w-1/5 flex justify-center items-center">
+                  <h1 class="text-sm font-medium">
+                    {{ item.value.date }}
+                  </h1>
+                </div>
+                <div class="grid grid-cols-3 gap-1.5" formArrayName="times">
+                  <div
+                    *ngFor="let itm of item.value.times; index as ii"
+                    [formGroupName]="ii"
+                  >
+                    <input
+                      [id]="'time' + i + ii"
+                      type="text"
+                      [placeholder]="'Time ' + (ii + 1)"
+                      formControlName="time"
+                      class="py-2 px-2 w-full border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+                    />
+                  </div>
+                  <!-- <input
+                    id="time"
+                    name="time"
+                    type="text"
+                    placeholder="Time 2"
+                    class="py-2 px-2 w-full border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+                  />
+                  <input
+                    id="time"
+                    name="time"
+                    type="text"
+                    placeholder="Time 3"
+                    class="py-2 px-2 w-full border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+                  /> -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- CHOOSEN PARTICIPANTS -->
+          <!-- <div class="w-2/5 pl-1.5">
           <div
             class="h-full rounded-md border text-center text-sm space-y-2 p-2"
           >
@@ -412,27 +507,107 @@
               </h1>
             </div>
           </div>
-        </div>
+        </div> -->
 
-        <div class="w-full flex justify-evenly gap-2">
-          <button
-            (click)="stepper = 2"
-            type="button"
-            class="px-4 py-1 bg-lime-600 hover:bg-lime-700 rounded-md text-white"
-          >
-            Back
-          </button>
-          <button
-            type="submit"
-            
-            class="px-4 py-1 bg-sky-500 hover:bg-sky-600 rounded-md text-white"
-          >
-            Submit
-          </button>
+          <div class="w-full flex justify-evenly gap-2">
+            <button
+              (click)="stepper = 2"
+              type="button"
+              class="px-4 py-1 bg-lime-600 hover:bg-lime-700 rounded-md text-white"
+            >
+              Back
+            </button>
+            <a
+              (click)="stepper = 4"
+              class="px-4 py-1 bg-teal-600 hover:bg-teal-700 rounded-md text-white cursor-pointer"
+            >
+              Next
+            </a>
+          </div>
         </div>
-      </div>
+        <!-- SELECT PARTICIPANTS -->
+        <div
+          [ngClass]="stepper == 4 ? '' : 'hidden'"
+          class="flex flex-wrap gap-y-4"
+        >
+          <!-- PARTICIPANT -->
+          <div class="w-3/5 p-2 border rounded-md">
+            <div class="flex justify-center items-center flex-wrap">
+              <label
+                for="inline-input-label-with-helper-text"
+                class="block text-sm mb-2 w-full font-semibold"
+                >Search Participant</label
+              >
+              <input
+                #particip
+                id="participants"
+                name="participants"
+                (change)="pushParticipant()"
+                type="email"
+                list="emailList"
+                multiple
+                class="py-2 px-2 w-full border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
+              />
+              <datalist id="emailList">
+                <option
+                  *ngFor="let item of nameEmailEmployee"
+                  [value]="item[2]"
+                >
+                  <span class="font-semibold">{{ item[1] }}</span> -
+                  {{ item[0] }}
+                </option>
+              </datalist>
+            </div>
+          </div>
+          <!-- CHOOSEN PARTICIPANTS -->
+          <div class="w-2/5 pl-1.5">
+            <div
+              class="h-full rounded-md border text-center text-sm space-y-2 p-2"
+            >
+              <h1 class="font-semibold text-gray-400">Choosen Participants:</h1>
+              <div
+                *ngFor="let item of choosenEmployee"
+                class="flex rounded-md border"
+              >
+                <a
+                  (click)="removeChoosenParticipant(item)"
+                  class="overflow-hidden cursor-pointer w-[12%] flex justify-center items-center bg-red-500 hover:bg-red-400 shadow-sm rounded-md transition-colors"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="14"
+                    viewBox="0 96 960 960"
+                    width="14"
+                    fill="white"
+                  >
+                    <path
+                      d="M261 936q-24.75 0-42.375-17.625T201 876V306h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438V306ZM367 790h60V391h-60v399Zm166 0h60V391h-60v399ZM261 306v570-570Z"
+                    />
+                  </svg>
+                </a>
+                <h1 class="w-full font-medium break-all">
+                  {{ item }}
+                </h1>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full flex justify-evenly gap-2">
+            <button
+              (click)="stepper = 3"
+              type="button"
+              class="px-4 py-1 bg-lime-600 hover:bg-lime-700 rounded-md text-white"
+            >
+              Back
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-1 bg-sky-500 hover:bg-sky-600 rounded-md text-white"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
       </form>
-      
     </div>
   </div>
 </div>

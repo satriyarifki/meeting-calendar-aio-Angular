@@ -38,7 +38,7 @@ export class NavbarComponent {
 
   ngOnInit(): void {
     this.userData = this.authService.getUser()[0]
-    console.log(this.userData);
+    // console.log(this.userData);
     
     forkJoin(
       this.apiService.voteDetailsByUserGet(
