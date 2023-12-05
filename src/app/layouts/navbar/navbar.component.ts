@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { AlertType } from 'src/app/services/alert/alert.model';
@@ -13,6 +13,9 @@ import { VoteActivityService } from 'src/app/services/vote-activity/vote-activit
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent {
+  @ViewChild('nav')
+  nav!: ElementRef;
+  box = document.querySelector('#nav');
   notifBool: Boolean = false;
   hide:Boolean = false;
 
@@ -29,6 +32,8 @@ export class NavbarComponent {
     public router: Router,
     private voteService: VoteActivityService
   ) {
+    console.log(this.nav);
+    
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.ngOnInit();
@@ -37,14 +42,14 @@ export class NavbarComponent {
   }
 
   ngOnInit(): void {
-    this.userData = this.authService.getUser()[0]
+    this.userData = this.authService.getUser()
     // console.log(this.userData);
     
     forkJoin(
       this.apiService.voteDetailsByUserGet(
-        this.authService.getUser()[0]?.lg_nik
+        this.authService.getUser()?.lg_nik
       ),
-      this.apiService.votesByUserGet(this.authService.getUser()[0]?.lg_nik)
+      this.apiService.votesByUserGet(this.authService.getUser()?.lg_nik)
     ).subscribe((res) => {
       this.voteNotif = res[0];
       this.voteSelf = res[1];

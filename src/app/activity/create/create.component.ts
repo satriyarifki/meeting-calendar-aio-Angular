@@ -112,12 +112,13 @@ export class CreateComponent implements OnInit {
   callModal(date: any) {
     this.initialDate = date;
     this.initialForm();
-    // console.log(this.authService.getUser()[0].lg_nik);
+    // console.log(this.authService.getUser().lg_nik);
 
     this.show = true;
   }
   closeModal() {
     this.uploader.clearQueue();
+    this.form.reset();
     this.show = false;
   }
   convertDate(date: any) {
@@ -235,9 +236,10 @@ export class CreateComponent implements OnInit {
     // }
 
     // this.f['userId'].setValue(1);
-
+    console.log();
+    
     let body = {
-      userId: this.authService.getUser()[0]?.lg_nik,
+      userId: this.authService.getUser()?.lg_nik,
       date: this.f['date'].value,
       time_start: this.f['time_start'].value,
       time_end: this.f['time_end'].value,
@@ -251,7 +253,7 @@ export class CreateComponent implements OnInit {
       message: this.f['message'].value,
     };
     let bodyReserv = {
-      userId: this.authService.getUser()[0].lg_nik,
+      userId: this.authService.getUser().lg_nik,
       resourceId: this.f['roomId'].value - 1,
       begin: set(new Date(body.date), {
         hours: body.time_start.slice(0, 2),
@@ -413,21 +415,24 @@ export class CreateComponent implements OnInit {
                 },
                 (er) => {
                   // console.log(er);
-
-                  this.alertService.onCallAlert(
-                    'Booked Reservation Fail!',
-                    AlertType.Error
-                  );
+                  setTimeout(() => {
+                    this.alertService.onCallAlert(
+                      'Booked Reservation Fail!',
+                      AlertType.Error
+                    );
+                  }, 3000);
                 }
               );
             },
             (err) => {
               // console.log(err);
               this.spinner.hide();
-              this.alertService.onCallAlert(
-                'Booked Reservation Fail!',
-                AlertType.Error
-              );
+              setTimeout(() => {
+                this.alertService.onCallAlert(
+                  'Booked Reservation Fail!',
+                  AlertType.Error
+                );
+              }, 3000);
             },
             () => {}
           );
@@ -475,6 +480,10 @@ export class CreateComponent implements OnInit {
       (err) => {
         // console.log('Error');
         this.spinner.hide();
+        this.alertService.onCallAlert(
+          'Create Meeting Fail!',
+          AlertType.Error
+        );
         // this.alertServie.setAlert('Add Data Failed', AlertType.Error)
         console.log(err);
         this.submitted = false;

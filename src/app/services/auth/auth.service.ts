@@ -54,13 +54,13 @@ export class AuthService {
   signOut(): void {
     window.localStorage.clear();
     // window.location.reload();
-    this.deleteCookie()
+    this.deleteCookie();
     this.router.navigate(['/']);
   }
 
   public saveToken(token: string): void {
     window.localStorage.removeItem(TOKEN_KEY);
-    this.setCookie(token,1)
+    this.setCookie(token, 1);
     window.localStorage.setItem(TOKEN_KEY, token);
   }
 
@@ -86,12 +86,18 @@ export class AuthService {
     window.localStorage.removeItem(USER_KEY);
     window.localStorage.removeItem(USER_DATA_KEY);
     window.localStorage.setItem(USER_KEY, JSON.stringify(user));
-    this.employeesGetById(this.getUser()[0].lg_nik).subscribe((data) => {
-      console.log(data);
-      
-      window.localStorage.setItem(USER_DATA_KEY, JSON.stringify(data[0]));
-    },(err)=>{console.log(err);
-    });
+    console.log(this.getUser())
+    
+      this.employeesGetById(this.getUser().lg_nik).subscribe(
+        (data) => {
+          // console.log(data);
+
+          window.localStorage.setItem(USER_DATA_KEY, JSON.stringify(data));
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
     
   }
 
@@ -106,7 +112,7 @@ export class AuthService {
   public getUserData(): any {
     const user = window.localStorage.getItem(USER_DATA_KEY);
     // console.log(user);
-    
+
     if (user) {
       return JSON.parse(user);
     }

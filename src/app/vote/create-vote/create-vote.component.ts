@@ -21,8 +21,8 @@ import { VoteActivityService } from 'src/app/services/vote-activity/vote-activit
   styleUrls: ['./create-vote.component.css'],
 })
 export class CreateVoteComponent {
-  show: Boolean = true;
-  stepper = 3;
+  show: Boolean = false;
+  stepper = 1;
 
   //FORMS
   formArrayTime: any[] = [];
@@ -54,7 +54,7 @@ export class CreateVoteComponent {
     this.form = this.formBuilder.group({
       title: ['', Validators.required],
       desc: '',
-      userId: this.authService.getUser()[0].lg_nik,
+      userId: this.authService.getUser().lg_nik,
     });
     this.itemsParticipants = this.formBuilder.array([]);
     if (this.voteService.subsVar == undefined) {
@@ -71,7 +71,7 @@ export class CreateVoteComponent {
 
   callModal(data: any) {
     // this.initialForm();
-    // console.log(this.authService.getUser()[0].lg_nik);
+    // console.log(this.authService.getUser().lg_nik);
     this.loopDate(this.currentDate);
 
     this.show = true;
@@ -130,6 +130,7 @@ export class CreateVoteComponent {
         this.apiService.voteDetailsPost(details).subscribe(
           (resd) => {
             // console.log(resd);
+            // this.apiService.voteTimesPost()
             this.alertService.onCallAlert(
               'Success added vote!',
               AlertType.Success
@@ -178,9 +179,9 @@ export class CreateVoteComponent {
     return this.formBuilder.group({
       date: [date, Validators.required],
       times: this.formBuilder.array([
-        this.formBuilder.group({ time: ['', Validators.required] }),
-        this.formBuilder.group({ time: ['', Validators.required] }),
-        this.formBuilder.group({ time: ['', Validators.required] }),
+        this.formBuilder.group({ time: [''] }),
+        this.formBuilder.group({ time: [''] }),
+        this.formBuilder.group({ time: [''] }),
       ]),
     });
   }

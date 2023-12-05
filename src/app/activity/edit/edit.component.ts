@@ -451,7 +451,7 @@ export class EditComponent {
       message: this.f['message'].value,
     };
     let bodyReserv = {
-      userId: this.authService.getUser()[0].lg_nik,
+      userId: this.authService.getUser().lg_nik,
       resourceId: this.f['roomId'].value - 1,
       begin: set(new Date(body.date), {
         hours: body.time_start.slice(0, 2),
