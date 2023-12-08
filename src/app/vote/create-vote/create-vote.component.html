@@ -367,11 +367,11 @@
             >
               <h1 class="font-semibold text-gray-400">Choosen Date:</h1>
               <div
-                *ngFor="let item of choosenDate"
+                *ngFor="let item of choosenDate; index as i"
                 class="flex rounded-md border"
               >
                 <a
-                  (click)="removeChoosenDate(item)"
+                  (click)="removeChoosenDate(item, i)"
                   class="overflow-hidden cursor-pointer w-[12%] flex justify-center items-center bg-red-500 hover:bg-red-400 shadow-sm rounded-md transition-colors"
                   ><svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -434,12 +434,13 @@
               </h1>
             </div>
             <div
-              class="flex justify-center p-2 border gap-5 rounded-md items-center flex-wrap"
+            formArrayName="arrayTime"
+              class="flex justify-center p-2 border gap-3 rounded-md items-center flex-wrap"
             >
               <div
-                *ngFor="let item of formArrayTime; index as i"
-                [formGroup]="item"
+                *ngFor="let item of formArrayTime.controls; index as i"
                 class="w-full flex"
+                [formGroupName]="i"
               >
                 <div class="w-1/5 flex justify-center items-center">
                   <h1 class="text-sm font-medium">
@@ -448,13 +449,12 @@
                 </div>
                 <div class="grid grid-cols-3 gap-1.5" formArrayName="times">
                   <div
-                    *ngFor="let itm of item.value.times; index as ii"
+                    *ngFor="let itm of asFormArray(i).controls; index as ii"
                     [formGroupName]="ii"
                   >
                     <input
                       [id]="'time' + i + ii"
                       type="text"
-                      [placeholder]="'Time ' + (ii + 1)"
                       formControlName="time"
                       class="py-2 px-2 w-full border border-gray-300 rounded-md text-sm focus:border-blue-500 ring:border-blue-500 outline-none"
                     />

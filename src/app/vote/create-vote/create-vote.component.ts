@@ -1,5 +1,6 @@
 import { Component, ElementRef, SimpleChanges, ViewChild } from '@angular/core';
 import {
+  Form,
   FormArray,
   FormBuilder,
   FormControl,
@@ -25,8 +26,14 @@ export class CreateVoteComponent {
   stepper = 1;
 
   //FORMS
-  formArrayTime: any[] = [];
-  form!: FormGroup;
+  formArrayTime!: FormArray ;
+  form: FormGroup = this.formBuilder.group({
+    title: ['', Validators.required],
+    desc: '',
+    userId: this.authService.getUser().lg_nik,
+    arrayTime: this.formBuilder.array([])
+  });
+
   participantInput: any;
   itemsParticipants!: FormArray;
   itemsDates!: FormArray;
@@ -51,11 +58,7 @@ export class CreateVoteComponent {
     private formBuilder: FormBuilder
   ) {}
   ngOnInit(): void {
-    this.form = this.formBuilder.group({
-      title: ['', Validators.required],
-      desc: '',
-      userId: this.authService.getUser().lg_nik,
-    });
+    this.formArrayTime = this.form.get('arrayTime') as FormArray  
     this.itemsParticipants = this.formBuilder.array([]);
     if (this.voteService.subsVar == undefined) {
       this.voteService.subsVar = this.voteService.invokeCreate.subscribe(
@@ -175,13 +178,13 @@ export class CreateVoteComponent {
     this.particip.nativeElement.value = '';
   }
 
-  defaultTimes(date: any) {
+  defaultTimes(date: any) : FormGroup {
     return this.formBuilder.group({
-      date: [date, Validators.required],
+      date: [date,Validators.required],
       times: this.formBuilder.array([
-        this.formBuilder.group({ time: [''] }),
-        this.formBuilder.group({ time: [''] }),
-        this.formBuilder.group({ time: [''] }),
+        this.formBuilder.group({ time: '' }),
+        this.formBuilder.group({ time: '' }),
+        this.formBuilder.group({ time: '' }),
       ]),
     });
   }
@@ -190,17 +193,26 @@ export class CreateVoteComponent {
   }
 
   pushChoosenDate(date: any) {
+    let arrayTime = this.form.get('arrayTime') as FormArray
+    arrayTime.push(this.defaultTimes(date));
     this.choosenDate.push(date);
-    this.formArrayTime.push(this.defaultTimes(date));
-    console.log(this.formArrayTime);
+    console.log(this.formArrayTime.controls);
+    
+    
   }
 
-  removeChoosenDate(date: any) {
+  removeChoosenDate(date: any,index :any) {
     this.choosenDate = this.choosenDate.filter((data) => data != date);
-    this.formArrayTime = this.formArrayTime.filter(
-      (data) => data.value.date != date
-    );
+    this.formArrayTime.removeAt(index)
+    // this.formArrayTime = this.formArrayTime.filter(
+    //   (data) => data.value.date != date
+    // );
   }
+
+  asFormArray(i:number){
+   return  this.formArrayTime.controls[i].get('times') as FormArray
+  }
+
 
   loopDate(date: any) {
     var firstDay = date;
