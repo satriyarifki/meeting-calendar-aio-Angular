@@ -17,7 +17,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { EditActivityService } from 'src/app/services/edit-activity/edit-activity.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DayComponent } from 'src/app/calendar/day/day.component';
-const URL = 'http://127.0.0.1:3555/upload';
+const URL = 'http://127.0.0.1:3666/upload';
 
 const listLink = [
   {
@@ -331,14 +331,14 @@ export class EditComponent {
       file.withCredentials = false;
     };
     this.uploader.onCompleteItem = (item: any, status: any) => {
-      console.log('Uploaded File Details:', item);
+      // console.log('Uploaded File Details:', item);
       this.alertService.onCallAlert('Upload Success!', AlertType.Success);
     };
   }
   sendEmail() {
     // console.log(this.uploader.queue);
     if (this.form.invalid) {
-      console.log(this.f);
+      // console.log(this.f);
 
       this.alertService.onCallAlert('Fill Blank Inputs!', AlertType.Warning);
       return;
@@ -356,16 +356,21 @@ export class EditComponent {
       // datetime_start: set(new Date(this.f['date'].value), {hours: this.f['time_start'].value.slice(0,2), minutes: this.f['time_start'].value.slice(3,5)}),
       // datetime_end: set(new Date(this.f['date'].value), {hours: this.f['time_end'].value.slice(0,2), minutes: this.f['time_end'].value.slice(3,5)}),
       organizer:
-        this.nameEmailEmployee[
-          this.emailsEmployee.indexOf(this.f['organizer'].value)
-        ],
+      this.nameEmailEmployee.filter((data:any)=>data[0] == this.f['organizer'].value)[0],
       participants: this.f['participants'].value,
       message: this.f['message'].value,
       online_offline: this.f['online_offline'].value,
       url_online: this.f['url_online'].value,
       roomId: this.f['roomId'].value,
     };
-
+    // console.log(this.f['organizer'].value);
+    // console.log(
+    //   this.nameEmailEmployee[
+    //     this.emailsEmployee.indexOf(this.f['organizer'].value)
+    //   ]
+    // );
+    // console.log(this.nameEmailEmployee.filter((data:any)=>data[0] == this.f['organizer'].value)[0]);
+    
     if (this.uploader.queue.length > 0) {
       this.uploader.queue.forEach((element) => {
         if (
@@ -399,10 +404,7 @@ export class EditComponent {
           );
         },
         (err) => {
-          this.alertService.onCallAlert(
-            'Send Email Failed!',
-            AlertType.Success
-          );
+          this.alertService.onCallAlert('Send Email Failed!', AlertType.Error);
           console.log('Email Failed');
         }
       );
@@ -477,16 +479,14 @@ export class EditComponent {
       description: this.f['message'].value,
     };
 
-    if (
-      body.online_offline == 'Offline'
-      
-    ) {
-      if (this.isOverlappingTimeReserv(
-        bodyReserv.begin,
-        bodyReserv.end,
-        bodyReserv.resourceId
-      )) {
-        
+    if (body.online_offline == 'Offline') {
+      if (
+        this.isOverlappingTimeReserv(
+          bodyReserv.begin,
+          bodyReserv.end,
+          bodyReserv.resourceId
+        )
+      ) {
         this.spinner.hide();
         return;
       }
@@ -556,7 +556,6 @@ export class EditComponent {
         // this.router.navigate(['/dashboard/users']);
         // this.arrayParicipants.forEach((element) => {
         if (this.uploader.queue.length > 0) {
-
           this.uploader.queue.forEach((element, index) => {
             // console.log(this.uploader.queue[index]);
             // console.log({

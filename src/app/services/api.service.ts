@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 var baseApi = environment.baseApi;
 var defaultApi = environment.defaultApi;
+var offDayApi = 'https://api-harilibur.vercel.app/'
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +15,15 @@ export class ApiService {
   private emailUrl = baseApi + 'email/';
 
   constructor(private http: HttpClient) {}
+  // GET Holiday
+  getHolidayByMonthYear(month:any, year:any): Observable<any> {
+    return this.http.get(offDayApi+'/api?month='+month+'&year='+year);
+  }
+  getget(){
+    return this.http.get('https://kalenderindonesia.com/api/xU4WoL46lhlP/kalender/masehi/2023/12');
+  }
+
+
   //EVENTS----------------------------------------------------------
   getEvents(): Observable<any> {
     return this.http.get(this.baseUrl + 'events');

@@ -87,10 +87,14 @@ export class CreateVoteComponent {
     });
   }
   closeModal() {
-    this.show = false;
     this.arrayDateinMonth = [];
     this.choosenEmployee = [];
     this.choosenDate = [];
+    this.form.reset()
+    this.formArrayTime.clear()
+    console.log(this.form.value);
+    this.stepper = 1
+    this.show = false;
   }
 
   onSubmit() {
@@ -109,6 +113,8 @@ export class CreateVoteComponent {
 
     // console.log(this.choosenDate);
     // console.log(this.itemsParticipants.value);
+    console.log(this.form.value);
+   
     let details: any[] = [];
     this.itemsParticipants.value.forEach((parc: any) => {
       this.choosenDate.forEach((date) => {
@@ -121,8 +127,9 @@ export class CreateVoteComponent {
         });
       });
     });
-    // console.log(details);
+    console.log(details);
     // console.log(this.form);
+    return
 
     this.apiService.votesPost(this.form.value).subscribe(
       (res) => {
@@ -182,9 +189,9 @@ export class CreateVoteComponent {
     return this.formBuilder.group({
       date: [date,Validators.required],
       times: this.formBuilder.array([
-        this.formBuilder.group({ time: '' }),
-        this.formBuilder.group({ time: '' }),
-        this.formBuilder.group({ time: '' }),
+        this.formBuilder.group({ time: '', agree:false}),
+        this.formBuilder.group({ time: '', agree:false}),
+        this.formBuilder.group({ time: '', agree:false }),
       ]),
     });
   }
@@ -211,6 +218,10 @@ export class CreateVoteComponent {
 
   asFormArray(i:number){
    return  this.formArrayTime.controls[i].get('times') as FormArray
+  }
+
+  checkChoosenDate(date:any):Boolean{
+    return this.formArrayTime.value.filter((data:any)=>data.date == date).length != 0 ? false : true
   }
 
 

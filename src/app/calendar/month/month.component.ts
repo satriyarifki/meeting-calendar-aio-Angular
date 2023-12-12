@@ -48,17 +48,20 @@ export class MonthComponent {
     } else {
       this.loopDate(this.dateChanged);
     }
+    console.log(this.dateParams);
+    
 
     forkJoin(apiService.getEvents(), apiService.getM2UpEmployees(),apiService.getEventsHo()).subscribe(
       ([events, m2up,ho]) => {
         this.eventData = events;
         this.m2upData = m2up;
-        this.eventHoData = ho
+        this.eventHoData = ho;
+        
         // console.log(new Date(m2up[0].date_of_birth).getMonth());
         // console.log(new Date().getMonth());
         // console.log(new Date().getDate());
       },
-      () => {},
+      () => {spinner.hide();},
       () => {
         spinner.hide();
       }

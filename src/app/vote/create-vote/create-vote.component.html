@@ -338,7 +338,7 @@
                 "
               >
                 <a
-                  (click)="pushChoosenDate(item.dateFull)"
+                  (click)="checkChoosenDate(item.dateFull)? pushChoosenDate(item.dateFull) : ''"
                   class="w-full h-full flex justify-center rounded-full hover:bg-gray-200 p-1"
                   ><span
                     class="w-5 text-sm max-lg:text-xs font-semibold font-manrope"
