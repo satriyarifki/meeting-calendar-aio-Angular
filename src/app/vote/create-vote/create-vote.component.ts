@@ -91,6 +91,7 @@ export class CreateVoteComponent {
     this.choosenDate = [];
     this.form.reset();
     this.formArrayTime.clear();
+    this.itemsParticipants.clear();
     this.stepper = 1;
     this.show = false;
   }
@@ -121,7 +122,7 @@ export class CreateVoteComponent {
       });
     });
     // console.log(this.itemsParticipants.value);
-    // console.log(this.form.value);
+    // // console.log(this.form.value);
     // return
     this.apiService.votesPost(this.form.value).subscribe(
       (res) => {

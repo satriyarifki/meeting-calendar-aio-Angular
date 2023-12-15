@@ -46,13 +46,13 @@ export class NavbarComponent {
     // console.log(this.userData);
     
     forkJoin(
-      // this.apiService.voteDetailsByUserGet(
-      //   this.authService.getUser()?.lg_nik
-      // ),
+      this.apiService.voteDetailsByUserGet(
+        this.authService.getUser()?.lg_nik
+      ),
       this.apiService.votesByUserGet(this.authService.getUser()?.lg_nik)
     ).subscribe((res) => {
-      // this.voteNotif = res[0];
-      this.voteSelf = res[0];
+      this.voteNotif = res[0];
+      this.voteSelf = res[1];
     });
   }
   onAuthCheck() {

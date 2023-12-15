@@ -43,7 +43,7 @@ export class ViewVoteComponent {
     this.vote = data;
     forkJoin(this.apiService.voteDetailsByVoteGet(data.id)).subscribe((res) => {
       this.voteDetails = res[0];
-      console.log(this.distinctVoteDetails);
+      console.log(this.voteDetails);
 
       this.distinctVoteDetails.forEach((elem, i, arr) => {
         console.log(elem);
@@ -69,14 +69,24 @@ export class ViewVoteComponent {
   voteDetailsByUser(userId: any) {
     let data = this.voteDetails.filter((data) => data.userId == userId);
     data = data.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
-    console.log(data);
-    
-    return data 
+    // console.log(data);
+
+    return data;
   }
   get distinctVoteDetails() {
     return this.voteDetails.filter((thing, i, arr) => {
       return arr.indexOf(arr.find((t) => t.userId === thing.userId)) === i;
     });
+  }
+
+  arrayTimes(userId:any): any[] {
+    let array: any[] = [];
+    this.voteDetailsByUser(userId).forEach((elem) => {
+      elem.vote_times.forEach((element: any) => {
+        array.push(element);
+      });
+    });
+    return array;
   }
   closeModal() {
     this.show = false;

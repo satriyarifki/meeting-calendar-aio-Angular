@@ -58,6 +58,8 @@ export class SubmitVoteComponent {
     ).subscribe((res) => {
       this.userData = res[0][0];
       this.voteDetails = res[1];
+      console.log(this.voteDetails);
+      
       this.pushVoteInput();
       // console.log(this.voteDetails);
       // console.log(this.filterVoteDetailsByUser(this.voteParam.userId));
@@ -75,8 +77,14 @@ export class SubmitVoteComponent {
           date: [elem.date, Validators.required],
           userId: [elem.userId, Validators.required],
           agree: [elem.agree, Validators.required],
+          times: this.formBuilder.array([
+          ]),
         })
       );
+      elem.vote_times.forEach((element:any) => {
+        (this.voteInput.controls[this.voteInput.length-1].get('times') as FormArray).push(this.formBuilder.group({ time: element.time, agree: element.agree }))
+      });
+      
     });
 
     console.log(this.voteInput);
