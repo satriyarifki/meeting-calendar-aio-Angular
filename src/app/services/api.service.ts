@@ -154,4 +154,12 @@ export class ApiService {
   voteTimesPost(body:any): Observable<any> {
     return this.http.post(this.baseUrl + 'vote-times',body);
   }
+
+   // ---------------------------VOTE TIMES
+   voteParticipantsGet(): Observable<any> {
+    return this.http.get(this.baseUrl + 'vote-participants');
+  }
+  voteParticipantsPost(body:any): Observable<any> {
+    return this.http.post(this.baseUrl + 'vote-participants',body);
+  }
 }

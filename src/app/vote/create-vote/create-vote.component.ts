@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { addMonths, format } from 'date-fns';
+import { id } from 'date-fns/locale';
 import { forkJoin } from 'rxjs';
 import { AlertType } from 'src/app/services/alert/alert.model';
 import { AlertService } from 'src/app/services/alert/alert.service';
@@ -26,12 +27,12 @@ export class CreateVoteComponent {
   stepper = 1;
 
   //FORMS
-  formArrayTime!: FormArray ;
+  formArrayTime!: FormArray;
   form: FormGroup = this.formBuilder.group({
     title: ['', Validators.required],
     desc: '',
     userId: this.authService.getUser().lg_nik,
-    arrayTime: this.formBuilder.array([])
+    arrayTime: this.formBuilder.array([]),
   });
 
   participantInput: any;
@@ -58,13 +59,11 @@ export class CreateVoteComponent {
     private formBuilder: FormBuilder
   ) {}
   ngOnInit(): void {
-    this.formArrayTime = this.form.get('arrayTime') as FormArray  
+    this.formArrayTime = this.form.get('arrayTime') as FormArray;
     this.itemsParticipants = this.formBuilder.array([]);
     if (this.voteService.subsVar == undefined) {
       this.voteService.subsVar = this.voteService.invokeCreate.subscribe(
         (data: any) => {
-          console.log();
-
           this.callModal(data);
           this.callApiService();
         }
@@ -76,7 +75,7 @@ export class CreateVoteComponent {
     // this.initialForm();
     // console.log(this.authService.getUser().lg_nik);
     this.loopDate(this.currentDate);
-
+    this.form.controls['userId'].setValue(this.authService.getUser().lg_nik);
     this.show = true;
   }
 
@@ -90,10 +89,9 @@ export class CreateVoteComponent {
     this.arrayDateinMonth = [];
     this.choosenEmployee = [];
     this.choosenDate = [];
-    this.form.reset()
-    this.formArrayTime.clear()
-    console.log(this.form.value);
-    this.stepper = 1
+    this.form.reset();
+    this.formArrayTime.clear();
+    this.stepper = 1;
     this.show = false;
   }
 
@@ -109,12 +107,7 @@ export class CreateVoteComponent {
       );
       return;
     }
-    // console.log(this.form);
 
-    // console.log(this.choosenDate);
-    // console.log(this.itemsParticipants.value);
-    console.log(this.form.value);
-   
     let details: any[] = [];
     this.itemsParticipants.value.forEach((parc: any) => {
       this.choosenDate.forEach((date) => {
@@ -127,32 +120,48 @@ export class CreateVoteComponent {
         });
       });
     });
-    console.log(details);
-    // console.log(this.form);
-    return
-
+    // console.log(this.itemsParticipants.value);
+    // console.log(this.form.value);
+    // return
     this.apiService.votesPost(this.form.value).subscribe(
       (res) => {
-        console.log(res);
-        details.forEach((element, i) => {
-          details[i].voteId = res.id;
-        });
-        this.apiService.voteDetailsPost(details).subscribe(
-          (resd) => {
-            // console.log(resd);
-            // this.apiService.voteTimesPost()
-            this.alertService.onCallAlert(
-              'Success added vote!',
-              AlertType.Success
-            );
-            this.closeModal();
-          },
-          (err) => {
-            this.alertService.onCallAlert('Failed added vote', AlertType.Error);
-          }
-        );
+        // console.log(res);
+        // details.forEach((element, i) => {
+        //   details[i].voteId = res.id;
+        // });
+        this.apiService
+          .voteParticipantsPost({
+            voteId: res.id,
+            array: this.itemsParticipants.value,
+          })
+          .subscribe((res) => {});
+        this.apiService
+          .voteDetailsPost({
+            voteId: res.id,
+            details: this.form.value.arrayTime,
+            participants: this.itemsParticipants.value,
+          })
+          .subscribe(
+            (resd) => {
+              // console.log(resd);
+              // this.apiService.voteTimesPost()
+              this.alertService.onCallAlert(
+                'Success added vote!',
+                AlertType.Success
+              );
+              this.closeModal();
+            },
+            (err) => {
+              this.alertService.onCallAlert(
+                'Failed added vote',
+                AlertType.Error
+              );
+            }
+          );
       },
       (er) => {
+        console.log(er);
+        
         this.alertService.onCallAlert('Failed added vote', AlertType.Error);
       }
     );
@@ -185,13 +194,13 @@ export class CreateVoteComponent {
     this.particip.nativeElement.value = '';
   }
 
-  defaultTimes(date: any) : FormGroup {
+  defaultTimes(date: any): FormGroup {
     return this.formBuilder.group({
-      date: [date,Validators.required],
+      date: [date, Validators.required],
       times: this.formBuilder.array([
-        this.formBuilder.group({ time: '', agree:false}),
-        this.formBuilder.group({ time: '', agree:false}),
-        this.formBuilder.group({ time: '', agree:false }),
+        this.formBuilder.group({ time: '', agree: false }),
+        this.formBuilder.group({ time: '', agree: false }),
+        this.formBuilder.group({ time: '', agree: false }),
       ]),
     });
   }
@@ -200,30 +209,29 @@ export class CreateVoteComponent {
   }
 
   pushChoosenDate(date: any) {
-    let arrayTime = this.form.get('arrayTime') as FormArray
+    let arrayTime = this.form.get('arrayTime') as FormArray;
     arrayTime.push(this.defaultTimes(date));
     this.choosenDate.push(date);
-    console.log(this.formArrayTime.controls);
-    
-    
   }
 
-  removeChoosenDate(date: any,index :any) {
+  removeChoosenDate(date: any, index: any) {
     this.choosenDate = this.choosenDate.filter((data) => data != date);
-    this.formArrayTime.removeAt(index)
+    this.formArrayTime.removeAt(index);
     // this.formArrayTime = this.formArrayTime.filter(
     //   (data) => data.value.date != date
     // );
   }
 
-  asFormArray(i:number){
-   return  this.formArrayTime.controls[i].get('times') as FormArray
+  asFormArray(i: number) {
+    return this.formArrayTime.controls[i].get('times') as FormArray;
   }
 
-  checkChoosenDate(date:any):Boolean{
-    return this.formArrayTime.value.filter((data:any)=>data.date == date).length != 0 ? false : true
+  checkChoosenDate(date: any): Boolean {
+    return this.formArrayTime.value.filter((data: any) => data.date == date)
+      .length != 0
+      ? false
+      : true;
   }
-
 
   loopDate(date: any) {
     var firstDay = date;
