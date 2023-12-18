@@ -154,8 +154,11 @@ export class ApiService {
   voteTimesPost(body:any): Observable<any> {
     return this.http.post(this.baseUrl + 'vote-times',body);
   }
+  voteTimesUpdate(body:any): Observable<any> {
+    return this.http.put(this.baseUrl + 'vote-times',body);
+  }
 
-   // ---------------------------VOTE TIMES
+   // ---------------------------VOTE PARTICIPANTS
    voteParticipantsGet(): Observable<any> {
     return this.http.get(this.baseUrl + 'vote-participants');
   }

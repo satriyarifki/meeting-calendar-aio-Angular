@@ -16,6 +16,7 @@ import { VoteActivityService } from 'src/app/services/vote-activity/vote-activit
 export class SubmitVoteComponent {
   show: Boolean = false;
   voteParam: any;
+  load:Boolean = true
 
   //FORM
   form!: FormGroup;
@@ -58,9 +59,9 @@ export class SubmitVoteComponent {
     ).subscribe((res) => {
       this.userData = res[0][0];
       this.voteDetails = res[1];
-      console.log(this.voteDetails);
       
       this.pushVoteInput();
+      this.load = false
       // console.log(this.voteDetails);
       // console.log(this.filterVoteDetailsByUser(this.voteParam.userId));
     });
@@ -71,30 +72,36 @@ export class SubmitVoteComponent {
   pushVoteInput() {
     // console.log(this.particip.nativeEle
     this.filterVoteDetailsByUser(this.voteParam.userId).forEach((elem) => {
+      
       this.voteInput.push(
         this.formBuilder.group({
+          id: [elem.id, Validators.required],
           voteId: [elem.voteId, Validators.required],
           date: [elem.date, Validators.required],
           userId: [elem.userId, Validators.required],
-          agree: [elem.agree, Validators.required],
           times: this.formBuilder.array([
           ]),
         })
       );
       elem.vote_times.forEach((element:any) => {
-        (this.voteInput.controls[this.voteInput.length-1].get('times') as FormArray).push(this.formBuilder.group({ time: element.time, agree: element.agree }))
+        (this.voteInput.controls[this.voteInput.length-1].get('times') as FormArray).push(this.formBuilder.group({id:element.id,voteDetailId:elem.id,time: element.time, agree: element.agree }))
       });
       
     });
 
-    console.log(this.voteInput);
+    // console.log(this.voteInput);
   }
 
   onSubmit() {
-    console.log(this.voteInput);
-    this.apiService.voteDetailsUpdatePut(this.voteInput.value).subscribe(
+    let timesUpdate:any[] = []
+    console.log(this.voteInput.value);
+    this.voteInput.value.forEach((elem:any) => {
+      elem.times.forEach((element:any) => {
+        timesUpdate.push(element)
+      });
+    });
+    this.apiService.voteTimesUpdate(timesUpdate).subscribe(
       (res) => {
-        console.log(res);
         this.alertService.onCallAlert(
           'Saving Vote Success!',
           AlertType.Success
@@ -107,6 +114,8 @@ export class SubmitVoteComponent {
   }
 
   closeModal() {
+    this.load = true;
+    this.voteInput.clear()
     this.show = false;
   }
 
