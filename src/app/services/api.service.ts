@@ -19,9 +19,6 @@ export class ApiService {
   getHolidayByMonthYear(month:any, year:any): Observable<any> {
     return this.http.get(offDayApi+'/api?month='+month+'&year='+year);
   }
-  getget(){
-    return this.http.get('https://kalenderindonesia.com/api/xU4WoL46lhlP/kalender/masehi/2023/12');
-  }
 
 
   //EVENTS----------------------------------------------------------

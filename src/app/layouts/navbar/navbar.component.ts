@@ -15,7 +15,7 @@ import { VoteActivityService } from 'src/app/services/vote-activity/vote-activit
 export class NavbarComponent {
   @ViewChild('nav')
   nav!: ElementRef;
-  box = document.querySelector('#nav');
+  box = document.getElementById('#nav')
   notifBool: Boolean = false;
   hide:Boolean = false;
 
@@ -32,7 +32,7 @@ export class NavbarComponent {
     public router: Router,
     private voteService: VoteActivityService
   ) {
-    console.log(this.nav);
+    
     
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -42,6 +42,8 @@ export class NavbarComponent {
   }
 
   ngOnInit(): void {
+    console.log(this.nav?.nativeElement.offsetWidth);
+    console.log(this.box);
     this.userData = this.authService.getUser()
     // console.log(this.userData);
     

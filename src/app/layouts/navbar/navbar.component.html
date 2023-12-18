@@ -1,13 +1,17 @@
 <div
+  #nav
+  id="nav"
   class="flex fixed z-10 right-0 transition-all"
   [ngClass]="
     router.url == '/login'
       ? 'hidden'
       : hide
       ? !onAuthCheck()
-        ? 'translate-x-[180px]'
-        : 'translate-x-[160px]'
-      : !onAuthCheck()? 'top-3':'top-7'
+        ? 'translate-x-[225px] top-3'
+        : 'translate-x-[160px] top-7'
+      : !onAuthCheck()
+      ? 'top-3'
+      : 'top-7'
   "
 >
   <div
@@ -29,7 +33,6 @@
     </a>
   </div>
   <div
-    id="nav"
     *ngIf="!router.url.includes('login')"
     class="px-3 py-2 bg-[#034466] bg-opacity-70 backdrop-blur-sm shadow-lg rounded-l-2xl font-manrope"
   >
@@ -73,23 +76,25 @@
             <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
           </svg>
           <span
-          *ngIf="voteNotif.length > 0"
+            *ngIf="voteNotif.length > 0"
             class="absolute top-0 end-0 inline-flex items-center py-0.5 px-1.5 rounded-full text-xs font-medium transform -translate-y-1/2 translate-x-1/2 bg-red-500 text-white"
             >{{ voteNotif.length }}</span
           >
         </button>
         <div
           [ngClass]="notifBool ? '' : 'hidden'"
-          class="absolute -right-1/2 duration min-w-[15rem]  bg-white shadow-md rounded-lg p-2 mt-2 dark:bg-gray-800 dark:border dark:border-gray-700 dark:divide-gray-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
+          class="absolute -right-1/2 duration min-w-[15rem] bg-white shadow-md rounded-lg p-2 mt-2 dark:bg-gray-800 dark:border dark:border-gray-700 dark:divide-gray-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
         >
           <div class="px-3">
             <h1 class="text-sm font-medium">Notifications</h1>
           </div>
-          <div [ngClass]="voteNotif.length < 4?'h-fit' : 'h-[50vh] '" class="space-y-1 overflow-y-auto">
-            <a *ngIf="voteNotif.length==0" class="w-full text-slate-500">
+          <div
+            [ngClass]="voteNotif.length < 4 ? 'h-fit' : 'h-[50vh] '"
+            class="space-y-1 overflow-y-auto"
+          >
+            <a *ngIf="voteNotif.length == 0" class="w-full text-slate-500">
               <h1 class="text-center text-xs font-medium py-2.5">
-  
-                No Notifications 
+                No Notifications
               </h1>
             </a>
             <a
@@ -151,7 +156,6 @@
               </div>
             </a>
           </div>
-  
         </div>
       </div>
       <!-- Sign In -->

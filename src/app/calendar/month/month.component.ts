@@ -7,6 +7,7 @@ import { AlertService } from 'src/app/services/alert/alert.service';
 import { AlertType } from 'src/app/services/alert/alert.model';
 import { forkJoin } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-month',
@@ -29,6 +30,7 @@ export class MonthComponent {
   eventData: any[] = [];
   m2upData: any[] = [];
   eventHoData: any[] = [];
+  holiDate: any[] = [];
 
   constructor(
     private apiService: ApiService,
@@ -48,20 +50,25 @@ export class MonthComponent {
     } else {
       this.loopDate(this.dateChanged);
     }
-    console.log(this.dateParams.getMonth());
-    forkJoin(apiService.getEvents(), apiService.getM2UpEmployees(),apiService.getEventsHo(),apiService.getHolidayByMonthYear(this.dateParams.getMonth()+1,this.dateParams.getFullYear())).subscribe(
-      ([events, m2up,ho,ge]) => {
+    console.log();
+    forkJoin(
+      apiService.getEvents(),
+      apiService.getM2UpEmployees(),
+      apiService.getEventsHo(),
+      apiService.getHolidayByMonthYear(
+        this.dateParams.getMonth() + 1,
+        this.dateParams.getFullYear()
+      )
+    ).subscribe(
+      ([events, m2up, ho, holiday]) => {
         this.eventData = events;
         this.m2upData = m2up;
         this.eventHoData = ho;
-        console.log(ge);
-        
-        
-        // console.log(new Date(m2up[0].date_of_birth).getMonth());
-        // console.log(new Date().getMonth());
-        // console.log(new Date().getDate());
+        this.holiDate = holiday.reverse();
       },
-      () => {spinner.hide();},
+      () => {
+        spinner.hide();
+      },
       () => {
         spinner.hide();
       }
@@ -91,7 +98,7 @@ export class MonthComponent {
     return dataFilter;
     // console.log(month + 1 + '-' + date + '/n ' + dataFilter);
   }
-  filterEventHo(year:any,month: any, date: any) {
+  filterEventHo(year: any, month: any, date: any) {
     const dataFilter = this.eventHoData.filter(
       (value: any) =>
         new Date(value.start_time).getFullYear() == year &&
@@ -137,12 +144,21 @@ export class MonthComponent {
           '/' +
           firstDay.getFullYear(),
         localeString: firstDay.toLocaleDateString(),
+        formFormat: formatDate(firstDay,'yyyy-MM-d','EN-US')
       });
 
       firstDay.setDate(firstDay.getDate() + 1);
     }
   }
 
+  filterHoliday(date: any) {
+    if (this.holiDate.length) {
+    }
+
+    return this.holiDate.filter(
+      (elem) => elem.holiday_date == date && elem.is_national_holiday == true
+    );
+  }
   getFirstDayOfWeek(d: any) {
     // 👇️ clone date object, so we don't mutate it
     const date = new Date(d);
