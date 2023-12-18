@@ -744,12 +744,15 @@
         <div class="text-start flex justify-between mx-5 my-3">
           <div class="max-md:flex max-md:space-x-2">
             <div class="flex gap-3">
-              <h1 class="text-2xl max-md:text-lg font-semibold">
+              <h1 [ngClass]="filterHoliday.length > 0 ? 'text-red-500' : ''" class="text-2xl max-md:text-lg font-semibold">
                 {{ dateParams | date : " dd" }}
               </h1>
               <h1 class="text-2xl max-md:text-lg">
                 {{ dateParams | date : "EEEE" }}
               </h1>
+            </div>
+            <div *ngIf="filterHoliday.length > 0" class="space-y-0.5">
+              <h1 *ngFor="let item of filterHoliday" class="text-sm text-red-500">{{item.holiday_name}}</h1>
             </div>
             <div
               *ngIf="
@@ -758,7 +761,7 @@
                   this.dateParams.getDate()
                 ).length != 0
               "
-              class="mx-7 mt-1 px-3 py-1.5 rounded border"
+              class="mx-5 mt-1 px-3 py-1.5 rounded border"
             >
               <div
                 class="flex items-center"

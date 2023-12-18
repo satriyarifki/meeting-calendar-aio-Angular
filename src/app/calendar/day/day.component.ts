@@ -49,6 +49,7 @@ export class DayComponent {
   eventData: any[] = [];
   m2upData:any[] = []
   eventHoData:any[] = []
+  holiDate:any[] = []
   
   constructor(
     private actRoute: ActivatedRoute,
@@ -75,13 +76,16 @@ export class DayComponent {
       this.apiService.getRooms(),
       this.apiService.getM2UpEmployees(),
       this.apiService.getEventsHoByDate(format(this.dateParams, 'yyyy-MM-dd')),
-    ).subscribe(([events, participants, rooms,m2up,eventHo]) => {
+      this.apiService.getHolidayByMonthYear(this.dateParams.getMonth()+1, this.dateParams.getFullYear())
+    ).subscribe(([events, participants, rooms,m2up,eventHo,holiday]) => {
       this.eventData = events;
       this.dataParticipants = participants;
       this.roomsData = rooms;
       this.m2upData = m2up;
       this.eventHoData = eventHo
+      this.holiDate = holiday
       
+      console.log(this.filterHoliday);
       
       // console.log((this.inBetweenTimeChecker('10')!.minutes/60));
       // console.log(this.filterM2upBirthday(this.dateParams.getMonth(), this.dateParams.getDate()));
@@ -93,6 +97,12 @@ export class DayComponent {
 
       // console.log(this.filterParticipants(1));
     },(err)=>{}, ()=>{this.spinner.hide()});
+  }
+
+  get filterHoliday(){
+    // console.log(this.holiDate[0]);
+    // console.log(this.dateParams.getDate());
+    return this.holiDate.filter(elem=>elem.holiday_date.slice(8,10) == this.dateParams.getDate())
   }
 
   callCreateService() {
