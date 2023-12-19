@@ -42,8 +42,8 @@ export class NavbarComponent {
   }
 
   ngOnInit(): void {
-    console.log(this.nav?.nativeElement.offsetWidth);
-    console.log(this.box);
+    // console.log(this.nav?.nativeElement.offsetWidth);
+    // console.log(this.box);
     this.userData = this.authService.getUser()
     // console.log(this.userData);
     
@@ -55,6 +55,8 @@ export class NavbarComponent {
     ).subscribe((res) => {
       this.voteNotif = res[0];
       this.voteSelf = res[1];
+      // console.log(this.voteNotif);
+      
     });
   }
   onAuthCheck() {

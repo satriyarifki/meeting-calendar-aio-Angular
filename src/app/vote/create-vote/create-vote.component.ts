@@ -101,6 +101,9 @@ export class CreateVoteComponent {
       this.alertService.onCallAlert('Title can`t blank', AlertType.Warning);
       return;
     }
+    // console.log(this.itemsParticipants.value);
+    // console.log(this.choosenDate);
+    
     if (this.itemsParticipants.invalid || this.choosenDate.length == 0) {
       this.alertService.onCallAlert(
         'Date or Participant can`t blank',

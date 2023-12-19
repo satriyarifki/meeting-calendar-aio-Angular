@@ -86,7 +86,7 @@
                           "
                           [attr.colspan]="item.vote_times.length"
                           scope="col"
-                          [ngClass]="odd ? 'bg-slate-100' : ''"
+                          
                           class="w-28 py-2 text-center text-xs font-semibold text-gray-800"
                         >
                           {{ item.date | date : "mediumDate" }}
@@ -94,8 +94,9 @@
                       </tr>
                       <tr>
                         <th
-                          *ngFor="let item of arrayTimes(voteDetails[0]?.userId)"
+                          *ngFor="let item of arrayTimes(voteDetails[0]?.userId);odd as od"
                           scope="col"
+                          [ngClass]="od ? 'bg-slate-100' : ''"
                           class="w-28 py-1.5 text-center text-xs font-semibold text-gray-600"
                         >
                           {{ item.time }}
