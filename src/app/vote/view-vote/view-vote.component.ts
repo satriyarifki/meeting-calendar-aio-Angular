@@ -5,6 +5,7 @@ import { forkJoin } from 'rxjs';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { DeleteApiService } from 'src/app/services/delete-api/delete-api.service';
 import { VoteActivityService } from 'src/app/services/vote-activity/vote-activity.service';
 
 @Component({
@@ -26,7 +27,8 @@ export class ViewVoteComponent {
     private apiService: ApiService,
     private alertService: AlertService,
     private authService: AuthService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private deleteService:DeleteApiService
   ) {}
   ngOnInit(): void {
     if (this.voteService.subsView == undefined) {
@@ -39,14 +41,14 @@ export class ViewVoteComponent {
   }
 
   callModal(data: any) {
-    console.log(data);
+    // console.log(data);
     this.vote = data;
     forkJoin(this.apiService.voteDetailsByVoteGet(data.id)).subscribe((res) => {
       this.voteDetails = res[0];
-      console.log(this.voteDetails);
+      // console.log(this.voteDetails);
 
       this.distinctVoteDetails.forEach((elem, i, arr) => {
-        console.log(elem);
+        // console.log(elem);
         this.authService.employeesGetById(elem.userId).subscribe((resp) => {
           this.usersData.push(resp[0]);
           // console.log(resp[0].employee_code);
@@ -55,13 +57,13 @@ export class ViewVoteComponent {
           );
           if (arr.length == i + 1) {
             this.load = false;
-            console.log(this.load);
+            // console.log(this.load);
           }
         });
       });
     });
     setTimeout(() => {
-      console.log(this.usersData);
+      // console.log(this.usersData);
     }, 2000);
 
     this.show = true;
@@ -93,5 +95,11 @@ export class ViewVoteComponent {
     this.load = true;
     this.voteDetails = [];
     this.usersData = [];
+  }
+
+  deleteVotes(id: any,name:any) {
+    const fun = 'this.apiService.deleteVotes(' + id + ')';
+    this.deleteService.onCallDelete({ dataName: name, func: fun });
+    this.closeModal();
   }
 }

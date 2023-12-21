@@ -128,6 +128,10 @@ export class ApiService {
   votesPost(body:any): Observable<any> {
     return this.http.post(this.baseUrl + 'vote',body);
   }
+  deleteVotes(id:number): Observable<any> {
+    return this.http.delete(this.baseUrl + 'vote/'+id);
+  }
+
   // ---------------------------VOTE DETAILS
   voteDetailsGet(): Observable<any> {
     return this.http.get(this.baseUrl + 'vote-details');

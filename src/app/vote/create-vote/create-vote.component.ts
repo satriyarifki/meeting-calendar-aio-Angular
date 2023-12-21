@@ -156,6 +156,8 @@ export class CreateVoteComponent {
                 'Success added vote!',
                 AlertType.Success
               );
+              this.router.onSameUrlNavigation = 'reload';
+              this.router.navigateByUrl(this.router.url);
               this.closeModal();
             },
             (err) => {

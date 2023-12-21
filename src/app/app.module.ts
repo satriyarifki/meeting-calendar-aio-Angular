@@ -23,6 +23,7 @@ import { CreateVoteComponent } from './vote/create-vote/create-vote.component';
 import { ViewVoteComponent } from './vote/view-vote/view-vote.component';
 import { SubmitVoteComponent } from './vote/submit-vote/submit-vote.component';
 import { NavbarComponent } from './layouts/navbar/navbar.component';
+import { DeleteApiComponent } from './layouts/delete-api/delete-api.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { NavbarComponent } from './layouts/navbar/navbar.component';
     ViewVoteComponent,
     SubmitVoteComponent,
     NavbarComponent,
+    DeleteApiComponent,
   ],
   imports: [
     BrowserModule,

@@ -196,7 +196,7 @@
         </div>
         <div class="p-3 flex justify-center items-center">
           <button
-            type="submit"
+            (click)="deleteVotes(vote.id, 'Vote ' + vote.title)"
             class="px-4 py-1 bg-rose-500 hover:bg-rose-600 rounded-md text-white"
           >
             Delete

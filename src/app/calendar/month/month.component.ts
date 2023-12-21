@@ -40,6 +40,9 @@ export class MonthComponent {
     private router: Router,
     private spinner: NgxSpinnerService
   ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
     spinner.show();
     this.endDate.setMonth(this.currentDate.getMonth() + 2);
     this.dateAgo.setDate(this.currentDate.getDate() - 14);
@@ -50,7 +53,6 @@ export class MonthComponent {
     } else {
       this.loopDate(this.dateChanged);
     }
-    console.log(formatDate(new Date(new Date().setDate(1)),'yyyy-MM-dd','EN-US'));
     forkJoin(
       apiService.getEvents(),
       apiService.getM2UpEmployees(),

@@ -33,7 +33,9 @@ export class NavbarComponent {
     private voteService: VoteActivityService
   ) {
     
-    
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.ngOnInit();
@@ -83,5 +85,10 @@ export class NavbarComponent {
   }
   changeHide(){
     this.hide = !this.hide
+    console.log(this.hide);
+    if (this.hide) {
+      this.notifBool = false
+    }
+    
   }
 }
