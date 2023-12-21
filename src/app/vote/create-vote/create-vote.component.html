@@ -32,9 +32,18 @@
           Add Vote Meeting
         </h2>
       </div>
+      <div *ngIf="load" class="w-full flex justify-center py-5">
+        <div
+          class="animate-spin inline-block w-10 h-10 border-[4px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500"
+          role="status"
+          aria-label="loading"
+        >
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
 
       <!-- STEPPER -->
-      <div class="p-6">
+      <div *ngIf="!load" class="p-6">
         <ol
           class="flex items-center justify-center w-full p-3 space-x-2 text-sm font-medium text-center text-gray-500 bg-white border-gray-200 rounded-lg shadow-sm sm:text-base sm:p-4 sm:space-x-4 rtl:space-x-reverse"
         >
@@ -163,7 +172,7 @@
         </ol>
       </div>
 
-      <form (ngSubmit)="onSubmit()" [formGroup]="form">
+      <form *ngIf="!load" (ngSubmit)="onSubmit()" [formGroup]="form">
         <!-- INPUT TITLE -->
         <div
           [ngClass]="stepper == 1 ? '' : 'hidden'"

@@ -24,6 +24,7 @@ import { VoteActivityService } from 'src/app/services/vote-activity/vote-activit
 })
 export class CreateVoteComponent {
   show: Boolean = false;
+  load:Boolean = true
   stepper = 1;
 
   //FORMS
@@ -64,6 +65,7 @@ export class CreateVoteComponent {
     if (this.voteService.subsVar == undefined) {
       this.voteService.subsVar = this.voteService.invokeCreate.subscribe(
         (data: any) => {
+          this.load = true
           this.callModal(data);
           this.callApiService();
         }
@@ -75,14 +77,15 @@ export class CreateVoteComponent {
     // this.initialForm();
     // console.log(this.authService.getUser().lg_nik);
     this.loopDate(this.currentDate);
+    
     this.form.controls['userId'].setValue(this.authService.getUser().lg_nik);
     this.show = true;
   }
 
   callApiService() {
     forkJoin(this.apiService.getNameEmailEmployees()).subscribe((res) => {
-      // console.log(res[0]);
       this.nameEmailEmployee = res[0];
+      this.load = false
     });
   }
   closeModal() {
@@ -103,7 +106,7 @@ export class CreateVoteComponent {
     }
     // console.log(this.itemsParticipants.value);
     // console.log(this.choosenDate);
-    
+
     if (this.itemsParticipants.invalid || this.choosenDate.length == 0) {
       this.alertService.onCallAlert(
         'Date or Participant can`t blank',
@@ -165,7 +168,7 @@ export class CreateVoteComponent {
       },
       (er) => {
         console.log(er);
-        
+
         this.alertService.onCallAlert('Failed added vote', AlertType.Error);
       }
     );
@@ -180,21 +183,20 @@ export class CreateVoteComponent {
 
   pushParticipant() {
     // console.log(this.particip.nativeElement.value);
-    this.choosenEmployee.push(this.particip.nativeElement.value);
-    let c = this.nameEmailEmployee.filter(
-      (data) => data[2] == this.particip.nativeElement.value
-    )[0];
-    // console.log(c);
+    if (this.choosenEmployee.indexOf(this.particip.nativeElement.value) == -1) {
+      this.choosenEmployee.push(this.particip.nativeElement.value);
+      let c = this.nameEmailEmployee.filter(
+        (data) => data[2] == this.particip.nativeElement.value
+      )[0];
+      // console.log(c);
 
-    this.itemsParticipants.push(
-      this.formBuilder.group({
-        userId: [this.particip.nativeElement.value, Validators.required],
-        email: [c[0], Validators.required],
-      })
-    );
-    // console.log(this.itemsParticipants.value);
-
-    // console.log(this.particip.nativeElement.value);
+      this.itemsParticipants.push(
+        this.formBuilder.group({
+          userId: [this.particip.nativeElement.value, Validators.required],
+          email: [c[0], Validators.required],
+        })
+      );
+    }
     this.particip.nativeElement.value = '';
   }
 

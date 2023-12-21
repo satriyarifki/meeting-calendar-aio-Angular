@@ -152,16 +152,16 @@
       >
         <div>
           <span
-            class="w-6 pr-1 text-xl max-sm:text-[1rem] text-center font-semibold"
+            class="w-6 pr-0.5 text-xl max-sm:text-[1rem] text-center font-semibold"
             [ngClass]="
               item.month != monthSelected.getMonth()
                 ? 'text-gray-400'
                 : item.date == currentDate.getDate() &&
                   item.month == currentDate.getMonth() &&
                   item.year == currentDate.getFullYear()
-                ? 'bg-emerald-300 p-0.5 rounded-full'
+                ? 'bg-amber-200 p-0.5 rounded-full'
                 : filterHoliday(item.formFormat).length > 0
-                ? 'text-[#cf3241]'
+                ? 'text-red-500'
                 : 'text-[#050833]'
             "
           >
@@ -169,7 +169,7 @@
           </span>
           <div *ngIf="filterM2upBirthday(item.month, item.date).length != 0">
             <a
-              class="hover:bg-slate-100"
+              class="hover:bg-slate-100 flex justify-center"
               [tooltip]="foearchM2up(filterM2upBirthday(item.month, item.date))"
               placement="top"
             >
@@ -262,10 +262,10 @@
         </h1>
       </div>
     </div>
-    <div class="px-2 py-1 bg-gray-100 border rounded-lg my-1 space-y-1 md:w-1/5">
+    <div class="px-2 py-1 bg-gray-100 border rounded-lg my-1 space-y-1 md:w-1/5 hidden">
       <div class="flex items-center">
-        <div class="bg-emerald-400 rounded-full p-2.5 text-center"></div>
-        <h1 class="font-medium text-sm text-emerald-500"> {{ '' }}&nbsp; Today</h1>
+        <div class="bg-amber-200 rounded-full p-2.5 text-center"></div>
+        <h1 class="font-medium text-sm text-amber-500"> {{ '' }}&nbsp; Today</h1>
       </div>
       <div class="flex items-center">
         <!-- <div class="text-red-500 rounded-full w-6 text-center font-semibold">0</div> -->

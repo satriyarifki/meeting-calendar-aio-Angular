@@ -5,7 +5,7 @@
   class="fixed top-0 left-0 right-0 z-20 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-screen md:h-full bg-gray-900 bg-opacity-50"
   *ngIf="show"
 >
-  <div class="relative w-full h-full mx-auto max-w-xl md:h-auto font-manrope">
+  <div [ngClass]="voteInput.value?.length > 4? '' : 'max-w-3xl'" class="relative w-full h-full mx-auto min-w-min  md:h-auto font-manrope">
     <div class="relative rounded-lg shadow bg-white p-4">
       <button
         (click)="closeModal()"
@@ -175,27 +175,21 @@
               <li
                 *ngFor="let item of voteInput.value; index as i; odd as odd"
                 [formGroupName]="i"
-                [ngClass]="odd ? 'bg-slate-100' : 'bg-violet-100'"
-                class="w-full flex flex-col items-center gap-x-2 divide-y-2 divide-[#6f99ae] divide-opacity-40 text-sm font-medium first:border- text-gray-800 -mt-px first:rounded-l-lg first:mt-0 last:rounded-r-lg"
+                [ngClass]="odd ? 'bg-slate-100' : 'bg-gray-50'"
+                class="w-full flex flex-col items-center gap-x-2 divide-y-2 divide-[#6f99ae] divide-opacity-40 text-sm font-medium  text-gray-800 -mt-px first:rounded-l-lg last:rounded-r-lg"
               >
                 <div
-                  class="flex justify-center items-center h-full py-2.5 px-3"
+                  class="flex justify-center items-center h-fit py-2.5 px-3"
                 >
                   <h1 class="font-semibold">{{ item.date }}</h1>
                 </div>
-                <div class="w-full flex flex-row py-2.5 px-3">
+                <div class="w-full flex flex-col py-2.5 px-3 gap-1.5">
                   <div
                     *ngFor="let itm of item.times; index as ii"
                     formArrayName="times"
-                    class=" flex flex-col justify-center items-center w-full"
-                  >
-                    <label
-                      for="hs-list-group-item-checkbox-1"
-                      class="w-full block text-sm text-center text-gray-700 "
+                    class=" grid grid-flow-col justify-center items-center w-full gap-3"
                     >
-                      {{ itm.time }}
-                    </label>
-                    <div class="flex items-center h-5" [formGroupName]="ii">
+                    <div class=" flex items-center h-5" [formGroupName]="ii">
                       <input
                         id="hs-list-group-item-checkbox-1"
                         name="hs-list-group-item-checkbox-1"
@@ -205,6 +199,12 @@
                         [value]="item.agree"
                       />
                     </div>
+                    <label
+                      for="hs-list-group-item-checkbox-1"
+                      class="w-full block text-sm text-center text-gray-700 "
+                    >
+                      {{ itm.time }}
+                    </label>
                   </div>
                 </div>
               </li>

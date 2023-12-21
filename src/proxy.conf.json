@@ -1,0 +1,9 @@
+{
+    "/api": {
+      "target": "https://api-harilibur.vercel.app",
+      "secure": false,
+      "changeOrigin": true,
+      "logLevel": "debug",
+      "pathRewrite": {"^/api" : ""}
+    }
+}

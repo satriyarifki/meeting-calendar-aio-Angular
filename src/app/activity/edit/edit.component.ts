@@ -123,6 +123,7 @@ export class EditComponent {
   }
   callModal(event: any) {
     this.initialEvent = event.id;
+    
     this.initialForm();
 
     this.show = true;
@@ -136,14 +137,6 @@ export class EditComponent {
     return (date = new Date(date).toLocaleDateString());
   }
 
-  changeOrganizer(event: any) {
-    // console.log(event.srcElement.value);
-    // console.log(
-    //   this.nameEmailEmployee[
-    //     this.emailsEmployee.indexOf(event.srcElement.value)
-    //   ]
-    // );
-  }
   change(email: any) {
     this.nameEmailEmployee[this.emailsEmployee.indexOf(email)];
   }

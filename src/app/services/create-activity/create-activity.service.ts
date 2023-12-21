@@ -8,7 +8,7 @@ export class CreateActivityService {
   invokeAlert = new EventEmitter();
   subsVar: Subscription | undefined;
   constructor() {}
-  onCallCreateModal(date: any) {
-    this.invokeAlert.emit({ date });
+  onCallCreateModal(date: any,event:any) {
+    this.invokeAlert.emit({ date,event });
   }
 }

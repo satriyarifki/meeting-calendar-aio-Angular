@@ -62,6 +62,7 @@ export class CreateComponent implements OnInit {
   roomsAll: any;
   eventDatas: any;
   reservs: any;
+  participantsApi:any[] = []
 
   //FORM
   form!: FormGroup;
@@ -106,12 +107,66 @@ export class CreateComponent implements OnInit {
       this.alertService.onCallAlert('Upload Success!', AlertType.Success);
     };
   }
+  duplicateForm(event:any) {
+    this.form = this.formBuilder.group({
+      userId: [event.userId, Validators.required],
+      date: [
+        format(new Date(event.date), 'yyyy-MM-dd'),
+        Validators.required,
+      ],
+      time_start: [event.time_start, Validators.required],
+      time_end: [event.time_end, Validators.required],
+      title: [event.title, Validators.required],
+      organizer: [event.organizer, Validators.required],
+      description: [''],
+      online_offline: [event.online_offline, Validators.required],
+      url_online: [event.url_online],
+      roomId: [event.roomId],
+      participants: [
+        this.joinParticipantById(event.id),
+        Validators.required,
+      ],
+      message: [event.message, Validators.required],
+      emailDirectSend: [false, Validators.required],
+    });
+    this.radioInput = event.online_offline;
+    
+  }
+  ngOnInit(): void {
+    forkJoin(
+      this.apiService.getEmailEmployees(),
+      this.apiService.getRooms(),
+      this.apiService.getEvents(),
+      this.apiService.getNameEmailEmployees(),
+      this.apiService.reservGet(),
+      this.apiService.getParticipants(),
+    ).subscribe(([emails, rooms, events, nameEmail, reserv,parti]) => {
+      this.emailsEmployee = emails;
+      this.nameEmailEmployee = nameEmail;
+      this.roomsAll = rooms;
+      this.eventDatas = events;
+      this.reservs = reserv;
+      this.participantsApi = parti
+    });
+
+    if (this.createService.subsVar == undefined) {
+      this.createService.subsVar = this.createService.invokeAlert.subscribe(
+        (data) => {
+          this.callModal(data);
+        }
+      );
+    }
+  }
   get f() {
     return this.form?.controls;
   }
-  callModal(date: any) {
-    this.initialDate = date;
-    this.initialForm();
+  callModal(data: any) {
+    this.initialDate = data.date;
+    if(data.event != 0 && data.event != null){
+      this.duplicateForm(data.event)
+    } else {
+      this.initialForm();
+    }
     // console.log(this.authService.getUser().lg_nik);
 
     this.show = true;
@@ -120,6 +175,16 @@ export class CreateComponent implements OnInit {
     this.uploader.clearQueue();
     this.form.reset();
     this.show = false;
+  }
+
+  joinParticipantById(id: any) {
+    var par: String[] = [];
+    this.participantsApi
+      .filter((data: any) => data.eventId == id)
+      .forEach((element: any) => {
+        par.push(element.email);
+      });
+    return par.join(', ');
   }
   convertDate(date: any) {
     return (date = new Date(date).toLocaleDateString());
@@ -170,29 +235,7 @@ export class CreateComponent implements OnInit {
     return result;
   }
 
-  ngOnInit(): void {
-    forkJoin(
-      this.apiService.getEmailEmployees(),
-      this.apiService.getRooms(),
-      this.apiService.getEvents(),
-      this.apiService.getNameEmailEmployees(),
-      this.apiService.reservGet()
-    ).subscribe(([emails, rooms, events, nameEmail, reserv]) => {
-      this.emailsEmployee = emails;
-      this.nameEmailEmployee = nameEmail;
-      this.roomsAll = rooms;
-      this.eventDatas = events;
-      this.reservs = reserv;
-    });
-
-    if (this.createService.subsVar == undefined) {
-      this.createService.subsVar = this.createService.invokeAlert.subscribe(
-        (date) => {
-          this.callModal(date.date);
-        }
-      );
-    }
-  }
+  
   inputFileChange(event: any) {
     // console.log(event);
   }

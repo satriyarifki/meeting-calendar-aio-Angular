@@ -81,6 +81,7 @@ export class TooltipDirective {
     this.renderer.addClass(this.tooltip, 'px-3');
     this.renderer.addClass(this.tooltip, 'rounded-md');
     this.renderer.addClass(this.tooltip, 'font-medium');
+    this.renderer.addClass(this.tooltip, 'shadow-md');
     if (this.color) {
       this.renderer.addClass(this.tooltip, this.color);
     } else {
@@ -133,12 +134,12 @@ export class TooltipDirective {
     let top, left;
 
     if (this.placement === 'top') {
-      top = hostPos.top - tooltipPos.height - this.offset;
+      top = hostPos.top - tooltipPos.height - this.offset / 2;
       left = hostPos.left + (hostPos.width - tooltipPos.width) / 2;
     }
 
     if (this.placement === 'bottom') {
-      top = hostPos.bottom + this.offset;
+      top = hostPos.bottom + this.offset / 2;
       left = hostPos.left + (hostPos.width - tooltipPos.width) / 2;
     }
 

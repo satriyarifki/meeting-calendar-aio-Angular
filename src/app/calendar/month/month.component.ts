@@ -50,21 +50,23 @@ export class MonthComponent {
     } else {
       this.loopDate(this.dateChanged);
     }
-    console.log();
+    console.log(formatDate(new Date(new Date().setDate(1)),'yyyy-MM-dd','EN-US'));
     forkJoin(
       apiService.getEvents(),
       apiService.getM2UpEmployees(),
       apiService.getEventsHo(),
-      apiService.getHolidayByMonthYear(
-        this.dateParams.getMonth() + 1,
-        this.dateParams.getFullYear()
-      )
+      // apiService.getHolidayByMonthYear(
+      //   this.dateParams.getMonth() + 1,
+      //   this.dateParams.getFullYear()
+      // )
     ).subscribe(
-      ([events, m2up, ho, holiday]) => {
-        this.eventData = events;
-        this.m2upData = m2up;
-        this.eventHoData = ho;
-        this.holiDate = holiday.reverse();
+      (res) => {
+        this.eventData = res[0];
+        this.m2upData = res[1];
+        this.eventHoData = res[2];
+        // this.holiDate = res[3].reverse();
+        // console.log(this.holiDate);
+        
       },
       () => {
         spinner.hide();
@@ -133,7 +135,7 @@ export class MonthComponent {
 
     while (firstDay <= this.getLastDayOfWeek(this.getLastDayofMonth(date))) {
       this.arrayDateinMonth.push({
-        date: firstDay.getDate(),
+        date: formatDate(firstDay,'dd','EN-US'),
         year: firstDay.getFullYear(),
         month: firstDay.getMonth(),
         full:

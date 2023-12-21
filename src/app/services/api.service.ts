@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 var baseApi = environment.baseApi;
 var defaultApi = environment.defaultApi;
 var offDayApi = 'https://api-harilibur.vercel.app/'
+var dayOffApi = 'https://dayoffapi.vercel.app/'
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class ApiService {
   constructor(private http: HttpClient) {}
   // GET Holiday
   getHolidayByMonthYear(month:any, year:any): Observable<any> {
-    return this.http.get(offDayApi+'/api?month='+month+'&year='+year);
+    return this.http.get(dayOffApi+'/api?month='+month+'&year='+year);
   }
 
 

@@ -76,16 +76,16 @@ export class DayComponent {
       this.apiService.getRooms(),
       this.apiService.getM2UpEmployees(),
       this.apiService.getEventsHoByDate(format(this.dateParams, 'yyyy-MM-dd')),
-      this.apiService.getHolidayByMonthYear(this.dateParams.getMonth()+1, this.dateParams.getFullYear())
-    ).subscribe(([events, participants, rooms,m2up,eventHo,holiday]) => {
-      this.eventData = events;
-      this.dataParticipants = participants;
-      this.roomsData = rooms;
-      this.m2upData = m2up;
-      this.eventHoData = eventHo
-      this.holiDate = holiday
+      // this.apiService.getHolidayByMonthYear(this.dateParams.getMonth()+1, this.dateParams.getFullYear())
+    ).subscribe((res) => {
+      this.eventData = res[0];
+      this.dataParticipants = res[1];
+      this.roomsData = res[2];
+      this.m2upData = res[3];
+      this.eventHoData = res[4]
+      // this.holiDate = res[5]
       
-      console.log(this.filterHoliday);
+      // console.log(this.filterHoliday);
       
       // console.log((this.inBetweenTimeChecker('10')!.minutes/60));
       // console.log(this.filterM2upBirthday(this.dateParams.getMonth(), this.dateParams.getDate()));
@@ -105,8 +105,8 @@ export class DayComponent {
     return this.holiDate.filter(elem=>elem.holiday_date.slice(8,10) == this.dateParams.getDate())
   }
 
-  callCreateService() {
-    this.createService.onCallCreateModal(this.dateParams);
+  callCreateService(event:any) {
+    this.createService.onCallCreateModal(this.dateParams,event);
   }
   callEditService(event:any) {
     this.editService.onCallEditModal(event);
