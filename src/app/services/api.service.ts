@@ -18,7 +18,7 @@ export class ApiService {
   constructor(private http: HttpClient) {}
   // GET Holiday
   getHolidayByMonthYear(month:any, year:any): Observable<any> {
-    return this.http.get(dayOffApi+'/api?month='+month+'&year='+year);
+    return this.http.get(this.baseUrl+'holiday/'+year +'/'+month);
   }
 
 
@@ -147,6 +147,9 @@ export class ApiService {
   }
   voteDetailsUpdatePut(body:any): Observable<any> {
     return this.http.put(this.baseUrl + 'vote-details',body);
+  }
+  voteEmailPost(body:any): Observable<any> {
+    return this.http.post(this.emailUrl + 'send/vote',body);
   }
 
    // ---------------------------VOTE TIMES

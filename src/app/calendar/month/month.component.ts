@@ -15,7 +15,7 @@ import { formatDate } from '@angular/common';
   styleUrls: ['./month.component.css'],
 })
 export class MonthComponent {
-  dateParams = new Date(this.actRoute.snapshot.queryParams['date']);
+  dateParams = new Date(this.actRoute.snapshot.queryParams['date']) ;
   arrayDateinMonth: any[] = [];
   dateChanged = new Date();
   monthSelected = new Date();
@@ -51,24 +51,26 @@ export class MonthComponent {
       this.monthSelected = this.dateParams;
       this.loopDate(this.dateParams);
     } else {
+      this.dateParams = this.dateChanged
       this.loopDate(this.dateChanged);
     }
+    console.log(this.dateParams.getMonth() + 1);
+    
     forkJoin(
       apiService.getEvents(),
       apiService.getM2UpEmployees(),
       apiService.getEventsHo(),
-      // apiService.getHolidayByMonthYear(
-      //   this.dateParams.getMonth() + 1,
-      //   this.dateParams.getFullYear()
-      // )
+      apiService.getHolidayByMonthYear(
+        this.dateParams.getMonth() + 1 ,
+        this.dateParams.getFullYear() 
+      )
     ).subscribe(
       (res) => {
         this.eventData = res[0];
         this.m2upData = res[1];
         this.eventHoData = res[2];
-        // this.holiDate = res[3].reverse();
-        // console.log(this.holiDate);
-        
+        this.holiDate = res[3];
+        spinner.hide()
       },
       () => {
         spinner.hide();
@@ -156,11 +158,9 @@ export class MonthComponent {
   }
 
   filterHoliday(date: any) {
-    if (this.holiDate.length) {
-    }
-
+    
     return this.holiDate.filter(
-      (elem) => elem.holiday_date == date && elem.is_national_holiday == true
+      (elem) => elem.tanggal == date && elem.cuti == false
     );
   }
   getFirstDayOfWeek(d: any) {

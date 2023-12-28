@@ -17,6 +17,7 @@ import { CreateActivityService } from 'src/app/services/create-activity/create-a
 import { EditActivityService } from 'src/app/services/edit-activity/edit-activity.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { VoteActivityService } from 'src/app/services/vote-activity/vote-activity.service';
+import { formatDate } from '@angular/common';
 
 const HoursOfDay = [
   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
@@ -76,14 +77,14 @@ export class DayComponent {
       this.apiService.getRooms(),
       this.apiService.getM2UpEmployees(),
       this.apiService.getEventsHoByDate(format(this.dateParams, 'yyyy-MM-dd')),
-      // this.apiService.getHolidayByMonthYear(this.dateParams.getMonth()+1, this.dateParams.getFullYear())
+      this.apiService.getHolidayByMonthYear(this.dateParams.getMonth()+1, this.dateParams.getFullYear())
     ).subscribe((res) => {
       this.eventData = res[0];
       this.dataParticipants = res[1];
       this.roomsData = res[2];
       this.m2upData = res[3];
       this.eventHoData = res[4]
-      // this.holiDate = res[5]
+      this.holiDate = res[5]
       
       // console.log(this.filterHoliday);
       
@@ -100,9 +101,16 @@ export class DayComponent {
   }
 
   get filterHoliday(){
-    // console.log(this.holiDate[0]);
-    // console.log(this.dateParams.getDate());
-    return this.holiDate.filter(elem=>elem.holiday_date.slice(8,10) == this.dateParams.getDate())
+
+    return this.holiDate.filter(elem=>elem.tanggal == formatDate(this.dateParams,'yyyy-MM-d','EN-US'))
+  }
+
+  checkHoliday(date:any){
+    // console.log(date);
+    
+    return this.holiDate.filter(
+      (elem) => elem.tanggal == date && elem.cuti == false
+    );
   }
 
   callCreateService(event:any) {
@@ -172,6 +180,7 @@ export class DayComponent {
     this.dateParams = addDays(this.dateParams, -1);
     this.loopDate(date);
     this.showActivity = false;
+    
     this.router.navigate(['/day'],{
       queryParams: { date: date.toLocaleDateString() }});
     // console.log(this.dateParams);
@@ -182,7 +191,7 @@ export class DayComponent {
     this.dateParams = addMonths(this.dateParams, 1);
     // console.log(date);
     this.loopDate(date);
-    this.showActivity = false;
+    this.showActivity = false;;
     this.router.navigate(['/day'],{
       queryParams: { date: date.toLocaleDateString() }});
 
@@ -222,7 +231,10 @@ export class DayComponent {
         month: firstDay.getMonth(),
         full: (firstDay.getMonth() + 1) + '/' + firstDay.getDate() + '/' + firstDay.getFullYear(),
         localeString : firstDay.toLocaleDateString(),
+        formFormat: formatDate(firstDay,'yyyy-MM-d','EN-US')
       });
+      // console.log(this.arrayDateinMonth);
+      
       firstDay.setDate(firstDay.getDate() + 1);
     }
   }
@@ -252,13 +264,11 @@ export class DayComponent {
   }
 
   changeDatePicker(date: any) {
-    // console.log(date);
-
     this.dateParams = new Date(date);
     var pickDate = new Date(date);
     this.loopDate(pickDate);
     this.router.navigate(['/day'],{
-      queryParams: { filter: date.toLocaleDateString() }});
+      queryParams: { date: new Date(date).toLocaleDateString() }});
   }
   enterActivityHover() {
     this.showActivity = true;

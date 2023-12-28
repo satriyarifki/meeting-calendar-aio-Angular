@@ -86,6 +86,7 @@ export class CreateVoteComponent {
     forkJoin(this.apiService.getNameEmailEmployees()).subscribe((res) => {
       this.nameEmailEmployee = res[0];
       this.load = false
+      
     });
   }
   closeModal() {
@@ -127,9 +128,14 @@ export class CreateVoteComponent {
         });
       });
     });
+    const emailParticipants = this.itemsParticipants.value.map(function(data:any){
+      return data.email
+    })
     // console.log(this.itemsParticipants.value);
-    // // console.log(this.form.value);
-    // return
+    // console.log(this.form.value);
+    // console.log({title:this.form.value.title, desc: this.form.value.desc, participants:emailParticipants, organizer:this.nameEmailEmployee.filter(dt=> dt[2] == this.form.value.userId)[0]});
+    
+
     this.apiService.votesPost(this.form.value).subscribe(
       (res) => {
         // console.log(res);
@@ -152,6 +158,13 @@ export class CreateVoteComponent {
             (resd) => {
               // console.log(resd);
               // this.apiService.voteTimesPost()
+              this.apiService.voteEmailPost({title:this.form.value.title, desc: this.form.value.desc, participants:emailParticipants, organizer:this.nameEmailEmployee.filter(dt=> dt[2] == this.form.value.userId)[0]}).subscribe((res)=>{
+                console.log('Email Sended');
+                
+              }, err => {
+                console.log('Email Failed: ' + err.message);
+                
+              })
               this.alertService.onCallAlert(
                 'Success added vote!',
                 AlertType.Success
