@@ -397,6 +397,8 @@ export class EditComponent {
           );
         },
         (err) => {
+          console.log(err);
+          
           this.alertService.onCallAlert('Send Email Failed!', AlertType.Error);
           console.log('Email Failed');
         }
